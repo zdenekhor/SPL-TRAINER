@@ -32,9 +32,10 @@ function startMode(selectedMode) {
 clearInterval(timerInterval);
 document.getElementById("timer").textContent = "";
 mode = selectedMode;
-const category = document.getElementById("categorySelect").value;
-questions = data[category];
-filteredQuestions = [...questions];
+const categorySelect = document.getElementById("categorySelect");
+const category = categorySelect.value || Object.keys(data)[0];
+questions = data[category] || [];
+
 
 
 if (selectedMode === "edit") {
