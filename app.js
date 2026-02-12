@@ -231,3 +231,34 @@ document.getElementById("metarBox").textContent =
 }
 
 loadMETAR();
+
+function markKnown() {
+  const currentId = filteredQuestions[currentQuestionIndex].question;
+  questionStatus[currentId] = "known";
+  localStorage.setItem("questionStatus", JSON.stringify(questionStatus));
+  alert("Označeno jako UMÍM");
+}
+
+function markUnknown() {
+  const currentId = filteredQuestions[currentQuestionIndex].question;
+  questionStatus[currentId] = "unknown";
+  localStorage.setItem("questionStatus", JSON.stringify(questionStatus));
+  alert("Označeno jako NEUMÍM");
+}
+
+function applyFilter() {
+  const filter = document.getElementById("filterSelect").value;
+
+  if (filter === "all") {
+    filteredQuestions = currentQuestions;
+  } else {
+    filteredQuestions = currentQuestions.filter(q => {
+      const status = questionStatus[q.question];
+      return status === filter;
+    });
+  }
+
+  currentQuestionIndex = 0;
+  showQuestion();
+}
+
