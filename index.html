@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f3a5f">
+<meta charset="UTF-8">
+<title>SPL Testovací Aplikace PRO+</title>
+<link rel="stylesheet" href="style.css">
+
+
+</head>
+<body>
+
+<div class="container">
+<h1>✈ SPL01 Testovací Aplikace  </h1>
+
+<div id="metarBox" style="
+margin:15px 0;
+padding:12px;
+background:#101f33;
+border-radius:8px;
+font-family: monospace;
+color:#7fdfff;
+">
+Načítám METAR...
+</div>
+
+
+<div id="menu">
+<h3>Okruh:</h3>
+<select id="categorySelect"></select>
+
+<br><br>
+<button onclick="startStudy()">📘 Studium</button>
+<button onclick="startTest()">📝 Test</button>
+<button onclick="startEdit()">⚙ Nastavit správné odpovědi</button>
+</div>
+
+<div id="app" class="hidden">
+<div id="progress"></div>
+<div id="editInfo" style="margin-bottom:10px; color:#ffd966;"></div>
+<div id="progress"></div>
+<div id="progressBarContainer">
+    <div id="progressBar"></div>
+</div>
+<div id="editInfo"></div>
+<div id="timer"></div>
+<div id="timer"></div>
+<div id="questionBox"></div>
+<div id="answersBox"></div>
+<button onclick="nextQuestion()">Další</button>
+<button onclick="goBack()">Zpět</button>
+</div>
+
+<div id="result" class="hidden"></div>
+
+</div>
+
+<script src="app.js"></script>
+
+<footer style="
+position: fixed;
+bottom: 10px;
+right: 15px;
+font-size: 12px;
+opacity: 0.5;
+">
+© 2026 Zdeněk Horák | SPL Trainer 003 | AI-assisted
+</footer>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+
+</body>
+</html>
