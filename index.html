@@ -49,6 +49,19 @@ Načítám METAR...
 <div id="timer"></div>
 <div id="questionBox"></div>
 <div id="answersBox"></div>
+    <div style="margin:10px 0;">
+  <button onclick="markKnown()">✔ Umím</button>
+  <button onclick="markUnknown()">✖ Neumím</button>
+</div>
+
+<div style="margin:10px 0;">
+  <select id="filterSelect" onchange="applyFilter()">
+    <option value="all">Všechny otázky</option>
+    <option value="unknown">Jen neumím</option>
+    <option value="known">Jen umím</option>
+  </select>
+</div>
+
 <button onclick="nextQuestion()">Další</button>
 <button onclick="goBack()">Zpět</button>
 </div>
