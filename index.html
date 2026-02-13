@@ -5,7 +5,7 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f3a5f">
 <meta charset="UTF-8">
-<title>SPL Testovací Aplikace PRO+</title>
+<title>SPL Testovací Aplikace</title>
 <link rel="stylesheet" href="style.css">
 
 
@@ -37,38 +37,6 @@ Načítám METAR...
 <button onclick="startEdit()">⚙ Nastavit správné odpovědi</button>
 </div>
 
-<div id="app" class="hidden">
-
-    <div id="progress"></div>
-
-    <div id="editInfo" style="margin-bottom:10px; color:#ffd966;"></div>
-
-    <div id="progressBarContainer">
-        <div id="progressBar"></div>
-    </div>
-
-    <div id="timer"></div>
-
-    <div id="questionBox"></div>
-    <div id="answersBox"></div>
-
-    <div style="margin:10px 0;">
-        <button onclick="markKnown()">✔ Umím</button>
-        <button onclick="markUnknown()">✖ Neumím</button>
-    </div>
-
-    <div style="margin:10px 0;">
-        <select id="filterSelect" onchange="applyFilter()">
-            <option value="all">Všechny otázky</option>
-            <option value="unknown">Jen neumím</option>
-            <option value="known">Jen umím</option>
-        </select>
-    </div>
-
-    <button onclick="nextQuestion()">Další</button>
-    <button onclick="goBack()">Zpět</button>
-
-</div>
 
 
 <div id="result" class="hidden"></div>
