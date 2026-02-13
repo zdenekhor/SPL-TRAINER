@@ -4,33 +4,7 @@ console.log("SPL READY");
    METAR GENERATOR
 ========================= */
 
-function generateMetar() {
-  const airports = ["LKMT", "LKPR", "LKTB", "LKNA"];
-  const windDir = Math.floor(Math.random() * 36) * 10;
-  const windSpeed = Math.floor(Math.random() * 20) + 1;
-  const visibility = ["9999", "8000", "6000", "4000"];
-  const clouds = ["FEW020", "SCT030", "BKN040", "OVC050"];
-  const temp = Math.floor(Math.random() * 25) - 5;
-  const dew = temp - Math.floor(Math.random() * 5);
-  const qnh = 980 + Math.floor(Math.random() * 40);
 
-  const metar =
-    airports[Math.floor(Math.random() * airports.length)] +
-    " 131000Z " +
-    windDir.toString().padStart(3, "0") +
-    windSpeed +
-    "KT " +
-    visibility[Math.floor(Math.random() * visibility.length)] +
-    " " +
-    clouds[Math.floor(Math.random() * clouds.length)] +
-    " " +
-    temp +
-    "/" +
-    dew +
-    " Q" +
-    qnh;
-
-  document.getElementById("metarBox").innerText = metar;
 }
 
 generateMetar();
