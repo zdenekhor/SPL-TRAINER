@@ -47,3 +47,4 @@ function startEdit(){
 function startQuiz(){
     currentQuestions = data
 
+}
