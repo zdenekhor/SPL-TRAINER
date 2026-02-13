@@ -144,7 +144,7 @@ function finishQuiz(){
       + Math.round((score/currentQuestions.length)*100)
       + " %";
   }
-}  ],
+}  );
   "Letecká meteoroligie": []
 }
 
