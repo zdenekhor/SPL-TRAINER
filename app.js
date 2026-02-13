@@ -1,4 +1,8 @@
-let data = {};
+let data = {
+  "Letecké předpisy": []
+};
+
+// Dočasně jen test – ověříme, že kód běží
 
 let currentQuestions = [];
 let currentIndex = 0;
@@ -8,13 +12,6 @@ let mode = "study";
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
 const resultBox = document.getElementById("result");
-
-fetch("data.json")
-.then(r => r.json())
-.then(json => {
-    data = json;
-    initCategories();
-});
 
 function initCategories(){
     categorySelect.innerHTML="";
@@ -26,20 +23,8 @@ function initCategories(){
     });
 }
 
-function startStudy(){ mode="study"; startQuiz(); }
-function startTest(){ mode="test"; score=0; startQuiz(); }
-function startEdit(){ mode="edit"; startQuiz(); }
+initCategories();
 
-function startQuiz(){
-    currentQuestions=data[categorySelect.value];
-    currentIndex=0;
-    resultBox.innerHTML="";
-    showQuestion();
+function startStudy(){
+    alert("Kód běží správně.");
 }
-
-function showQuestion(){
-
-    if(currentIndex<0) currentIndex=0;
-    if(currentIndex>=currentQuestions.length){
-        finishQuiz();
-        re
