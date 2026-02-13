@@ -160,17 +160,22 @@ function highlightSelection(c,s){
     if(i === s && i !== c) btn.style.background="#e74c3c";
   });
 }
-
 function finishQuiz(){
   if(mode === "test"){
+    let percent = Math.round((score/currentQuestions.length)*100);
+
+    saveStats(categorySelect.value, percent);
+
     resultBox.innerHTML =
       "<div style='margin-top:20px;font-weight:bold'>Hotovo.<br>Správně: "
       + score + " / " + currentQuestions.length +
       "<br>Úspěšnost: "
-      + Math.round((score/currentQuestions.length)*100)
-      + " %</div>";
+      + percent +
+      " %</div><hr>" +
+      showStats();
   }
 }
+
 /* =========================
    STATISTICS SYSTEM
 ========================= */
