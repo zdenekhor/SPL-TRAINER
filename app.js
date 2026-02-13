@@ -222,4 +222,21 @@ function showStats(){
 
   return html;
 }
+/* =========================
+   GITHUB VERSION
+========================= */
+
+const GITHUB_USER = "zdenekhor";
+const GITHUB_REPO = "SPL-TRAINER";
+
+fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits/main`)
+  .then(res => res.json())
+  .then(data => {
+    const shortHash = data.sha.substring(0,7);
+    document.getElementById("versionInfo").innerText = "commit " + shortHash;
+  })
+  .catch(err => {
+    document.getElementById("versionInfo").innerText = "verze nenalezena";
+  });
+
 
