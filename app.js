@@ -37,7 +37,6 @@ function startStudy(){
 
 function showQuestion(){
   let q=currentQuestions[currentIndex];
-  }doplnilk jsem zavorklu
   quizContainer.innerHTML="<h3>"+q.question+"</h3>";
 }
 
