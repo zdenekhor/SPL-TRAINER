@@ -171,4 +171,50 @@ function finishQuiz(){
       + " %</div>";
   }
 }
+/* =========================
+   STATISTICS SYSTEM
+========================= */
+
+function saveStats(category, percentage){
+  let stats = JSON.parse(localStorage.getItem("splStats")) || {};
+
+  if(!stats[category]){
+    stats[category] = {
+      attempts: 0,
+      totalPercent: 0,
+      best: 0
+    };
+  }
+
+  stats[category].attempts += 1;
+  stats[category].totalPercent += percentage;
+
+  if(percentage > stats[category].best){
+    stats[category].best = percentage;
+  }
+
+  localStorage.setItem("splStats", JSON.stringify(stats));
+}
+
+function showStats(){
+  let stats = JSON.parse(localStorage.getItem("splStats"));
+  if(!stats) return "Žádná statistika.";
+
+  let html = "<h3>Statistika</h3>";
+
+  Object.keys(stats).forEach(cat=>{
+    let avg = Math.round(stats[cat].totalPercent / stats[cat].attempts);
+
+    html += `
+      <div style="margin-bottom:10px;">
+        <strong>${cat}</strong><br>
+        Pokusů: ${stats[cat].attempts}<br>
+        Průměr: ${avg}%<br>
+        Nejlepší: ${stats[cat].best}%
+      </div>
+    `;
+  });
+
+  return html;
+}
 
