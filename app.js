@@ -1,148 +1,14065 @@
-console.log("SPL READY");
-
-let data = {};
-let currentQuestions = [];
-let currentIndex = 0;
-let score = 0;
-let mode = "study";
-
-const categorySelect = document.getElementById("categorySelect");
-const quizContainer = document.getElementById("quizContainer");
-const resultBox = document.getElementById("result");
-
-fetch("./data.json")
-  .then(res => res.json())
-  .then(json => {
-    data = json;
-    initCategories();
-  });
-
-function initCategories(){
-  categorySelect.innerHTML = "";
-  Object.keys(data).forEach(cat=>{
-    let option = document.createElement("option");
-    option.value = cat;
-    option.textContent = cat;
-    categorySelect.appendChild(option);
-  });
-}
-
-function startStudy(){
-  mode = "study";
-  startQuiz();
-}
-
-function startTest(){
-  mode = "test";
-  score = 0;
-  startQuiz();
-}
-
-function startEdit(){
-  mode = "edit";
-  startQuiz();
-}
-
-function startQuiz(){
-  currentQuestions = data[categorySelect.value];
-  currentIndex = 0;
-  resultBox.innerHTML = "";
-  showQuestion();
-}
-
-function showQuestion(){
-
-  if(!currentQuestions || currentQuestions.length === 0) return;
-
-  let q = currentQuestions[currentIndex];
-
-  let html = "<div><strong>Otázka "
-    + (currentIndex+1) + " / " + currentQuestions.length + "</strong></div>";
-
-  html += "<h3>" + q.question + "</h3>";
-
-  q.answers.forEach((a,i)=>{
-    html += "<button onclick='selectAnswer("+i+")' \
-    style='display:block;width:100%;margin:6px 0;padding:10px;border:none;border-radius:6px;background:#1f3a5f;color:white;' \
-    id='ans_"+i+"'>" + a + "</button>";
-  });
-
-  html += "<div style='margin-top:10px;display:flex;gap:8px;'>";
-  html += "<button onclick='prevQuestion()'>⬅ Zpět</button>";
-  html += "<button onclick='nextQuestion()'>Další ➡</button>";
-  html += "</div>";
-
-  quizContainer.innerHTML = html;
-
-  if(mode === "study"){
-    document.getElementById("ans_"+q.correct).style.background = "#2ecc71";
-  }
-
-  if(mode === "edit"){
-    highlightCorrect();
-  }
-}
-
-function selectAnswer(i){
-
-  let correct = currentQuestions[currentIndex].correct;
-
-  if(mode === "edit"){
-    currentQuestions[currentIndex].correct = i;
-    highlightCorrect();
-    return;
-  }
-
-  if(mode === "test"){
-    if(i === correct) score++;
-    highlightSelection(correct,i);
-    setTimeout(nextQuestion,600);
-  }
-}
-
-function nextQuestion(){
-  if(currentIndex < currentQuestions.length-1){
-    currentIndex++;
-    showQuestion();
-  } else {
-    finishQuiz();
-  }
-}
-
-function prevQuestion(){
-  if(currentIndex > 0){
-    currentIndex--;
-    showQuestion();
-  }
-}
-
-function highlightCorrect(){
-  let buttons = quizContainer.querySelectorAll("button");
-  buttons.forEach((btn,i)=>{
-    btn.style.background="#1f3a5f";
-    if(i === currentQuestions[currentIndex].correct){
-      btn.style.background="#2ecc71";
+{
+  "Letecká meteoroligie": [
+    {
+      "question": "1.  Která z uvedených vrstev zemské atmosféry má průměrnou vertikální mohutnost 11 km",
+      "answers": [
+        "a)  stratosféra",
+        "b)  troposféra",
+        "c)  tropopauza"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "2.  Která z uvedených charakteristik jsou charakteristikami nejspodnější vrstvy zemské atmosféry - troposféry",
+      "answers": [
+        "a)  pokles teploty s výškou",
+        "b)  isotermie",
+        "c)  pokles tlaku s výškou"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "3.  Která ze složek troposféry je základní složkou tvoření oblačnosti",
+      "answers": [
+        "a)  kyslík",
+        "b)  dusík",
+        "c)  vodní pára"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "4.  Turbulentní proudění je charakteristické pro",
+      "answers": [
+        "a)  stratosféru",
+        "b)  troposféru",
+        "c)  tropopauzu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "5.  Jak nazýváme nejspodnější vrstvu atmosféry",
+      "answers": [
+        "a)  mezosféra",
+        "b)  troposféra",
+        "c)  stratosféra"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "6.  Která z uvedených vrstev zemské atmosféry je charakteristická vertikálními pohyby",
+      "answers": [
+        "a)  stratosféra",
+        "b)  troposféra",
+        "c)  tropopauza"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "7.  Inverzí rozumíme",
+      "answers": [
+        "a)  pokles teploty s výškou",
+        "b)  vzrůst teploty s výškou",
+        "c)  teplota se s výškou nemění"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "8.  Vertikální mohutnost troposféry je největší",
+      "answers": [
+        "a)  nad póly",
+        "b)  v mírném pásu",
+        "c)  nad rovníkovými oblastmi"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "9.  Vertikální mohutnost troposféry je nejmenší",
+      "answers": [
+        "a)  nad póly",
+        "b)  nad oblastmi rovníku",
+        "c)  v mírném pásu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "10.  Inverzní situace jsou charakteristické pro",
+      "answers": [
+        "a)  horní vrstvy troposféry",
+        "b)  přízemní vrstvu troposféry",
+        "c)  stratosféru"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "11.  Největší hmotnost má zemská atmosféra",
+      "answers": [
+        "a)  ve vrstvě troposféry",
+        "b)  ve vrstvě sahající od země do výšky isobarické hladiny 500 HPa",
+        "c)  v horních vrstvách troposféry"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "12.  Zdrojem atmosférické vlhkosti je",
+      "answers": [
+        "a)  zemský povrch",
+        "b)  troposféra",
+        "c)  stratosféra"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "13.  Ve stratosféře převládá proudění vzduchu",
+      "answers": [
+        "a)  ve směru horizontálním",
+        "b)  turbulentní",
+        "c)  je nulové (klid)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "14.  Úbytek teploty s výškou v definici standardní atmosféry - vertikální teplotní gradient má hodnotu",
+      "answers": [
+        "a)  0,6 °C/100 m",
+        "b)  1,0 °C/100 m",
+        "c)  0,65 °C/100 m"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "15.  Změna teploty s výškou - vertikální teplotní gradient ve vrstvě isotermie má hodnotu",
+      "answers": [
+        "a)  zápornou",
+        "b)  nulovou",
+        "c)  kladnou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "16.  Změna teploty s výškou - vertikální teplotní gradient ve vrstvě inverze má hodnotu",
+      "answers": [
+        "a)  nulovou",
+        "b)  zápornou",
+        "c)  kladnou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "17.  Zvrstvení vzduchu ve vrstvě inverze je",
+      "answers": [
+        "a)  indiferentní",
+        "b)  stabilní",
+        "c)  instabilní"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "18.  Vertikální teplotní gradient v definic standardní atmosféry od výšky 11 km výše má hodnotu",
+      "answers": [
+        "a)  zápornou",
+        "b)  kladnou",
+        "c)  nulovou"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "19.  V definici standardní atmosféry jsou hodnoty tlaku a teploty na střední hladině moře",
+      "answers": [
+        "a)  1015 HPa, +10 °C",
+        "b)  1013,25 HPa, +15°C",
+        "c)  1013,25 HPa, +21 °C"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "20.  Hmotnost zemské atmosféry s výškou",
+      "answers": [
+        "a)  se nemění",
+        "b)  vzrůstá",
+        "c)  klesá"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "21.  Ve standardní atmosféře je výška vrstvy tropopauzy a teplota v ní",
+      "answers": [
+        "a)  11 km, -56,5 °C",
+        "b)  9 km, -50 °C",
+        "c)  12 km, -60 °C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "22.  Hmotnost vzduchu na střední hladině moře v definici standardní atmosféry při teplotě +15°C je",
+      "answers": [
+        "a)  1,5 kg/m3",
+        "b)  1,0 kg/m3",
+        "c)  1,225 kg/m3"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "23.  V jaké výšce přibližně dosahuje barometrický tlak poloviční hodnoty tlaku na střední hladině moře",
+      "answers": [
+        "a)  3 000 m MSL",
+        "b)  7 000 m MSL",
+        "c)  5 500 m MSL"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "24.  Jak se nazývá rozdíl mezi teplotou a teplotou rosného bodu",
+      "answers": [
+        "a)  deficit rosného bodu",
+        "b)  suchá teplota",
+        "c)  poměr nasycení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "25.  Vlhkostí vzduchu nazýváme obecně",
+      "answers": [
+        "a)  množství vodních par v ovzduší",
+        "b)  vypadávání srážek",
+        "c)  sněžení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "26.  Definice relativní vlhkosti zní",
+      "answers": [
+        "a)  množství vodní páry v gramech v kubickém metru vzduchu",
+        "b)  množství vodní páry v gramech v kilogramu vzduchu",
+        "c)  poměr skutečného tlaku vodní páry k maximálně možnému tlaku vodní páry při dané teplotě, vyjádřený v procentech"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "27.  Teplotou rosného bodu nazýváme",
+      "answers": [
+        "a)  teplotu, kterou by vzduch měl v okamžiku stavu nasycení",
+        "b)  teplotu vzduchu se stanovenou relativní vlhkostí",
+        "c)  teplotu vzduchu v určité výšce"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "28.  Změna fáze voda - vodní pára se nazývá",
+      "answers": [
+        "a)  kondenzace",
+        "b)  vypařování",
+        "c)  sublimace"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "29.  Změna fáze vodní pára - voda se nazývá",
+      "answers": [
+        "a)  krystalizace",
+        "b)  tuhnutí",
+        "c)  kondenzace"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "30.  Změna fáze led - vodní pára se nazývá",
+      "answers": [
+        "a)  sublimace",
+        "b)  kondenzace",
+        "c)  vypařování"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "31.  Změna fáze vodní pára - ledové krystalky se nazývá",
+      "answers": [
+        "a)  mrznutí",
+        "b)  kondenzace",
+        "c)  krystalizace"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "32.  Změna fáze voda - led se nazývá",
+      "answers": [
+        "a)  sublimace",
+        "b)  kondenzace",
+        "c)  mrznutí"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "33.  Kondenzační hladinou nazýváme výšku, ve které dochází",
+      "answers": [
+        "a)  k vypařování srážek",
+        "b)  ke kondenzaci",
+        "c)  k tvoření oblačnosti"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "34.  Vertikální teplotní gradient je",
+      "answers": [
+        "a)  hodnota změny teploty připadající na jednotkovou vzdálenost ve vertikálním směru",
+        "b)  hodnota teploty v určité výšce",
+        "c)  hodnota teploty v určité isobarické hladině"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "35.  Horizontální teplotní gradient je",
+      "answers": [
+        "a)  hodnota změny teploty připadající na jednotkovou vzdálenost v horizontálním směru",
+        "b)  stanovená konstantní změna teploty podél zemského povrchu",
+        "c)  průměrná teplota, měnící se od pólu k rovníku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "36.  Stavová křivka je definována jako",
+      "answers": [
+        "a)  čára o stejných hodnotách teploty",
+        "b)  křivka znázorňující průběh teploty v závislosti na výšce v reálné atmosféře",
+        "c)  křivka se stálou hodnotou změny teploty na každých 100 m výšky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "37.  Suchá adiabata je stavová křivka znázorňující změnu teploty s výškou o hodnotu",
+      "answers": [
+        "a)  0,65 °C/100 m výšky",
+        "b)  1,00 °C/100 m výšky",
+        "c)  0,60 °C/100 m výšky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "38.  Vlhká adiabata je stavová křivka znázorňující změnu teploty s výškou o hodnotu",
+      "answers": [
+        "a)  1,00 °C/100m výšky",
+        "b)  0,65 °C/100 m výšky",
+        "c)  0,60 °C/100  m výšky"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "39.  Pro vznik vertikálních pohybů v troposféře je příznivé zvrstvení",
+      "answers": [
+        "a)  stabilní",
+        "b)  indiferentní",
+        "c)  instabilní"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "40.  Jak se mění teplota a teplota rosného bodu ve vystupujícím vzduchu",
+      "answers": [
+        "a)  deficit rosného bodu vzrůstá",
+        "b)  deficit rosného bodu se zmenšuje",
+        "c)  deficit rosného bodu se nemění"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "41.  Jak se mění teplota a teplota rosného bodu v sestupujícím vzduchu",
+      "answers": [
+        "a)  deficit rosného bodu se zmenšuje",
+        "b)  deficit rosného bodu roste",
+        "c)  deficit rosného bodu se nemění"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "42.  Hustota vzduchu je závislá na teplotě vzduchu",
+      "answers": [
+        "a)  roste s rostoucí teplotou",
+        "b)  roste s klesající teplotou",
+        "c)  snižuje se s klesající teplotou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "43.  Přepočet rychlosti z KT na metry za sekundu vyjadřuje vztah",
+      "answers": [
+        "a)  1 KT = 1 ms-1",
+        "b)  1 KT = 0,5 ms-1",
+        "c)  1 KT = 2 ms-1"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "44.  Kde je správně vyznačen směr větru „severozápad“ ve zkratkách ICAO",
+      "answers": [
+        "a)  SE",
+        "b)  NW",
+        "c)  SW"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "45.  Výškový barometrický stupeň vyjadřuje",
+      "answers": [
+        "a)  obecně změnu tlaku vzduchu s výškou",
+        "b)  změnu tlaku vzduchu na změnu výšky o 100 m",
+        "c)  hodnotu změny výšky, podle které se tlak změní o jednotku (př. O 1 HPa, o 1 mmHg)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "46.  Jakou hodnotu má výškový barometrický stupeň při zemském povrchu",
+      "answers": [
+        "a)  1 HPa/11 m výšky",
+        "b)  1 HPa/16 m výšky",
+        "c)  1 HPa/08 m výšky"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "47.  Jakou hodnotu má výškový barometrický stupeň nad výškou 5 500 m MSL",
+      "answers": [
+        "a)  1 HPa/11 m výšky",
+        "b)  1 HPa/16m výšky",
+        "c)  1 HPa/08m výšky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "48.  Jak souvisí hodnota výškového barometrického stupně s teplotou vzduchu",
+      "answers": [
+        "a)  zmenšuje se s klesající teplotou vzduchu",
+        "b)  zvětšuje se s klesající teplotou vzduchu",
+        "c)  nemění se s klesající teplotou vzduchu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "49.  Jak souvisí hodnota výškového barometrického stupně s teplotou vzduchu",
+      "answers": [
+        "a)  zvětšuje se s klesající teplotou vzduchu",
+        "b)  zvětšuje s rostoucí teplotou vzduchu",
+        "c)  nemění se se změnou teploty vzduchu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "50.  Který údaj nazýváme staničním tlakem",
+      "answers": [
+        "a)  skutečný atmosférický tlak naměřený v nadmořské výšce pozorovací stanice",
+        "b)  tlak redukovaný na střední hladinu moře",
+        "c)  tlak vztažený k nejvyššímu bodu v okolí stanice"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "51.  K tomu, aby byly tlaky stanic v různých nadmořských výškách srovnatelné, provádí se redukce naměřeného tlaku",
+      "answers": [
+        "a)  k nadmořské výšce stanice",
+        "b)  ke standardní hladině - střední hladině moře (MSL)",
+        "c)  na střední hladinu moře při stanovené teplotě"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "52.  V čem spočívá redukce (přepočet) tlaku na střední hladinu moře",
+      "answers": [
+        "a)  přičtením konstantní hodnoty tlaku k naměřené hodnotě staničního tlaku",
+        "b)  odečtením určité hodnoty tlaku od naměřené hodnoty staničního tlaku",
+        "c)  přičtením hodnoty tlaku fiktivního sloupce vzduchu, který sahá od hladiny stanice až po MSL, za určitých předpokladů o teplotě tohoto fiktivního vzduchového sloupce"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "53.  Která z uvedených jednotek se v současnosti používá jako jednotka tlaku",
+      "answers": [
+        "a)  HPa",
+        "b)  mb",
+        "c)  dyn/cm2"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "54.  Tlak, zakreslovaný na přízemních meteorologických mapách, se nazývá tlak QFF a je to",
+      "answers": [
+        "a)  staniční tlak redukovaný na střední hladinu moře podle barometrické formule - předpokládá se, že teplota fiktivního vzduchového sloupce odpovídá aktuální teplotě naměřené na stanici v době pozorování",
+        "b)  staniční tlak redukovaný na střední hladinu moře podle podmínek atmosféry",
+        "c)  staniční tlak redukovaný na nejvyšší bod dráhového systému"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "55.  Pro vzlety a přistání na daném letišti se používá tlak",
+      "answers": [
+        "a)  QFF",
+        "b)  QNH",
+        "c)  QFE"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "56.  Tlak používaný pro nastavení výškoměru se nazývá tlak QNH a je to",
+      "answers": [
+        "a)  staniční tlak redukovaný na nejvyšší bod dráhové systému",
+        "b)  staniční tlak redukovaný na střední hladinu moře za podmínek standardní atmosféry - předpokládá se, že teplota na střední hladině moře je vždy +15 °C a vertikální teplotní gradient ve fiktivním sloupci vzduchu je 0,65 °C/100 m",
+        "c)  staniční tlak redukovaný na střední hladinu moře podle barometrické formule - to znamená, že teplota fiktivního sloupce vzduchu odpovídá aktuální teplotě na stanici v době pozorování"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "57.  Tlak používaný pro vzlety a přistání na daném letišti se nazývá tlak QFE a je definován jako",
+      "answers": [
+        "a)  staniční tlak redukovaný na nejvyšší bod dráhového systému",
+        "b)  staniční tlak redukovaný na střední hladinu moře za podmínek standardní atmosféry",
+        "c)  staniční tlak redukovaný na střední hladinu moře podle barometrické formule"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "58.  Ve kterém případě jsou si tlaky QNH, QFF a QFE rovny",
+      "answers": [
+        "a)  v případě naměřené teploty +15 °C",
+        "b)  v případě, že letiště leží ve výšce, která odpovídá střední hladině moře",
+        "c)  leží-li letiště v malé nadmořské výšce"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "59.  Ve kterém případě je rozdíl mezi tlaky QNH, QFF a QFE velký",
+      "answers": [
+        "a)  leží-li letiště ve velké nadmořské výšce",
+        "b)  v případě, že je naměřená teplota +15 °C",
+        "c)  v případě, že letiště leží v blízkosti střední hladiny moře"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "60.  Výškoměr nastavený na hodnotu QFE letiště ukazuje po přistání na letišti",
+      "answers": [
+        "a)  nadmořskou výšku tohoto letiště",
+        "b)  nulovou výšku",
+        "c)  nadmořskou výšku prahu VPD tohoto letiště"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "61.  Výškoměr nastavený na tlak QNH letiště ukazuje po přistání na letišti",
+      "answers": [
+        "a)  přibližnou nadmořskou výšku letiště",
+        "b)  nadmořskou výšku VPD",
+        "c)  nulovou výšku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "62.  Cejchování výškoměru je v praxi prováděno na základě změny tlaku s výškou ve standardní atmosféře, které z uvedených hodnot jsou nejdůležitější",
+      "answers": [
+        "a)  úbytek teploty s výškou je 0,65 °C/100 m, při teplotě +15 °C je tlak na střední hladině moře 1013,25 HPa",
+        "b)  výška tropopauzy je 11 km, teplota v této výšce je -56,5 °C a vertikální teplotní gradient je 0,0 °C/100 m",
+        "c)  v celém rozsahu atmosféry je suchý vzduch"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "63.  Údaje výškoměru jsou správné",
+      "answers": [
+        "a)  v každém reálném případě",
+        "b)  pouze v případě, kdy aktuální podmínky v atmosféře odpovídají podmínkám ve standardní atmosféře",
+        "c)  v případě, že teplota v reálném případě je +15 °C"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "64.  V případě, že letadlo letí ve studeném vzduchu, pak",
+      "answers": [
+        "a)  letadlo je výše, než je hodnota výšky udávané výškoměrem",
+        "b)  letadlo je níže, než je hodnota udávaná výškoměrem",
+        "c)  letadlo je ve výšce udávané výškoměrem"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "65.  V případě, že letadlo letí v teplém vzduchu, pak",
+      "answers": [
+        "a)  letadlo je výše, než je hodnota výšky udávané výškoměrem",
+        "b)  letadlo je ve výšce, kterou udává výškoměr",
+        "c)  letadlo je níže, než udává výškoměr"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "66.  Isobary jsou čáry na přízemních meteorologických mapách, které spojují místa",
+      "answers": [
+        "a)  se stejnou teplotou",
+        "b)  se stejným tlakem",
+        "c)  se stejnou vlhkostí"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "67.  Tlaková níže - cyklona - je oblastí",
+      "answers": [
+        "a)  nízkého tlaku s nejnižší hodnotou ve svém středu",
+        "b)  se snižující se hodnotou tlaku směrem od středu",
+        "c)  s nejnižší hodnotou po okrajích oblasti"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "68.  Tlaková výše - anticyklona - je oblast",
+      "answers": [
+        "a)  s nejvyšší hodnotou tlaku po okrajích oblasti",
+        "b)  s nejvyšší hodnotou tlaku ve svém středu",
+        "c)  s nejvyšší hodnotou tlaku rostoucím v určitém směru"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "69.  Tlakový gradient je definován jako",
+      "answers": [
+        "a)  změna tlaku v jakémkoli směru, připadající na určitou vzdálenost",
+        "b)  změna tlaku v horizontálním směru",
+        "c)  změna tlaku ve směru vertikálním"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "70.  Isobarická hladina je plocha",
+      "answers": [
+        "a)  v jejímž každém bodě je stejný tlak",
+        "b)  v jejímž každém bodě je stejná výška",
+        "c)  v jejímž každém bodě je stejná hustota"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "71.  Mapy absolutní barické topografie (mapy výškové) jsou meteorologické mapy, na kterých jsou zakresleny",
+      "answers": [
+        "a)  výšky daných isobarických ploch v daném čase na střední hladinou moře",
+        "b)  výšky stejných teplot",
+        "c)  výšky stejných hustot"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "72.  Kolísání tlakové isobarické hladiny s místem je znázorněno isočarami, které se nazývají",
+      "answers": [
+        "a)  isotachy",
+        "b)  isobary",
+        "c)  isohypsy"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "73.  Isohypsa je definována jako",
+      "answers": [
+        "a)  čára spojující místa se stejnou výškou v dané isobarické hladině",
+        "b)  čára spojující místa se stejnou výškou v rovině zemského povrchu",
+        "c)  čára spojující místa se stejnou rychlostí větru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "74. Které z uvedených hodnot jsou definovány jako standardní isobarické hladiny",
+      "answers": [
+        "a)  850, 500, 300 HPa",
+        "b)  1000, 400, 350 HPa",
+        "c)  990, 800, 750 HPa"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "75.  Jaká je průměrná výška standardní isobarické hladiny 850 HPa",
+      "answers": [
+        "a)  1200 m",
+        "b)  1500 m",
+        "c)  2000 m"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "76.  Průměrná výška standardní isobarické hladiny 500 HPa je",
+      "answers": [
+        "a)  5000 m",
+        "b)  6000 m",
+        "c)  5500 m"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "77.  Průměrná výška standardní isobarické hladiny 300 HPa je",
+      "answers": [
+        "a)  9000 m",
+        "b)  8000 m",
+        "c)  9500 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "78.  Na mapě standardní isobarické hladiny se zakreslují čáry, které nazýváme isotachy a tyto čáry vymezují",
+      "answers": [
+        "a)  místa se stejnou hustotou vzduchu",
+        "b)  místa se stejnou rychlostí větru v této hladině",
+        "c)  místa se stejnou vlhkostí"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "79.  Prostorové rozložení standardní isobarické hladiny získáme rozborem (analýzou) této hladiny pomocí čar, které nazýváme",
+      "answers": [
+        "a)  isobary",
+        "b)  isohypsy",
+        "c)  isotermy"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "80.  Provedeme-li na přízemní meteorologické mapě frontální analýzu, získáme tím",
+      "answers": [
+        "a)  rozložení oblastí stejného počasí",
+        "b)  rozložení oblastí bouřek",
+        "c)  polohy jednotlivých front, frontálního počasí a rozdělení vzduchových hmot"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "81.  Analýzou standardní isobarické hladiny 300 HPa získáme",
+      "answers": [
+        "a)  rozložení tlaku v této hladině",
+        "b)  rozložení teplotního pole",
+        "c)  prostorové rozložení této isobarické hladiny, oblasti stejné rychlosti proudění v této hladině a přibližnou polohu osy JTST"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "82.  Průměrná výška standardníisobarické hladiny 250 HPa je",
+      "answers": [
+        "a)  9 000 m MSL",
+        "b)  10 500 m MSL",
+        "c)  11 000 m MSL"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "83.  Průměrná výška standardní isobarické hladiny 200 HPa je",
+      "answers": [
+        "a)  12 000 m MSL",
+        "b)  14 000 m MSL",
+        "c)  10 500 m MSL"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "84.  Co je to vítr",
+      "answers": [
+        "a)  promíchávání vzduchových částic",
+        "b)  horizontální proudění (přemisťování) vzduchu",
+        "c)  pohyb vzduchových částic podél isobar"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "85.  Která je základní síla, působící horizontální pohyb vzduchu - vítr",
+      "answers": [
+        "a)  horizontální složka tlakového gradientu",
+        "b)  síla tření",
+        "c)  odstředivá síla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "86.  Coriolisova síla, která působí při vzniku větru je",
+      "answers": [
+        "a)  uchylující síla zemské rotace",
+        "b)  odstředivá síla",
+        "c)  síla tření"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "87.  Geostrofickým větrem nazýváme pohyb vzduchu, jestliže",
+      "answers": [
+        "a)  částice vzduchu se pohybují podél zakřivený isobar",
+        "b)  částice vzduchu se pohybují ustálenou rychlostí podél přímkových isobar bez působení tření",
+        "c)  částice vzduchu se pohybují nahodile"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "88.  Postupujeme-li ve vertikálním směru od země, pak směr větru se poněkud liší od směru, který byl naměřen u země a stáčí se",
+      "answers": [
+        "a)  vlevo od směru isobar",
+        "b)  nestáčí se",
+        "c)  vpravo od směru isobar"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "89.  Konvergencí vzdušných proudů rozumíme",
+      "answers": [
+        "a)  rozbíhavost vzdušných proudů",
+        "b)  neutrální chování vzdušných proudů",
+        "c)  sbíhavost vzdušných proudů"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "90.  Divergencí vzdušných proudů nazýváme",
+      "answers": [
+        "a)  jejich rozbíhavost",
+        "b)  jejich sbíhavost",
+        "c)  jejich neutrální chování"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "91.  Vítr významně ovlivňuje letecký provoz",
+      "answers": [
+        "a)  ovlivňuje přistání a vzlet",
+        "b)  let v letové hladině",
+        "c)  v některých případech je možné charakterizovat vítr jako nebezpečný jev"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "92.  Měření větru",
+      "answers": [
+        "a)  vítr je určen směrem",
+        "b)  vítr je určen rychlostí",
+        "c)  vítr je určen směrem a rychlostí"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "93.  Vliv větru na let v letové hladině",
+      "answers": [
+        "a)  ovlivňuje ekonomickou a bezpečnostní stránku letu",
+        "b)  nemá žádný vliv",
+        "c)  nemá vliv na bezpečnost letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "94.  Vítr určitého charakteru považujeme v meteorologii za nebezpečný jev a označujeme jej jako „SQUALL“ a je definován jako",
+      "answers": [
+        "a)  náhlé zesílení rychlosti alespoň o 3 m/s a větší",
+        "b)  náhlé zesílení rychlosti o 5 m/s",
+        "c)  náhlé zesílení rychlosti větru z rychlosti alespoň 8 m/s minimálně o 3 m/s trvající alespoň 1 minutu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "95.  Mezi místní charakteristické větry patří vítr nazývaný „FÖHN“",
+      "answers": [
+        "a)  vane údolím",
+        "b)  z hor do údolí",
+        "c)  z údolí do hor"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "96.  Buys-Ballotův zákon zní",
+      "answers": [
+        "a)  vítr při zemi vane od vysokého tlaku k tlaku nižšímu",
+        "b)  vítr vane kolmo na směr horizontální složky tlakového gradientu",
+        "c)  vítr vane při zemi tak, že se odchyluje od horizontální složky tlakového gradientu na severní polokouli vpravo, na jižní vlevo o úhel v průměru o 30°-60°"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "97.  Známe-li směr větru při zemi, můžeme zjistit rozložení tlaku (vysoký, nízký)",
+      "answers": [
+        "a)  pomocí Buys-Ballotova zákona",
+        "b)  pomocí znalostí působení uchylující síly zemské rotace",
+        "c)  pomocí znalosti síly tření"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "98.  Správný převod rychlosti větru z m/s na KT je vyjádřen vztahem",
+      "answers": [
+        "a)  1 m/s = 1 KT",
+        "b)  1 m/s = 1,94 KT",
+        "c)  1 m/s ≈  2 KT"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "99.  V oblasti tlakové níže vane vítr při zemi",
+      "answers": [
+        "a)  ve směru pohybu hodinových ručiček",
+        "b)  proti směru pohybu hodinových ručiček",
+        "c)  směr větru nesouvisí se směrem pohybu hodinových ručiček"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "100.  V oblasti tlakové výše vane vítr při zemi",
+      "answers": [
+        "a)  proti směru pohybu hodinových ručiček",
+        "b)  nesouvisí se směrem pohybu hodinových ručiček",
+        "c)  ve směru pohybu hodinových ručiček"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "101.  Víme, že kondenzace v troposféře je podmíněna ochlazením vodních par. Dalším nezbytným předpokladem je přítomnost tak zvaných kondenzačních jader v ovzduší, což jsou",
+      "answers": [
+        "a)  pouze pevné částice",
+        "b)  pouze kapalné částice",
+        "c)   kapalné i pevné částice v ovzduší"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "102.  Nejvyšší koncentrace kondenzačních jader bývá vždy",
+      "answers": [
+        "a)  těsně pod vrstvou isotermie",
+        "b)  pod vrstvou inverze",
+        "c)  v blízkosti isobarické standardní hladiny 500 HPa"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "103.  Koncentrace kondenzačních jader je největší",
+      "answers": [
+        "a)  nad pevninou",
+        "b)  nad oceány",
+        "c)  v blízkosti velkých městských aglomerací (průmysl. oblasti)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "104.  Jakým způsobem dochází v troposféře k přesycení vzduchu vodní parou a následné kondenzaci",
+      "answers": [
+        "a)  adiabatickým výstupným ochlazením",
+        "b)  mísením dvou různě teplých vzduchových hmot",
+        "c)  isobarickým ochlazením (vyzařováním - ráno, večer, v noci)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "105.  Který z uvedených dějů je nejvýznamnější pro tvoření srážek",
+      "answers": [
+        "a)  mísení dvou různě teplých vzduchových hmot",
+        "b)  adiabatický výstup vzduchu",
+        "c)  vyzařování"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "106.  Pokud se jedná o nenasycený vzduch, pak stabilním zvrstvením nazýváme zvrstvení, kdy",
+      "answers": [
+        "a)  nenasycená vzduchová částice (objem vzduchu) se vrátí do původní rovnovážné (klidové) polohy, přestane-li působit vnější síla, která ji z této polohy vychýlila",
+        "b)  nenasycená částice zůstane v poloze, do které ji působení vnější síly přemístilo",
+        "c)  nenasycená částice se vrátí do nižší polohy, něž měla před svým výstupem, po skončení působení vnější síly"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "107.  Instabilním zvrstvením při nenasyceném vzduchu nazýváme zvrstvení, kdy",
+      "answers": [
+        "a)  nenasycená vzduchová částice při svém výstupu z rovnovážné polohy dále stoupá i když přestane působit vnější síla",
+        "b)  nenasycená částice se zastaví v hladině, ve které přestala vnější síla působit",
+        "c)  nenasycená částice se po ukončení působení vnější síly vrací do své původní polohy"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "108.  O stabilní vzduchové hmotě mluvíme tehdy, platí-li",
+      "answers": [
+        "a)  jsou-li v ní příznivé podmínky pro vznik výstupných pohybů",
+        "b)  jsou v ní nepříznivé podmínky pro vznik výstupných proudů",
+        "c)  dochází v ní ke vzniku konvekce"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "109.  Atmosférickou konvekcí nazýváme",
+      "answers": [
+        "a)  více či méně uspořádaný pohyb četných malých objemů vzduchu ve vertikálním směr",
+        "b)  pohyb malých objemů vzduchu v horizontálním směru",
+        "c)  chaotický pohyb malých vzduchový objemů v atmosféře"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "110.  Hlavní příčinou atmosférické konvekce jsou",
+      "answers": [
+        "a)  rozdílné teploty vzduchu ve vertikálním směru",
+        "b)  horizontální teplotní rozdíly vznikající vlivem nestejnoměrného zahřívání zemského povrchu",
+        "c)  rozdílné teploty vyměňujících se vzduchových hmot"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "111.  Vynucenou konvekcí nazýváme konvekci vzniklou",
+      "answers": [
+        "a)  orografickým výstupem",
+        "b)  frontálním pohybem",
+        "c)  konvergencí proudění"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "112.  Základní příčinou vzniku oblačnosti v atmosféře je",
+      "answers": [
+        "a)  pokles teploty vzduchu s výškou",
+        "b)  dosažení stavu nasycení",
+        "c)  dosažení stavu nasycení s následnou kondenzací, nebo sublimací vodních par"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "113.  Mezi vysoká oblaka patří",
+      "answers": [
+        "a)  St - stratus, Sc - stratocumulus",
+        "b)  Cc - cirrocumulus, Cs - cirrostratus",
+        "c)  Cu - cumulus, Ac - altocumulus"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "114.  Mezi oblačnost s mohutným vertikálním vývojem řadíme",
+      "answers": [
+        "a)  Cu - cumulus",
+        "b)  Ac - altocumulus",
+        "c)  Cb - cumulonimbus"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "115.  Oblačnost středních výšek tvoří",
+      "answers": [
+        "a)  Ac - altocumulus, As - altostratus",
+        "b)  Cu - cumulus, Sc - stratocumulus",
+        "c)  Ci - cirrus, Cc - cirrocumulus"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "116.  Nízkou oblačnost tvoří",
+      "answers": [
+        "a)  Ac - altocumulus",
+        "b)  St - stratus",
+        "c)  Ci - cirrus"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "117.  Mezi oblačnost kupovitou patří",
+      "answers": [
+        "a)  Sc",
+        "b)  Cu",
+        "c)  Ac"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "118.  Oblačnost smíšenou tvoří",
+      "answers": [
+        "a)  Sc, Ac, Cc",
+        "b)  Cu, Cb",
+        "c)  St, Ns, As"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "119.  Mezi vrstevnatou oblačnost patří",
+      "answers": [
+        "a)  Ns, As",
+        "b)  Cu, Cb",
+        "c)  Ac, Cb"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "120.  Které z uvedených druhů oblačnosti řadíme svým složením mezi oblačnost vodní",
+      "answers": [
+        "a)  Sc, Cu",
+        "b)  Ns, Cb",
+        "c)  Ci, As"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "121.  Které z uvedených druhů oblačnosti řadíme složením mezi oblačnost krystalickou",
+      "answers": [
+        "a)  Cb, Ac",
+        "b)  Cc, Cs",
+        "c)  Ns, As"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "122.  Smíšenou oblačnost svým složením tvoří",
+      "answers": [
+        "a)  Ci, Cc",
+        "b)  Cu, Ac",
+        "c)  Cb, Ns"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "123.  Vizuálně na meteorologických stanicích u oblačnosti pozorujeme",
+      "answers": [
+        "a)  výšku základny oblačnosti",
+        "b)  pokrytí oblohy oblačností",
+        "c)  pohyb oblačnosti"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "124.  Srážky vypadávající z oblačnosti typu Cb jsou charakteru",
+      "answers": [
+        "a)  trvalých srážek",
+        "b)  přeháněk",
+        "c)  mrholení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "125.  Srážky vypadávající z oblačných soustav teplých front jsou převážně",
+      "answers": [
+        "a)  srážky občasné",
+        "b)  přeháňky",
+        "c)  trvalé"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "126.  Namrzajícími srážkami nazýváme srážky",
+      "answers": [
+        "a)  propadávající studenou vrstvou vzduchu",
+        "b)  padající ve formě kapalných srážek a mrznoucí po dopadu na podchlazenou zem",
+        "c)  vypadávající v podobě ledových krystalků"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "127.  Z vrstvy oblačnosti typu St převážně",
+      "answers": [
+        "a)  prší",
+        "b)  mrholí",
+        "c)  vypadávají kroupy"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "128.  Z vertikálně vyvinutých oblaků typu Cb vypadávají převážně srážky ve formě",
+      "answers": [
+        "a)  deště",
+        "b)  déšť a kroupy",
+        "c)  mrholení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "129.  Meteorologickou dohlednost (horizontální) v praxi určujeme",
+      "answers": [
+        "a)  subjektivním odhadem",
+        "b)  odhadem dle plánku orientačních bodu",
+        "c)  objektivním měřením"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "130.  Dráhovou dohledností (RVR) nazýváme",
+      "answers": [
+        "a)  subjektivně určenou dohlednost na vzletové a přistávací dráze",
+        "b)  jakoukoliv horizontální dohlednost změřenou v oblasti systému vzletových a přistávacích drah letiště",
+        "c)  objektivně změřenou horizontální dohlednost podél osy příslušné vzletové a přistávací dráhy"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "131.  Které meteorologické jevy nejčastěji a nejvíce zhoršují dohlednost",
+      "answers": [
+        "a)  sněžení",
+        "b)  mlhy",
+        "c)  déšť"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "132.  Pokud je dohlednost menší ne 1 km a je tento jev způsoben nahromaděním kondensačních produktů ve sledovaném prostoru, pak tento meteorologický jev nazýváme",
+      "answers": [
+        "a)  mlhou",
+        "b)  zákalem",
+        "c)  kouřmem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "133.  Pokud se mlha vytvoří tím, že vlivem radiačního ochlazení zemského povrchu dojde ke snížení dohlednosti pod 1 km, pak jde o mlhu",
+      "answers": [
+        "a)  místní",
+        "b)  radiační",
+        "c)  advekční"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "134.  Vytvoří-li se mlha advekcí teplého a vlhkého vzduchu nad prochlazeným zemským povrchem, nazývá se",
+      "answers": [
+        "a)  radiační",
+        "b)  místní",
+        "c)  advekční"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "135.  Frontální mlhy se tvoří hlavně při přechodu front",
+      "answers": [
+        "a)  teplých",
+        "b)  studených II. typu",
+        "c)  stacionárních"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "136.  Při přechodu studené fronty I. druhu se tvoří frontální mlhy",
+      "answers": [
+        "a)  vždy",
+        "b)  výjimečně",
+        "c)  nikdy"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "137.  V oblastech jezer, v údolích a v blízkosti velkých průmyslových oblastí často vznikají mlhy, které nazýváme",
+      "answers": [
+        "a)  radiační",
+        "b)  advekční",
+        "c)  místní"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "138.  Který z uvedených druhá mlh má nejdelší dobu trvání na místě, kde se vytvořil",
+      "answers": [
+        "a)  advekční",
+        "b)  frontální",
+        "c)  radiační"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "139.  Radiační mlhy se tvoří převážně",
+      "answers": [
+        "a)  v oblastech anticyklon při slabém přízemním větru",
+        "b)  v oblastech cyklon při slabém přízemním větru",
+        "c)  na předních stranách anticyklon při silnějším přízemním větru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "140.  Advekční mlha se velmi často přetváří během svého trvání ve vrstvu oblačnosti typu",
+      "answers": [
+        "a)  Ns",
+        "b)  Sc",
+        "c)  St"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "141.  Ve které denní době pozorujeme nejčastěji tvoření radiačních mlh",
+      "answers": [
+        "a)  během celé noci",
+        "b)  před východem Slunce",
+        "c)  v průběhu první poloviny noci"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "142.  Která z druhů uvedených mlh se nejčastěji likviduje zesílením rychlosti přízemního větru",
+      "answers": [
+        "a)  frontální",
+        "b)  radiační",
+        "c)  advekční"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "143.  Jaká změna teploty ve vertikálním směru je charakteristická pro advekční mlhy",
+      "answers": [
+        "a)  isotermie",
+        "b)  inverze",
+        "c)  pokles s výškou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "144.  Které základní parametry a jevy určují počasí uvnitř vzduchové hmoty",
+      "answers": [
+        "a)  srážky, dohlednost",
+        "b)  tlak, oblačnost, hustota vzduchu",
+        "c)  teplota, vlhkost, vertikální teplotní gradient"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "145.  Které dvě základní klasifikace vzduchových hmot znáte",
+      "answers": [
+        "a)  podle teplotních a tlakových změn",
+        "b)  termickou a geografickou",
+        "c)  podle charakteru oblačnosti a vypadávajících srážek"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "146.  Podle termické klasifikace dělíme vzduchové hmoty na",
+      "answers": [
+        "a)  teplé, studené, místní",
+        "b)  instabilní, stabilní",
+        "c)  vlhké, suché"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "147.  Místní vzduchovou hmotou nazýváme vzduchovou hmotu, která",
+      "answers": [
+        "a)  setrvává stále nad jednou částí zemského povrchu",
+        "b)  se nad určitou oblastí zemského povrchu nachází delší dobu a tím získává charakteristické vlastnosti pro tuto oblast v dané roční sezóně",
+        "c)  setrvává dlouhou dobu nad jednou oblastí a má charakteristický vertikální teplotní gradient"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "148.  Teplou vzduchovou hmotou nazýváme vzduchovou hmotu, která se při postupu nad danou geografickou oblast",
+      "answers": [
+        "a)  otepluje",
+        "b)  její teplota se nemění",
+        "c)  ochlazuje"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "149.  Studenou vzduchovou hmotou nazýváme hmotu, která se při postupu nad danou geografickou oblast",
+      "answers": [
+        "a)  ochlazuje",
+        "b)  otepluje",
+        "c)  její teplota se nemění"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "150.  Každý typ vzduchové hmoty klasifikovaný dle termické klasifikace můžeme rozdělit podle vertikálních změn teploty na stabilní a instabilní. Stabilní vzduchovou hmotou nazýváme vzduchovou hmotu, ve které",
+      "answers": [
+        "a)  konvektivní oblačnost se nevyvíjí",
+        "b)  teplota s výškou rychle ubývá",
+        "c)  ve spodních vrstvách troposféry se tvoří kupovitá oblačnost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "151.  Instabilní vzduchovou hmotou nazýváme vzduchovou hmotu, ve které dochází ke vzniku",
+      "answers": [
+        "a)  inverzí",
+        "b)  konvektivních vertikálních pohybů",
+        "c)  k tvorbě vrstevnaté oblačnosti"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "152.  Podle geografické klasifikace rozlišujeme vzduchové hmoty",
+      "answers": [
+        "a)  teplé, studené, místní",
+        "b)  stabilní, instabilní",
+        "c)  arktické, polární, tropické, ekvatoriální"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "153.  Při přechodu z jedné vzduchové hmoty do druhé, se na jejich rozhraní setkáváme s počasím, výrazně se lišícím od počasí v jedné i druhé vzduchové hmotě. Jak toto rozhraní nazýváme",
+      "answers": [
+        "a)  rozhraní vzduchových hmot",
+        "b)  atmosférická fronta",
+        "c)  čára fronty"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "154.  Čárou fronty nazýváme",
+      "answers": [
+        "a)  rozhraní dvou vzduchových hmot v prostoru",
+        "b)  přechodovou vrstvu mezi dvěma rozdílnými vzduchovými hmotami",
+        "c)  průsečnici atmosférické fronty se zemským povrchem"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "155.  Co je to atmosférická fronta",
+      "answers": [
+        "a)  šikmá a úzká přechodová vrstva (plocha) mezi rozdílnými vzduchovými hmotami",
+        "b)  čára fronty",
+        "c)  vertikální rozhraní mezi dvěma rozdílnými vzduchovými hmotami"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "156.  Fronty, které v klasifikaci nazýváme hlavními, od sebe oddělují",
+      "answers": [
+        "a)  teplý a studený prostor",
+        "b)  arktický a polární, polární a tropický vzduch",
+        "c)  mořský a kontinentální vzduch"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "157.  Podružnou frontou nazýváme frontu, která vznikne",
+      "answers": [
+        "a)  mezi stabilní a instabilní vzduchovou hmotou",
+        "b)  mezi kontinentální a mořskou vzduchovou hmotou",
+        "c)  uvnitř jedné vzduchové hmoty"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "158.  V závislosti na směru pohybu teplé a studené vzduchové hmoty fronty dělíme na",
+      "answers": [
+        "a)  arktické, polární, tropické",
+        "b)  teplé, studené a fronty okluze",
+        "c)  zvlněné, výškové"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "159.  Stacionární frontou nazýváme frontu, která",
+      "answers": [
+        "a)  postupuje jen velmi zvolna",
+        "b)  se nepohybuje",
+        "c)  setrvává dlouho na jednom místě"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "160.  Výškovou frontou nazýváme",
+      "answers": [
+        "a)  frontu, která se neprojevuje žádným význačným počasím v celém rozsahu troposféry",
+        "b)  rozhraní mezi dvěma vzduchovými hmotami nedosahuje až na zemský povrch, ale je dobře vyjádřeno ve středních vrstvách troposféry",
+        "c)  frontu, která se projevuje pouze v blízkosti tropopauzy"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "161.  Pokud se jedná o teplou frontu, pak",
+      "answers": [
+        "a)  srážkové pásmo je převážně těsně za čárou fronty a jedná se o srážky občasné",
+        "b)  srážkové pásmo je před čarou fronty a jde o srážky trvalé",
+        "c)  srážkové pásmo je na čáře fronty a jde o srážky krátkodobého charakteru"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "162.  Nebezpečné jevy pro letový provoz spojené s teplou frontou jsou",
+      "answers": [
+        "a)  námraza, nízká oblačnost, zhoršená dohlednost",
+        "b)  turbulence, bouřky, kroupy",
+        "c)  silný vítr, střih větru, turbulence"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "163.  Které druhy oblaků jsou typické pro oblačný systém teplé fronty",
+      "answers": [
+        "a)  Cu, Ac, Cb",
+        "b)  St, Ns, As",
+        "c)  Sc, Ac, Cc"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "164.  Který z oblaků tvořící se na čele studené fronty je pro letový provoz nejnebezpečnější",
+      "answers": [
+        "a)  Ns",
+        "b)  As",
+        "c)  Cb"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "165.  Pokud se jedná o studenou frontu I. druhu, které nebezpečné jevy jsou s ní spojeny",
+      "answers": [
+        "a)  Cb oblak na čele fronty ukrytý ve vrstevnaté oblačnosti, turbulence a námraza",
+        "b)  nízká oblačnost vrstevnatého charakteru",
+        "c)  silný přízemní vítr a jeho nárazovitost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "166.  Při pozorování přechodu studené fronty I. druhu je srážkové pásmo",
+      "answers": [
+        "a)  před čárou fronty",
+        "b)  za čárou fronty",
+        "c)  na čáře fronty"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "167.  Může se při přechodu studené fronty vytvořit mlha a ve které její oblasti",
+      "answers": [
+        "a)  ano, před čárou fronty v oblasti vypadávajících srážek",
+        "b)  ne",
+        "c)  ano, za čárou fronty - mlha zafrontální"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "168.  Při přechodu aktivní studené fronty II. Druhu se setkáváme s typickými nebezpečnými jevy",
+      "answers": [
+        "a)  námrazou, trvalými srážkami, zhoršenou dohledností",
+        "b)  silnou turbulencí, silnou námrazou, aktivní bouřkovou činností, silnými přeháňkami, silným větrem",
+        "c)  nízkou oblačností, mohutnou vrstevnatou oblačností, silným trvalým deštěm"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "169.  Přechod studené fronty s aktivními bouřkovými projevy se v poli teploty, tlaku a přízemního větru projevuje",
+      "answers": [
+        "a)  poklesem teploty, silným poklesem tlaku a jeho následným vzestupem, silným zesílením větru a jeho nárazovitostí",
+        "b)  teplota se nemění, tlak slabě klesá, vítr mírně zesílí bez nárazů",
+        "c)  teplota klesá a později stoupá, tlak se nemění, vítr slábne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "170.  Do jakých výšek zasahuje vertikálně vyvinutá oblačnost typu Cb v našich zeměpisných šířkách a jaké srážky z této oblačnosti mohou vypadávat při přechodu studené fronty II. Druhu v letním období",
+      "answers": [
+        "a)  12-15 km, kroupy v silných přeháňkách",
+        "b)  10 km, silný déšť",
+        "c)  11 km, silný déšť s ledovými krupkami"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "171.  Který z jevů vznikajících na studené frontě II. Druhu je zvláště nebezpečný pro nízko letící letadla",
+      "answers": [
+        "a)  snížení základny oblačnosti, někdy až k zemi",
+        "b)  silný pokles tlaku a teploty",
+        "c)  silná turbulence omezená na úzký prostor horizontálního víru - húlavy, s osou přibližně v úrovni základny Cb"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "172.  Pokud pilot nízko letícího malého letadla před sebou zjistí bouřkový oblak s húlavou, je povinen",
+      "answers": [
+        "a)  oblast bouřkového oblaku podletět",
+        "b)  vrátit se na letiště vzletu",
+        "c)  oblast proletět ve vyšších hladinách"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "173.  Jak nazýváme část cyklóny vymezenou teplou a studenou frontou",
+      "answers": [
+        "a)  přední strana cyklóny",
+        "b)  teplý sektor",
+        "c)  zadní stranou cyklóny"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "174.  Jaké meteorologické jevy lze očekávat v teplém sektoru frontálního systému v chladné části roku",
+      "answers": [
+        "a)  nízkou oblačnost, mrholení, výrazně zhoršenou dohlednost",
+        "b)  oblačnost typu As, Cs, občasný déšť, zhoršenou dohlednost",
+        "c)  počasí beze srážek, střední oblačnost, dobrou dohlednost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "175.  Vzhledem ke skutečnosti, že studená fronta postupuje vždy rychleji než teplá, postupně se při zemi zužuje teplý sektor a teplý vzduch z této oblasti je vytlačován do vyšších vrstev. Jak se nazývá tento proces",
+      "answers": [
+        "a)  zánik cyklóny",
+        "b)  proces okluze",
+        "c)  vyplňování cyklóny"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "176.  Procesem okluze vznikne okludovaná fronta. Kdy mluvíme o teplé okluzi",
+      "answers": [
+        "a)  když vzduchová hmota na přední straně systému je teplejší než ta na zadní straně systému",
+        "b)  když teploty na obou stranách celého systému se příliš neliší",
+        "c)  když vzduchová hmota postupující za studenou frontou je teplejší než studená vzduchová hmota před teplou frontou celého systému"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "177.  V jakém případě mluvíme po ukončení procesu okluze o studené okluzi",
+      "answers": [
+        "a)  když studená vzduchová hmota za studenou frontou celého systému je chladnější než vzduchová hmota před teplou frontou systému",
+        "b)  když vzduchová hmota postupující za studenou frontou je labilnější než vzduchová hmota před teplou frontou celého systému",
+        "c)  je-li studená vzduchová hmota před teplou frontou celého systému sušší než studená vzduchová hmota za studenou frontou celého systému"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "178.  Kterým jevem je okludovaná fronta nebezpečná pro letecký provoz",
+      "answers": [
+        "a)  zhoršenou dohledností a snížením základny oblačnosti",
+        "b)  výskytem maskovaných Cb oblaků",
+        "c)  vypadáváním intenzivních srážek"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "179.  Typické počasí vyvinuté cyklóny se nalézá",
+      "answers": [
+        "a)  pouze v centru cyklóny",
+        "b)  v teplém sektoru frontálního systému cyklóny",
+        "c)  na zadní straně cyklóny za studenou frontou"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "180.  V oblasti fronty se tvoří mohutná a výrazná Cb oblačnost. Je to typický případ",
+      "answers": [
+        "a)  studené fronty II. Druhu",
+        "b)  studené okludované fronty",
+        "c)  teplé okludované fronty"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "181.  Jaké typické jevy působí vlhký studený vzduch, který se nad určitou částí zemského povrchu začne ohřívat",
+      "answers": [
+        "a)  vypadávání trvalých srážek ze vzniklých oblačných systémů",
+        "b)  mlhy s mrholením",
+        "c)  vznik konvektivní oblačnosti až bouřkové a tudíž přeháňky a místní bouřky"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "182.  Proudění jakého směru převládá nad střední Evropou během celého roku",
+      "answers": [
+        "a)  severní - meridionální (podél poledníků)",
+        "b)  východní",
+        "c)  západní - zonální (podél rovnoběžek)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "183.  Co rozumíme v meteorologii pojmem bouřka",
+      "answers": [
+        "a)  přírodní jev doprovázený intenzivními srážkami",
+        "b)  nejvýraznější projev konvekce ve volné atmosféře",
+        "c)  jev totožný s pojmem „studená fronta“"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "184.  Nebezpečné jevy spojené s bouřkou",
+      "answers": [
+        "a)  výstupné proudy a růst Cb oblaku",
+        "b)  silné výstupné proudy s maximem v horní polovině Cb - silná turbulence, sestupné proudy s maximem blízko základny, silná námraza, elektrické vlastnosti Cb",
+        "c)  hustota oblaku, který je složen z kapalné i pevné fáze vody"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "185.  Přízemní projevy aktivní bouřky nebezpečné pro letecký provoz",
+      "answers": [
+        "a)  vypadávání trvalých srážek",
+        "b)  snížení základny oblačnosti, snižování dohlednosti",
+        "c)  húlava na čele bouřky, existence silného vzestupného proudu před húlavou, silný sestupný proud za húlavou v oblasti vypadávajících srážek, silné nárazy větru"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "186.  Bouřky vznikající uvnitř vzduchových hmot rozdělujeme do dvou skupin podle podstaty jejich vzniku. Jednu skupinu bouřek nazýváme bouřky insolační (z tepla), tyto vznikají když se",
+      "answers": [
+        "a)  ohřívá vlhký studený vzduch během dne",
+        "b)  studený vlhký vzduch se přesouvá nad teplý zemský povrch",
+        "c)  v cestě vlhkému studenému vzduchu stojí mechanická překážka"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "187.  Bouřky advekční patří mezi bouřky vznikající uvnitř vzduchových hmot tehdy, když",
+      "answers": [
+        "a)  postupujícímu studenému vzduchu stojí v cestě mechanická překážka",
+        "b)  studený vlhký vzduch se přesouvá nad teplý zemský povrch nebo nad teplý vodní povrch",
+        "c)  studený vlhký vzduch se ohřívá během dne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "188.  Orografickými bouřkami nazýváme bouřky, které vznikají když",
+      "answers": [
+        "a)  studený vlhký vzduch se ohřívá nad mechanickou překážkou - pohořím",
+        "b)  studený vlhký vzduch postupuje směrem k pohoří a podél návětrné strany se vytvoří řada bouřek",
+        "c)  studený vlhký vzduch proudí nad teplý vodní povrch"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "189.  Bouřky frontální vznikají nejčastěji na",
+      "answers": [
+        "a)  teplých frontách",
+        "b)  stacionárních frontách",
+        "c)  studených frontách"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "190.  Bouřky se tvoří",
+      "answers": [
+        "a)  v každé denní době, jsou-li příhodné podmínky",
+        "b)  nejčastěji odpoledne a večer, v hodinách nejvyšších přízemních teplot",
+        "c)  nejčastěji během noci"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "191.  Posuzujeme-li regionální rozdělení bouřek, pak bouřek ubývá směrem",
+      "answers": [
+        "a)  od západu k východu",
+        "b)  kumulují se v mírném pásu",
+        "c)  od rovníku k pólu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "192.  Nejvíce dní s bouřkou se soustřeďuje do oblastí",
+      "answers": [
+        "a)  tropických šířek",
+        "b)  mírných zeměpisných šířek",
+        "c)  polárních oblastí"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "193.  Které jsou nutné podmínky pro vznik vyvinuté bouřky",
+      "answers": [
+        "a)  studený instabilní vzduch, který se rychle pohybuje podél zemského povrchu",
+        "b)  teplý, vlhký vzduch",
+        "c)  instabilní zvrstvení do vysokých hladin, vysoká vlhkost a existence vnější síly, která způsobí vertikální pohyb"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "194.  Jev nazývaný turbulence je definován jako",
+      "answers": [
+        "a)  síly působící na letadlo v různých směrech a udělující tomuto letadlu různá přídavná zrychlení",
+        "b)  síly, které působí na letadlo ve vertikálním směru",
+        "c)  síly, které zvyšují rychlost letícího letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "195.  Podle příčin vzniku známe turbulenci termickou, která vzniká",
+      "answers": [
+        "a)  v prostředí, které je charakteristické isotermií",
+        "b)  vlivem nestejnoměrného zahřívání zemského povrchu a tím i nestejnoměrného ohřívání přilehlých vzduchových vrstev",
+        "c)  vlivem kopcovitého terénu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "196.  V příznivém prostředí a za vhodných podmínek se může chaotická konvekce změnit v konvekci uspořádanou a vzniknou mohutné výstupné a sestupné pohyby vzduchu. O jak velké výstupné rychlosti v našich zeměpisných šířkách jde",
+      "answers": [
+        "a)  5 - 10 m/s",
+        "b)  20 - 30 m/s",
+        "c)  2 - 5 m/s"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "197.  Jak nazýváme turbulenci vzniklou vlivem nestejnoměrného ohřátí zemského povrchu",
+      "answers": [
+        "a)  mechanickou",
+        "b)  dynamickou",
+        "c)  termickou"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "198.  Co je základní příčinou vzniku mechanické turbulence",
+      "answers": [
+        "a)  uspořádání terénu a rychlost větru",
+        "b)  zvrstvení vzduchu",
+        "c)  vlhkost a teplota vzduchu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "199.  Při analýze mechanické turbulence zjišťujeme, že pokud kolmé proudění ve směru na překážku dostatečně zesílí ve vrstvě vzduchu, několikanásobně převyšující svou mohutností výšku překážky, objeví se za překážkou proudění, které nazýváme",
+      "answers": [
+        "a)  vírové",
+        "b)  rotorové",
+        "c)  vlnové"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "200.  Pokud je vertikální mohutnost proudící vrstvy poměrně malá - srovnatelná s výškou překážky, pak na závětrné straně překážky vzniká proudění (při dostatečné rychlosti větru), které nazýváme",
+      "answers": [
+        "a)  vlnové",
+        "b)  rotorové",
+        "c)  laminární"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "201.  Co rozumíme pojmem „čistá termika“",
+      "answers": [
+        "a)  silný nárazovitý vítr v bezoblačném prostředí",
+        "b)  turbulenci ve spojení se střihem větru",
+        "c)  termický vzestupný proud bez tvorby oblačnosti"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "202.  Turbulence, která vzniká působením vnitřního tření mezi vrstvami vzduchu s rozdílným směrem a rychlostí větru, se nazývá",
+      "answers": [
+        "a)  mechanická",
+        "b)  dynamická",
+        "c)  JET-STREAM"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "203.  Dynamická turbulence se vyskytuje ve velkých výškách, převážně v bezoblačném prostoru, proč",
+      "answers": [
+        "a)  je tam minimální vlhkost",
+        "b)  neexistují výstupné proudy",
+        "c)  je tam isotermie"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "204.  Námrazou, kterou řadíme mezi nebezpečné meteorologické jevy, rozumíme",
+      "answers": [
+        "a)  kondenzaci vodních par na letadle",
+        "b)  tvorbu ledu, v různých formách, na letadle",
+        "c)  let inverzní vrstvou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "205.  Na jakých faktorech je závislá tvorba a druh námrazy",
+      "answers": [
+        "a)  rychlosti letadla, relativní vlhkosti, rychlosti větru",
+        "b)  směru letu letadla, výšce letu, tlaku a vlhkosti",
+        "c)  teplotě a vlhkosti vzduchu, velikosti částic, rychlosti letu, aerodynamice letadla"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "206.  Který z druhů námrazy vznikne ve vrstvě, kde jsou převážně velké vodní kapky",
+      "answers": [
+        "a)  jinovatka",
+        "b)  ledovka",
+        "c)  zrnitá námraza"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "207.  Letadlo letí prostorem, kde převažují drobné přechlazené vodní kapky a ledové krystalky, který druh námrazy se může vytvořit",
+      "answers": [
+        "a)  ledovka",
+        "b)  jinovatka",
+        "c)  zrnitá námraza"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "208.  Aby se vytvořila námraza na letadle ve značném množství, musí být splněno",
+      "answers": [
+        "a)  musí být přítomny velké přechlazené vodní kapky a povrch letadla musí mít teplotu nižší než 0°C",
+        "b)  letadlo musí letět rychlostí alespoň 500 km/h a v prostoru, kde je vysoká vlhkost a teplota alespoň -10°C",
+        "c)  letadlo musí letět pomalu v oblasti kladných teplot blízkých 0°C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "209.  Který z druhů oblačnosti je vzhledem k tvoření námrazy nejnebezpečnější",
+      "answers": [
+        "a)  St",
+        "b)  Cu",
+        "c)  Cb"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "210.  V intervalu jakých teplot se nejčastěji tvoří zrnitá námraza",
+      "answers": [
+        "a)  0°C až -10°C",
+        "b)  -10°C až -20°C",
+        "c)  0° až -40°C"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "211.  V oboru jakých teplot se tvoří druh námrazy nazývaný ledovka",
+      "answers": [
+        "a)  0°C až -10°C",
+        "b)  +1°C až -1°C",
+        "c)  +5°C až 0°C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "212.  Intenzitou námrazy rozumíme",
+      "answers": [
+        "a)  tloušťku vrstvy ledu v desetinách mm vytvořenou za 10 sekund",
+        "b)  tloušťku vrstvy ledu v násobkách mm vytvořenou za 1 minutu",
+        "c)  tloušťku vrstvy ledu v mm vytvořenou za 1 minutu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "213.  Tropopauzou nazýváme vrstvu",
+      "answers": [
+        "a)  inverzní vrstvu v troposféře",
+        "b)  přechodovou vrstvu mezi troposférou a stratosférou",
+        "c)  isotermickou vrstvu ve spodní stratosféře"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "214.  Mohutnost (tloušťka) tropopauzy se pohybuje v rozmezí",
+      "answers": [
+        "a)  několika desítek metrů až do několika kilometrů",
+        "b)  3 kilometry",
+        "c)  stovky metrů"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "215.  Vertikální teplotní gradient v tropopauze je nejčastěji",
+      "answers": [
+        "a)  0,2 °C/100 m",
+        "b)  0,65 °C/100 m",
+        "c)  0,0 °C/100 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "216.  Vyskytuje se v tropopauze inverze teploty",
+      "answers": [
+        "a)  ano",
+        "b)  velmi zřídka",
+        "c)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "217.  Výška tropopauzy (vzdálenost od země) vzrůstá",
+      "answers": [
+        "a)  od pólu k rovníku",
+        "b)  od západu k východu",
+        "c)  od jihu k severu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "218.  Při advekci teplého vzduchu výška tropopauzy (vzdálenost od země)",
+      "answers": [
+        "a)  klesá",
+        "b)  roste",
+        "c)  nemění se"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "219.  Při advekci studeného vzduchu výška tropopauzy (vzdálenost od země)",
+      "answers": [
+        "a)  nemění se",
+        "b)  roste",
+        "c)  klesá"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "220.  V mírných šířkách můžeme sledovat výrazné sezónní změny výšky tropopauzy",
+      "answers": [
+        "a)  4 - 5 km\t\t\t10 km",
+        "b)  7 - 10 km\t\t\t15 km",
+        "c)  6 km\t\t\t11 - 13 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "221.  V blízkosti tropopauzy se velice často setkáváme",
+      "answers": [
+        "a)  s termickou turbulencí",
+        "b)  s dynamickou turbulenci - CAT",
+        "c)  s vlnovým prouděním"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "222.  JET-STREAM - JTST je silné výškové proudění, které se nejčastěji vyskytuje v blízkosti",
+      "answers": [
+        "a)  spodní stratosféry",
+        "b)  v blízkosti tropopauzy",
+        "c)  v blízkosti každé isotermické vrstvy"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "223.  Nejvyšší rychlost v oblasti JTST je v jeho ose. Jaké nejvyšší rychlosti větru byly v JTST zaznamenány",
+      "answers": [
+        "a)  150 km/h",
+        "b)  300 km/h",
+        "c)  500 km/h"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "224.  Na kterých meteorologických mapách můžeme analyzovat oblasti JTST",
+      "answers": [
+        "a)  na mapách absolutní barické topografie 300 HPa až 200 HPa",
+        "b)  na mapách 500 HPa",
+        "c)  na mapách 700 HPa"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "225.  Čím jsou mapy absolutní barické topografie 300 HPa, kde byly analyzovány oblasti JTST, charakteristické",
+      "answers": [
+        "a)  rovnoběžnými isohypsami",
+        "b)  oblastmi nahuštěných isohyps",
+        "c)  stálou rychlostí větru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "226.  Význam JTST pro létání",
+      "answers": [
+        "a)  JTST je nutno posuzovat jako nebezpečný jev",
+        "b)  nemá žádný vliv na bezpečnost letu",
+        "c)  v každém případě je pro let oblastí JTST výhodný"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "227.  JTST mírných šířek. V jakých výškách leží nejčastěji jeho osa a s jakými rychlstmi větru se v tomto JTST můžeme setkat",
+      "answers": [
+        "a)  15 km, 100 km/h",
+        "b)  8 - 11 km, 150 - 300 km/h",
+        "c)  6 - 8 km, 200 - 400 km/h"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "228.  Ve velkých výškách, především v blízkosti JTST a tropopauzy, se často vyskytuje turbulence i v bezoblačném prostoru, která dostala název „clear air turbulence - CAT“. Jak zní její definice",
+      "answers": [
+        "a)  CAT je dynamická turbulence vyskytující se v celé vrstvě tropopauzy",
+        "b)  CAT je turbulence vyskytující se pouze v bezoblačném prostoru",
+        "c)  CAT je jakákoliv turbulence vyskytující se v hladinách nad 6000 m, která není spojena s oblačností s vertikálním vývojem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "229.  Se kterým jevem, který se v horní troposféře vyskytuje, je CAT nejčastěji spojena",
+      "answers": [
+        "a)  s JTST",
+        "b)  s isotermickou vrstvou",
+        "c)  s mohutnou vrstvou oblačnosti"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "230.  Které znáte základní úkoly letecké meteorologické služby",
+      "answers": [
+        "a)  pozorování počasí, vysílání „ATIS“, vysílání „VOLMET“",
+        "b)  analýzy meteorologických map, kódování meteorologických zpráv",
+        "c)  pozorování počasí, předpovídání počasí, provádění výstražné služby"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "231.  Meteorologické zabezpečení letectví má přispívat",
+      "answers": [
+        "a)  k bezpečnosti letového provozu",
+        "b)  k ekonomičnosti letového provozu",
+        "c)  k pravidelnosti letového provozu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "232.  Na základě pravidelných leteckých meteorologických pozorování jsou sestavovány",
+      "answers": [
+        "a)  zprávy nazývané „ATIS“",
+        "b)  zprávy METAR, hlášení MET-REPORT",
+        "c)  upozornění na nebezpečné meteorologické jevy"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "233.  Na základě mimořádných leteckých meteorologických pozorování jsou sestavovány",
+      "answers": [
+        "a)  předpovědi pro vzlet a přistání",
+        "b)  hlášení „VOLMET“",
+        "c)  zvláštní zprávy SPECI, mimořádná hlášení SPECIAL"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "234.  Zpráva METAR je",
+      "answers": [
+        "a)  pravidelné hlášení o meteorologické situaci na letišti",
+        "b)  pravidelná předpověď pro přistání",
+        "c)  pravidelná letecká meteorologická zpráva"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "235.  Pravidelná letecká meteorologická zpráva - METAR vyjadřuje",
+      "answers": [
+        "a)  skutečné počasí, které v pravidelném pozorovacím termínu na letišti bylo",
+        "b)  meteorologická zpráva o meteorologické situaci v letové oblasti",
+        "c)  dekódovaná zpráva  METAR"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "236.  Pravidelné meteorologické hlášení - základní meteorologická informace pro složky ATC se nazývá",
+      "answers": [
+        "a)  METAR",
+        "b)  MET-REPORT",
+        "c)  TREND"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "237.  Zvláštní meteorologická zpráva se sestavuje na základě jakého pozorování a jak se nazývá",
+      "answers": [
+        "a)  mimořádné pozorování, SPECI",
+        "b)  zvláštní pozorování, SPECIAL",
+        "c)  pravidelné pozorování, SPECI"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "238.  K jaké meteorologické informaci může být přopojena předpověď typu TREND",
+      "answers": [
+        "a)  ke zprávě METAR",
+        "b)  k předpovědi TAF",
+        "c)  k letové předpovědi"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "239.  Ke kterému z časových okamžiků, které jsou uvedeny se může vztahovat zvláštní zpráva SPECI",
+      "answers": [
+        "a)  09.00 UTC",
+        "b)  09.30 UTC",
+        "c)  09.15 UTC"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "240.  Výstražná činnost letecké meteorologické služby spočívá ve vydávání meteorologických výstrah",
+      "answers": [
+        "a)  SPECIAL, TAF, MET-REPORT",
+        "b)  SIGMET, pro FIR, pro letiště",
+        "c)  METAR, TAF, ATIS"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "241.  Která z meteorologických výstrah je sestavena ve zkrácené otevřené řeči",
+      "answers": [
+        "a)  TAF, česky",
+        "b)  MOTNE, anglicky",
+        "c)  SIGMET, anglicky"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "242.  Jak nazýváme výstrahu vydanou meteorologickou službou na silný výškový vítr ve stanovené standardní isobarické hladině",
+      "answers": [
+        "a)  SIGMET",
+        "b)  výstraha pro FIR (letovou oblast)",
+        "c)  výstraha pro letiště"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "243.  Je-li vydána výstraha na namrzající srážky, je vydána jako",
+      "answers": [
+        "a)  SIGMET",
+        "b)  výstraha pro letovou oblast (FIR)",
+        "c)  výstraha pro letiště"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "244.  Co rozumíme pojmem meteorologická informace SIGMET",
+      "answers": [
+        "a)  výstraha na nebezpečné meteorologické jevy v letové oblasti",
+        "b)  výstraha na nebezpečné jevy na určitém letišti",
+        "c)  informace typu AIREP"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "245.  Který typ meteorologické informace se vydává na výraznou horskou vlnu",
+      "answers": [
+        "a)  výstraha pro letiště",
+        "b)  informace SIGMET",
+        "c)  informace typu AIREP SPECIAL"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "246.  Je vydána výstraha na pokles tlaku QNH na 993 HPa. Patří mezi výstrahy",
+      "answers": [
+        "a)  pro letiště",
+        "b)  typu SIGMET",
+        "c)  pro letovou oblast (FIR)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "247.  Výstraha na sněžení se vydává",
+      "answers": [
+        "a)  pro letovou oblast (FIR)",
+        "b)  pro letiště",
+        "c)  SIGMET"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "248.  Na základě výkonu - předpovědní služby, sestavuje letecká meteorologická služba několik druhů meteorologických informací, které patří mezi letecké meteorologické předpovědi. Které z uvedených informací patří mezi předpovědi",
+      "answers": [
+        "a)  METAR",
+        "b)  MET-REPORT",
+        "c)  TAF"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "249.  Letištní předpověď - TAF obsahuje",
+      "answers": [
+        "a)  předpověď celkové meteorologické situace pro určitý jev",
+        "b)  předpověď nebezpečných podmínek",
+        "c)  stručné vyjádření předpovídaných meteorologických podmínek na letišti, během určitého časového období"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "250.  Platnost letištních předpovědí - kTAFů musí být",
+      "answers": [
+        "a)  ne kratší než 9 hodin",
+        "b)  delší než 2 hodiny",
+        "c)  ne delší než 24 hodin"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "251.  Letištní předpověď - TAF vydaná s platností na 9 hodin, se vydává",
+      "answers": [
+        "a)  každých 6 hodin",
+        "b)  každé 3 hodiny",
+        "c)  každých 12 hodin"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "252.  Letištní předpověď s platností na dobu 12 hodin a delší, ale ne delší než s platností na 24 hodin se vydává",
+      "answers": [
+        "a)  každé 3 hodiny",
+        "b)  každých 12 hodin",
+        "c)  každých 6 hodin"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "253.  Letištní předpověď s platností na 9 hodin se nazývá",
+      "answers": [
+        "a)  krátká letištní předpověď",
+        "b)  zvláštní letištní předpověď",
+        "c)  dlouhá letištní předpověď"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "254.  Letištní předpověď s platností na 18 hodin se nazývá",
+      "answers": [
+        "a)  zvláštní TAF",
+        "b)  krátký TAF",
+        "c)  dlouhý TAF"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "255.  Co je to letová předpověď - předpověď pro let, nebo letovou trať",
+      "answers": [
+        "a)  předpověď pro cílové letiště",
+        "b)  předpověď pro letovou cestu od letiště vzletu k cílovému letišti",
+        "c)  oblastní předpověď"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "256.  Letová předpověď může mít formu",
+      "answers": [
+        "a)  ve tvaru kódu",
+        "b)  v otevřené řeči - formu tabulkovou",
+        "c)  formu mapovou, bez doplnění"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "257.  Pro zabezpečení zahraničních letů vydávají letecké meteorologické služby letové předpovědi převážně",
+      "answers": [
+        "a)  tabulkové",
+        "b)  kódované",
+        "c)  mapové, doplněné tabulkami"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "258.  Které letištní předpovědi musí nezbytně doplňovat tabulkové i mapové zpracování letové předpovědi",
+      "answers": [
+        "a)  všech letišť po trase letu",
+        "b)  letiště vzletu, letiště přistání, minimálně jedno letiště náhradní",
+        "c)  žádné"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "259.  Které údaje musí obsahovat oblastní předpověď vydávaná pro potřeby stanovišť ATC",
+      "answers": [
+        "a)  celkovou meteorologickou situaci pro příslušnou letovou oblast (FIR)",
+        "b)  letištní předpovědi letišť v oblasti (FIR)",
+        "c)  výškový vítr, teplotu vzduchu ve výšce a význačné meteorologické jevy spolu s oblačností, která k nim náleží a celkovou meteorologickou situaci, vše vztaženo k příslušné letové oblasti (FIR)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "260.  V souvislosti se kterou základní informací se můžeme setkat s předpovědí pro přistání typu TREND",
+      "answers": [
+        "a)  v souvislosti s letištní předpovědí",
+        "b)  u letové předpovědi",
+        "c)  u zprávy METAR"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "261.  Přistávací předpověď typu TREND je součástí zprávy METAR, jakou má platnost",
+      "answers": [
+        "a)  3 hodiny od časového údaje uvedeného u zprávy METAR s níž je spojena",
+        "b)  4 hodiny od časového údaje uvedeného u zprávy METAR s níž je spojena",
+        "c)  2 hodiny od časového údaje uvedeného u zprávy METAR s níž je spojena"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "262.  Pokud je přistávací předpověď vyjádřena kódovým slovem NOSIG znamená to",
+      "answers": [
+        "a)  po celou dobu platnosti nedojde k žádné význačné změně",
+        "b)  po dobu platnosti se počasí bude zhoršovat",
+        "c)  po dobu platnosti se počasí bude zlepšovat"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "263.  Pokud je v přistávací předpovědi nutné vyjádřit změnu použije se indikátorů",
+      "answers": [
+        "a)  INTER, GRADU",
+        "b)  TEMPO, BECMG",
+        "c)  TEND, RAPID"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "264.  Pokud je v kódu METAR, ve skupině dohlednosti kódováno 9999, jedná se o horizontální dohlednost",
+      "answers": [
+        "a)  neměřitelnou",
+        "b)  větší než 20 km",
+        "c)  10 km a více"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "265.  Je-li v kódu METAR použito kódové slovo CAVOK, pak toto znamená",
+      "answers": [
+        "a)  Clouds OK",
+        "b)  Visibility OK",
+        "c)  Clouds And Visibility OK"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "266.  Kódové slovo CAVOK se v kódu METAR uvádí místo skupin dohlednosti, stavu počasí a oblačnosti, když se v čase pozorování vyskytují současně následující podmínky",
+      "answers": [
+        "a)  dohlednost 10 km a více, není oblaků pod 1500 m, nevyskytují se Cb",
+        "b)  dohlednost 10 km a více, není oblaků pod 1500 m, nejsou srážky, bouřka, písečná bouře, prachová bouře, přízemní mlha nebo nízko zvířený prach, písek nebo sníh",
+        "c)  dohlednost 10 km a více, není oblaků pod 1500 m nebo pod největší minimální sektorovou výšku, není žádný Cb, nejsou srážky, bouřka, písečná bouře, prachová bouře, přízemní mlha nebo nízko zvířený prach, písek nebo sníh"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "267.  Zkratka VC (in the vicinity) používaná v kódu METAR znamená",
+      "answers": [
+        "a)  podél VPD",
+        "b)  v prostoru prahu VPD",
+        "c)  v blízkosti letiště"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "268.  Kódová zkratka NSW (no significant weather) se použije, když",
+      "answers": [
+        "a)  se očekává konec význačné počasí",
+        "b)  není pozorován žádný Cb",
+        "c)  nejsou pozorována žádná oblaka"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "269.  Která oblačnost musí býti vždy v kódu METAR uvedena",
+      "answers": [
+        "a)  Cb, Ns",
+        "b)  Cb, Tcu",
+        "c)  Cb, Cu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "270.  Které z oblaků považujeme za význačné konvektivní oblaky",
+      "answers": [
+        "a)  Cu - cumulus, Cb - cumulonimbus",
+        "b)  TCu - věžovitý cumulus, Cu - cumulus",
+        "c)  Cb - cumulonimubs, TCu -věžovitý cumulus"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "271.  Pokrytí oblohy oblačností, pokud je jasno se kóduje",
+      "answers": [
+        "a)  nekóduje se",
+        "b)  SKC",
+        "c)  NSW"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "272.  Množství oblačnosti skoro jasno až polojasno (1-4/8) se kóduje",
+      "answers": [
+        "a)  NSW",
+        "b)  CAVOK",
+        "c)  SCT"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "273.  Množství oblačnosti zataženo (8/8) se kóduje",
+      "answers": [
+        "a)  SCT",
+        "b)  OVC",
+        "c)  SKC"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "274.  Množství oblačnosti skoro zataženo (5-7/8) se kóduje",
+      "answers": [
+        "a)  OVC",
+        "b)  SCT",
+        "c)  BKN"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "275.  Pokud je pozorována bouřka na letišti, kóduje se",
+      "answers": [
+        "a)  SQ",
+        "b)  TS",
+        "c)  SH"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "276.  Kódová zkratka SQ (squall) se použije pro hlášení húlavy, když je pozorováno",
+      "answers": [
+        "a)  náhlé zvýšení rychlosti větru o 8 MPS a rychlost dosáhne alespoň 11 MPS",
+        "b)  je pozorována silná bouřka",
+        "c)  jsou pozorovány silné srážky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "277.  Je-li ve zprávě METAR ve skupině stavu počasí kódováno FG, znamená to",
+      "answers": [
+        "a)  kouřmo",
+        "b)  mlha",
+        "c)  zákal"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "278.  Proměnlivý vítr do průměrné rychlosti 2 MPS se kóduje jako",
+      "answers": [
+        "a)  nekóduje se",
+        "b)  VRB",
+        "c)  dvěma údaji o směru a rychlosti"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "279.  Pokud je pozorováno bezvětří, kóduje se jako",
+      "answers": [
+        "a)  klid",
+        "b)  bezvětří",
+        "c)  00000 MPS"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "280.  Který z údajů o nárazech je správně kódován",
+      "answers": [
+        "a)  33007G12MPS",
+        "b)  33007/12MPS",
+        "c)  33007MPSG12MPS"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "281.  Který z údajů, byla-li naměřena teplota -7,5 °C a teplota rosného bodu -8,5 °C, je správně zakódován",
+      "answers": [
+        "a)  -7,5/-8,5",
+        "b)  -07/-08",
+        "c)  M07/M08"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "282.  Tlak QNH má hodnotu 995,6 HPa. Která z uvedených hodnot je správně zakódována",
+      "answers": [
+        "a)  Q0995",
+        "b)  0995",
+        "c)  Q995,6"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "283.  Hodnota tlaku QNH je 1010,3 HPa. Která z uvedených hodnot je správně zakódována",
+      "answers": [
+        "a)  Q1011",
+        "b)  1010,3",
+        "c)  Q1010"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "284.  Jak je správně dekódován uvedený stav počasí REDZ",
+      "answers": [
+        "a)  po dešti",
+        "b)  mrznoucí déšť",
+        "c)  po mrholení"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "285.  Jaký význam mají indikátory FM a TL používané v přistávací předpovědi nebo letištní předpovědi",
+      "answers": [
+        "a)  FM - od, TL - do",
+        "b)  FM - začátek, TL - konec",
+        "c)  FM - silný, TL - slabý"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "286.  Popis jevu FZ je správně použit ve spojení",
+      "answers": [
+        "a)  FZDZ, FZRA",
+        "b)  FZSH, FZPE",
+        "c)  FZMIFG, FZBR"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "287.  Jak je u letištních předpovědí kódováno ukončení jevu význačného počasí",
+      "answers": [
+        "a)  SKC",
+        "b)  CAVOK",
+        "c)  NSW"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "288.  Které z uvedených indikátorů změn u letištních předpovědí - TAF jsou uvedeny správně",
+      "answers": [
+        "a)  INTER, TEMPO",
+        "b)  TEMPO, BECMG",
+        "c)  GRADU, TEND"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "289.  Kde je správně ve zkratkách ICAO (kód METAR) uvedeno pokrytí oblohy oblačností \t\t\t\t1-4/8",
+      "answers": [
+        "a)  OVC",
+        "b)  SKC",
+        "c)  SCT"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "290.  Kde je správně ve zkratkách ICAO (kód METAR)  uvedeno  pokrytí  oblohy oblačností   5-7/8",
+      "answers": [
+        "a)  SCT",
+        "b)  BKN",
+        "c)  OVC"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "291.  Kde je správně ve zkratkách ICAO (kód METAR) uvedeno pokrytí oblohy oblačností „jasno“",
+      "answers": [
+        "a)  BKN",
+        "b)  SCT",
+        "c)  SKC"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "292.  Meteorologická konzultace, meteorologický briefing slouží posádkám letadel",
+      "answers": [
+        "a)  k ověření letové dokumentace",
+        "b)  k rozšíření informací obsažených v letové dokumentaci",
+        "c)  k předání zpráv METAR"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "293.  Letová meteorologická dokumentace sestává z",
+      "answers": [
+        "a)  předpovědí výškových větrů a teplot, předpovědí význačného počasí na trati letu, letištních předpovědí",
+        "b)  souboru METARů a TAFů v příslušných FIR, kterými vede letová trať",
+        "c)  předpovědi celkové meteorologické situace v příslušných oblastech"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "294.  Letová meteorologická dokumentace - mapa význačného počasí se připravuje zvlášť pro různé vrstvy. Jak se ve zkratkách ICAO nazývá mapa význačného počasí pro zabezpečení VRF letů a pro jakou vrstvu troposféry je připravena",
+      "answers": [
+        "a)  SWH - od FL 100 do FL 450",
+        "b)  SWL - od země do FL 100",
+        "c)  SWM - od země do FL 180"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "295.  Letová dokumentace - mapa význačného počasí pro lety IFR se nazývá a je připravena pro vrstvu",
+      "answers": [
+        "a)  SWL - od země do FL 290",
+        "b)  SWH - od země do FL 330",
+        "c)  SWM - od FL 100 do FL 450"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "296.  Letová dokumentace musí obsahovat předpovědní mapy výškových větrů a teplot alespoň",
+      "answers": [
+        "a)  ve dvou letových hladinách",
+        "b)  v jedné letové hladině",
+        "c)  ve třech letových hladinách"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "297.  Letová meteorologická dokumentace - letištní předpovědi jsou uváděny",
+      "answers": [
+        "a)  v otevřené řeči - česky",
+        "b)  ve tvaru kódu TAF"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "298.  Meteorologický briefing nebo konzultace pro lety v nízkých hladinách, včetně letů za podmínek VFR, musí obsahovat",
+      "answers": [
+        "a)  všechny dostupné meteorologické informace do letové hladiny 100, se zvláštní pozorností k výskytu nebo očekávanému výskytu mechanické turbulence, bouřek, mlh, silných srážek, námrazy, střihu větru",
+        "b)  meteorologické informace - TAFy všech letišť podél letové cesty",
+        "c)  předání SWL mapy"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "299.  Jakým způsobem může letadlo letící v určité letové oblasti (FIR) v letové hladině získat meteorologické informace METAR z letišť této oblasti",
+      "answers": [
+        "a)  AIREP SPECIAL",
+        "b)  VOLMET",
+        "c)  ATIS"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "300.  Které meteorologické informace jsou zařazeny do nepřetržitého rozhlasového vysílání VOLMET",
+      "answers": [
+        "a)  všechny letecké meteorologické informace",
+        "b)  AIREP, AIREP SPECIAL, SIGMET",
+        "c)  METAR, SIGMET"
+      ],
+      "correct": 2
     }
-  });
+  ],
+  "Spojovací předpisy": [
+    {
+      "question": "1.  Vyberte správnou zkratku pro „kmitočet“",
+      "answers": [
+        "a)  EMERG",
+        "b)  FG",
+        "c)  FREQ"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "2.  Vyberte správnou zkratku pro „vzletová a přistávací dráha“",
+      "answers": [
+        "a)  RV",
+        "b)  RTE",
+        "c)  RWY"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "3.  Vyberte správnou zkratku pro „uzavřeno, uzavřeny“",
+      "answers": [
+        "a)  COND",
+        "b)  CONC",
+        "c)  CLSD"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "4.  Vyberte správnou zkratku pro „země“",
+      "answers": [
+        "a)  GND",
+        "b)  AGL",
+        "c)  GS"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "5.  Vyberte správnou zkratku pro „odlet, odletět“",
+      "answers": [
+        "a)  SVF",
+        "b)  DEP",
+        "c)  DES"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "6.  Vyberte správnou zkratku pro „měřič vzdáleností“",
+      "answers": [
+        "a)  DME",
+        "b)  DLA",
+        "c)  DIF"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "7.  Vyberte správnou zkratku pro „automatická informační služba koncové řízené oblasti“",
+      "answers": [
+        "a)  ATIS",
+        "b)  ATTN",
+        "c)  DRSN"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "8.  Vyberte správnou zkratku pro „vyčkávání“",
+      "answers": [
+        "a)  HOL",
+        "b)  HLDG",
+        "c)  HDG"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "9.  Vyberte správnou zkratku pro „zpráva o přistání“",
+      "answers": [
+        "a)  APR",
+        "b)  ARR",
+        "c)  BCN"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "10.  Vyberte správnou zkratku „letová informační oblast“",
+      "answers": [
+        "a)  FIR",
+        "b)  FIC",
+        "c)  FISA"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "11.  Vyberte správnou zkratku pro „letištní maják“",
+      "answers": [
+        "a)  ABN",
+        "b)  ABM",
+        "c)  AD"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "12.  Vyberte správnou zkratku pro „řízený okrsek“",
+      "answers": [
+        "a)  DOM",
+        "b)  CTR",
+        "c)  CPL"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "13.  Vyberte správnou zkratku pro „žádost, požadováno“",
+      "answers": [
+        "a)  FIR",
+        "b)  FREQ",
+        "c)  REQ"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "14.  Vyberte správnou zkratku pro „stoupejte, spoutám do...“",
+      "answers": [
+        "a)  AMS",
+        "b)  BFR",
+        "c)  ASC"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "15.  Vyberte správnou zkratku pro „údobí nejistoty“",
+      "answers": [
+        "a)  ALERFA",
+        "b)  INCERFA",
+        "c)  DETRESFA"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "16. Vyberte správnou zkratku pro „vztažný bod letiště“",
+      "answers": [
+        "a)  APR",
+        "b)  ARP",
+        "c)  ARS"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "17.  Vyberte správno zkratku pro „letiště, letové cesty a pozemní zařízení“",
+      "answers": [
+        "a)  AIS",
+        "b)  AGA",
+        "c)  AGL"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "18.  Vyberte správnou zkratku pro „traťová rychlost“",
+      "answers": [
+        "a)  GS",
+        "b)  GR",
+        "c)  GP"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "19.  Vyberte správnou zkratku pro „mimo provoz, mimo službu“",
+      "answers": [
+        "a)  UNL",
+        "b)  U/S",
+        "c)  UNREL"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "20.  Vyberte správnou zkratku pro „předpokládaný čas příletu“",
+      "answers": [
+        "a)  FPL",
+        "b)  ETD",
+        "c)  ETA"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "21.  Vyberte správnou zkratku pro „indikovaná vzdušná rychlost“",
+      "answers": [
+        "a)  ICE",
+        "b)  IBN",
+        "c)  IAS"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "22.  Vyberte správnou zkratku pro „služba je k dispozici podle potřeb provozu“",
+      "answers": [
+        "a)  HOL",
+        "b)  HO",
+        "c)  HR"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "23.  Vyberte správnou zkratku pro „předpokládaný čas odletu“",
+      "answers": [
+        "a)  ETA",
+        "b)  ETD",
+        "c)  ETO"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "24.  Vyberte správnou zkratku pro „vzdálenost“",
+      "answers": [
+        "a)  DEG",
+        "b)  DIST",
+        "c)  DEST"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "25.  Vyberte správno zkratku pro „letiště“",
+      "answers": [
+        "a)  AC",
+        "b)  AD",
+        "c)  ACL"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "26.  Vyberte správno zkratku pro „všeobecný, všeobecně“",
+      "answers": [
+        "a)  GLD",
+        "b)  GEN",
+        "c)  GEO"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "27.  Vyberte správnou zkratku pro „letadlo“",
+      "answers": [
+        "a)  ACL",
+        "b)  ACFT",
+        "c)  ACN"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "28. Vyberte správnou zkratku pro „klesejte, klesám do...“",
+      "answers": [
+        "a)  MOC",
+        "b)  DES",
+        "c)  DEST"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "29.  Vyberte správno zkratku pro „nad úrovní země“",
+      "answers": [
+        "a)  GND",
+        "b)  AGA",
+        "c)  AGI"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "30.  Vyberte správný Q-kód pro „tlak, indikující nadmořskou výšku, přepočtený na střední hladinu moře“",
+      "answers": [
+        "a)  QNH",
+        "b)  QDM",
+        "c)  QFE"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "31.  Vyberte správný Q-kód pro „magnetický kurs, který máte za bezvětří sledovat, abyste směřoval ke mně“",
+      "answers": [
+        "a)  QDM",
+        "b)  QDR",
+        "c)  QDP"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "32.  Vyberte správný Q-kód pro „Vaše magnetické zaměření ode mne“",
+      "answers": [
+        "a)  QDM",
+        "b)  QDR",
+        "c)  QDP"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "33.  Vyberte správný Q-kód pro „tlak přepočtený na střední hladinu moře podle barometrické formule“",
+      "answers": [
+        "a)  QAB",
+        "b)  QFF",
+        "c)  QFE"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "34.  Vyberte správný Q-kód pro „přistání zakázáno“",
+      "answers": [
+        "a)  QGO",
+        "b)  QGN",
+        "c)  QGL"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "35.  Vyberte správný Q-kód pro „pravý kurs, který máte sledovat, abyste směřoval ke mně",
+      "answers": [
+        "a)  QTE",
+        "b)  QDM",
+        "c)  QUJ"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "36.  Vyberte správný Q-kód pro „tlak indikující výšku nad úrovní letiště“",
+      "answers": [
+        "a)  QNH",
+        "b)  QFF",
+        "c)  QFE"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "37.  Vyberte správný Q-kód pro „Vaše pravé zaměření vzhledem ke mně je“",
+      "answers": [
+        "a)  QTD",
+        "b)  QTE",
+        "c)  QDM"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "38.  Slovo „čekejte“ znamená",
+      "answers": [
+        "a)  čekejte, zavolám Vás",
+        "b)  čekejte a zavolejte později"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "39.  Slovo „přejděte“ znamená",
+      "answers": [
+        "a)  navažte radiové spojení s ....",
+        "b)  volejte znovu na pracovním kmitočtu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "40.  Slovo „konec“ znamená",
+      "answers": [
+        "a)  moje vysílání skončilo, očekávám Vaší odpověď",
+        "b)  rozhovor je ukončen a neočekává se odpověď"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "41.  Slovo „provedu“ znamená",
+      "answers": [
+        "a)  rozumím Vaší zprávě a budu podle ní postupovat",
+        "b)  ano",
+        "c)  přijal jsem vše  z Vašeho posledního vysílání"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "42.  Slovo „potvrďte“ znamená",
+      "answers": [
+        "a)  potvrďte mi, že jste zprávu přijal a rozuměl jí",
+        "b)  ověřte a odsouhlaste zprávu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "43.  Slovo „povoleno“ znamená",
+      "answers": [
+        "a)  povolení pro požadovaný úkon je schváleno",
+        "b)  oprávněn pokračovat za určitých podmínek"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "44.  Fráze „jak slyšíte“ znamená",
+      "answers": [
+        "a)  jaká je čitelnost mého vysílání",
+        "b)  rozuměl jste mi správně"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "45. Slovo „žádám“ znamená",
+      "answers": [
+        "a)  žádám objasnění",
+        "b)  rád bych věděl nebo přeji si obdržet"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "46.  Slovo „příjem“ znamená",
+      "answers": [
+        "a)  přijal jsem vše z Vašeho posledního vysílání",
+        "b)  moje vysílání skončilo, očekávám Vaši odpověď"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "47.  Slovo „věž“ znamená",
+      "answers": [
+        "a)  stanoviště letištní řídící věže",
+        "b)  letové informační středisko"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "48.  Slovo „APPROACH“ znamená",
+      "answers": [
+        "a)  přibližovací stanoviště řízení",
+        "b)  stanoviště oblastního střediska řízení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "49.  Slovo „vysílejte“ znamená",
+      "answers": [
+        "a)  oznamte, zda jste zprávu přijal a rozuměl jí",
+        "b)  vysílejte nebo pokračujte ve vysílání"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "50.  Slovo „rozumím“ znamená",
+      "answers": [
+        "a)  ano",
+        "b)  přijal jsem vše z Vašeho posledního vysílání"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "51.  Slovo „negativ“ znamená",
+      "answers": [
+        "a)  čekejte na povolení",
+        "b)  povolení není potvrzeno - to není správné - ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "52.  Slovo „schváleno“ znamená",
+      "answers": [
+        "a)  oprávněn pokračovat za určitých podmínek",
+        "b)  povolení pro požadovaný úkon je schváleno"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "53.  Slovo „oznamte“ znamená",
+      "answers": [
+        "a)  rád bych věděl nebo přeji si obdržet",
+        "b)  předejte mi následující informaci"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "54.  Slovo „opakujte“ znamená",
+      "answers": [
+        "a)  opakujte vše přesně tak, jak jste přijal",
+        "b)  opakujte vše nebo následující část Vašeho posledního vysílání"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "55.  Fráze „mluvte pomaleji“ znamená",
+      "answers": [
+        "a)  snižte rychlost Vaší řeči",
+        "b)  čitelnost Vašeho vysílání je nevyhovující"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "56.  Slovo „správně“ znamená",
+      "answers": [
+        "a)  to je správné",
+        "b)  povolení pro požadovaný úkon je schváleno"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "57.  Služba určená k vysílání informací, týkajících se leteckého provozu, je",
+      "answers": [
+        "a)  mezinárodní telekomunikační služba",
+        "b)  letecká rozhlasová služba"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "58.  Pohyblivá stanice letecké pohyblivé služby je",
+      "answers": [
+        "a)  letecká stanice",
+        "b)  letadlová stanice"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "59.  Vysílání z jedné stanice do druhé v případech, kdy spojení nemůže být navázáno, avšak předpokládá se, že volaná stanice může vysílání přijmout, je",
+      "answers": [
+        "a)  spojení na kanále INTERPILOT",
+        "b)  vysílání naslepo"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "60.  Pozemní stanice letecké pohyblivé služby je",
+      "answers": [
+        "a)  letadlová stanice",
+        "b)  letecká stanice"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "61.  Telekomunikační službu mezi leteckými a letadlovými stanicemi nebo mezi letadlovými stanicemi navzájem nazýváme",
+      "answers": [
+        "a)  leteckou rozhlasovou službou",
+        "b)  leteckou pohyblivou službou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "62.  Způsob, při kterém se výměna zpráv mezi dvěma stanicemi provádí střídavě jen v jednom směru, je",
+      "answers": [
+        "a)  SIMPLEX",
+        "b)  DUPLEX"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "63.  Skupina času se skládá ze šesti číslic, z nichž první čtyři značí hodiny a minuty a zbývající číslice den v měsíci",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "64.  Stanice letecké telekomunikační služby musí používat",
+      "answers": [
+        "a)  středoevropský čas",
+        "b)  greenwichský čas",
+        "c)  světový koordinovaný čas"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "65.  V mezinárodní telekomunikační službě se musí používat zkratky a kódy kdykoliv je to možné",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "66.  Výkonem letecké telekomunikační služby je pověřeno Řízení letového provozu pokud dohodou není stanoveno jinak",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "67.  V mezinárodní letecké telekomunikační službě se nemusí používat zkratky a kódy. Je tato informace správná?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "68.  Letecká telekomunikační služba se dělí na",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "69.  Letecká telekomunikační služba se dělí na",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "70.  Telekomunikační záznamy se musí uchovávat po dobu nejméně",
+      "answers": [
+        "a)  20 dnů",
+        "b)  30 dnů",
+        "c)  60 dnů"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "71.  V čase UTC se půnoc označuje pro konec dne 2400 a 0001 pro začátek dne",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "72.  V čase UTC se půlnoc označuje pro konec dne 2400 a 0000 pro začátek dne",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "73.  Skupina času se skládá ze šesti číslic, z nichž první dvě značí datum (den v měsíci) a zbývající číslice hodiny a minuty",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "74.  Zprávy u nichž jsou důvody pro zvláštní přednostní dopravu mají přednostní značku",
+      "answers": [
+        "a)  DD",
+        "b)  SS",
+        "c)  KK"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "75.  Telekomunikační služba mezi stanovenými pevnými body je definovaná jako",
+      "answers": [
+        "a)  letecká pevná služba",
+        "b)  letecká pohyblivá služba",
+        "c)  letecká rozhlasová služba"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "76.  Písemný nebo automatický záznam musí vést",
+      "answers": [
+        "a)  každá stanice letecké telekomunikační služby",
+        "b)  každá stanice letecké telekomunikační služby s výjimkou letadlových stanic"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "77.  Zprávy pro zajištění bezpečnosti letu mají přednostní značku",
+      "answers": [
+        "a)  GG",
+        "b)  FF",
+        "c)  SS"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "78.  Letecká pevná telekomunikační síť má zkratku",
+      "answers": [
+        "a)  AFS",
+        "b)  AFTN",
+        "c)  ATS"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "79.  Odpovědnost za přijetí zprávy k dopravě má stanice",
+      "answers": [
+        "a)  která zprávu vysílá",
+        "b)  u které byla zpráva původně podána",
+        "c)  která zprávu přijímá"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "80.  Přednostní značku FF patří do kategorie zpráv",
+      "answers": [
+        "a)  tísňové zprávy a pilnostní zprávy",
+        "b)  zprávy NOTAM I. Třídy",
+        "c)  zprávy pro zajištění bezpečnosti letu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "81.  Meteorologické zprávy mají přednostní značku",
+      "answers": [
+        "a)  GG",
+        "b)  FF",
+        "c)  SS"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "82.  Letecká pevná služba má zkratku",
+      "answers": [
+        "a)  ATS",
+        "b)  AFTN",
+        "c)  AFS"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "83.  Tísňové a pilnostní zprávy mají přednostní značku",
+      "answers": [
+        "a)  GG",
+        "b)  FF",
+        "c)  SS"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "84.  Letadlová stanice může přejít na jiný kmitočet",
+      "answers": [
+        "a)  podle vlastního uvážení",
+        "b)  po oznámení svého úmyslu letecké stanici"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "85.  Stanice letecké pohyblivé služby používají",
+      "answers": [
+        "a)  středoevropský čas",
+        "b)  greenwichský čas",
+        "c)  světový koordinovaný čas"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "86.  Ve volací značce letecké stanice řízení pohybu na zemi je název",
+      "answers": [
+        "a)  APRON",
+        "b)  GROUND",
+        "c)  RADIO"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "87.  V případě, že bylo navázáno uspokojivé spojení, služba (stanoviště) se",
+      "answers": [
+        "a)  nemůže vynechat",
+        "b)  může vynechat"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "88.  Vysílání pokusných signálů nesmí trvat déle než",
+      "answers": [
+        "a)  10 sekund",
+        "b)  5 sekund"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "89.  Ve volací značce letecké stanice pro lety VFR je název",
+      "answers": [
+        "a)  IFORMACE",
+        "b)  APPROACH",
+        "c)  TOWER"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "90.  Ve volací značce letecké stanice přibližovacího stanoviště může být název",
+      "answers": [
+        "a)  CONTROL",
+        "b)  APPROACH",
+        "c)  INFORMACE"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "91.  Ve volací značce letecké stanice letištního stanoviště je název",
+      "answers": [
+        "a)  CONTROL",
+        "b)  APPROACH",
+        "c)  VĚŽ"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "92.  Radiové spojení může být ukončeno",
+      "answers": [
+        "a)  na pokyn letecké stanice",
+        "b)  podle uvážení letadlové stanice"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "93.  Letadlová stanice udržuje radiové spojení s řídící stanicí letadlo - země",
+      "answers": [
+        "a)  na požádání",
+        "b)  vždy, je-li to možné",
+        "c)  podle vlastního uvážení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "94.  UTC je zkratka",
+      "answers": [
+        "a)  greenwichského času",
+        "b)  světového koordinovaného času",
+        "c)  středoevropského času"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "95.  Jestliže letadlová stanice není schopna navázat spojení s leteckou stanicí na určeném a jiném kmitočtu pro danou trať",
+      "answers": [
+        "a)  pokusí se navázat spojení s jiným letadlem nebo jinými leteckými stanicemi",
+        "b)  vysílá na dané frekvenci s použitím fráze „vysílám naslepo“"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "96.  Služba mezi leteckými a letadlovými stanicemi nebo mezi letadlovými stanicemi navzájem je",
+      "answers": [
+        "a)  letecká pevná služba",
+        "b)  letecká pohyblivá služba",
+        "c)  letecká rozhlasová služba"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "97.  Volací značka letecké stanice je tvořena",
+      "answers": [
+        "a)  zeměpisným názvem její polohy a službou (stanovištěm), která je k dispozici",
+        "b)  pouze zeměpisným názvem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "98.  Pro vysílání pokusných signálů je třeba získat souhlas před zahájením takového vysílání",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "99.  Fráze „vysílám naslepo“ se použije",
+      "answers": [
+        "a)  při neznalosti frekvence volané stanice",
+        "b)  při neúspěšném navázání spojení",
+        "c)  na pokyn letecké stanice"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "100.  Rychlost hovoru při RTF spojení nemá převyšovat",
+      "answers": [
+        "a)  50 slov za minutu",
+        "b)  80 slov za minutu",
+        "c)  100 slov za minutu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "101.  Letadlová stanice přechází z jednoho kmitočtu na jiný",
+      "answers": [
+        "a)  na příkaz letecké stanice",
+        "b)  dle vlastního uvážení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "102.  Letecká stanice je",
+      "answers": [
+        "a)  pozemní stanice letecké pohyblivé služby",
+        "b)  stanice letecké pevné služby",
+        "c)  pohyblivá stanice letecké pohyblivé služby"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "103.  Musí se jména, zkratky a slova, jejichž výslovnost může vyvolat pochybnost v radiotelefonii hláskovat?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "104.  Je dále uvedené přednostní pořadí zpráv, dopravovaných leteckou pohyblivou službou správné?",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. tísňové",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. pilnostní",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "3. o radiovém zaměření",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "4. pro zajištění bezpečnosti letů",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "5. meteozprávy",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "6. o pravidelnosti letů",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "105.  Jestliže letadlová stanice není schopna navázat spojení s leteckou stanicí na určeném kmitočtu",
+      "answers": [
+        "a)  použije fráze „vysílám naslepo“",
+        "b)  pokusí se o navázání spojení na jiném kmitočtu pro danou trať"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "106.  Číslo 47 se slovy vysílá",
+      "answers": [
+        "a)  čtyry sedum",
+        "b)  čtyrycet sedum"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "107.  Číslo 383 se slovy vysílá",
+      "answers": [
+        "a)  třista osm tři",
+        "b)  tři osm tři"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "108.  Číslo 18 900 se slovy vysílá",
+      "answers": [
+        "a)  jedna osm devět nula nula",
+        "b)  jedna osm tisíc devět set",
+        "c)  osmnáct tisíc devět set"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "109.  Číslo 200,5 se slovy vysílá",
+      "answers": [
+        "a)  dvě stě čárka pět",
+        "b)  dva nula nula čárka pět"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "110.  Číslo (ne frekvence) 100,125 se slovy vysílá",
+      "answers": [
+        "a)  jedno sto čárka jedna dva pět",
+        "b)  jedna nula nula čárka jedna dva pět",
+        "c)  sto čárka stodvacet pět"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "111.  Číslo 15 000 se slovy vysílá",
+      "answers": [
+        "a)  jedna pět nula nula nula",
+        "b)  jedna pět tisíc",
+        "c)  patnáct tisíc"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "112.  Čas 02 hodin 40 minut se vysílá",
+      "answers": [
+        "a)  nula dva čtyrycet",
+        "b)  čtyry nula nebo nula dva čtyry nula",
+        "c)  čtyrycet"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "113.  Čas 18 hodin 43 minuty se vysílá",
+      "answers": [
+        "a)  čtyrycet tři",
+        "b)  jedna osm čtyry tři nebo čtyry tři",
+        "c)  osumnáct čtyrycet tři"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "114.  Číslo 20 se slovy vysílá",
+      "answers": [
+        "a)  dvacet",
+        "b)  dva nula"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "115.  Číslo 200 se slovy vysílá",
+      "answers": [
+        "a)  dva nula nula",
+        "b)  dvě stě",
+        "c)  dva a nula nula"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "116.  Frekvence 118,725 se slovy vysílá",
+      "answers": [
+        "a)  jedna jedna osm čárka sedum dva pět",
+        "b)  jedna jedna osm čárka sedum dva",
+        "c)  sto osmnáct čárka sedum set dvacet pět"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "117.  Číslo 4000 se slovy vysílá",
+      "answers": [
+        "a)  čtyry tisíce",
+        "b)  čtyry nula nula nula"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "118.  Číslo 25 400 se slovy vysílá",
+      "answers": [
+        "a)  dva pět čtyry nula nula",
+        "b)  dva pět tisíc čtyry nula nula",
+        "c)  dva pět tisíc čtyry sta"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "119.  Poznávací značka civilního letadla je složena ze",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "120. Volací značku letadla lze tvořit",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "121.  Rejstříkovou značku civilních motorových letadel tvoří skupina tří písmen a ultralehkých letounů skupina čtyř písmen",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "122.  Rejstříkovou značku bezmotorových letadel tvoří skupina čtyř písmem",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "123.  Zkrácenou volací značku letadla lze použít",
+      "answers": [
+        "a)  podle vlastního uvážení",
+        "b)  až po zkrácení leteckou stanicí"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "124.  Správné zkrácení volací značky OK-SNY je následovné",
+      "answers": [
+        "a)  ONY",
+        "b)  SNY",
+        "c)  OSY"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "125.  Je zkrácení následující radiotelefonické volací značky letadla OK-ALR na OLR správné?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "126.  Je zkrácení následující radiotelefonické volací značky letadla OK-ALR na ALR správné?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "127.  Při navazování spojení lze použít",
+      "answers": [
+        "a)  zkrácenou volací značku",
+        "b)  pouze nezkrácenou volací značku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "128.  Správné zkrácení volací značky OK-DLS je následovné",
+      "answers": [
+        "a)  DLS",
+        "b)  OLS",
+        "c)  KLS"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "129.  Zkušební vysílání obsahuje",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "130.  Musí zkušební vysílání obsahovat frázi „zkouška radia“?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "131.  Při zkušebním vysílání dokonalá čitelnost je uváděna stupněm",
+      "answers": [
+        "a)  1",
+        "b)  5",
+        "c)  4"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "132.  Čitelnost zkušebního vysílání se udává",
+      "answers": [
+        "a)  pěti stupni",
+        "b)  třemi stupni",
+        "c)  čtyřmi stupni"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "133.  Součástí zkušebního vysílání je fráze",
+      "answers": [
+        "a)  zkouška zařízení",
+        "b)  zkouška radia",
+        "c)  zkouška vysílání"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "134.  Při zkušebním vysílání fráze „chvílemi nečitelné“ označuje stupeň čitelnosti",
+      "answers": [
+        "a)  4",
+        "b)  1",
+        "c)  2"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "135.  Při zkušebním vysílání stupeň 4 označuje, že zpráva je",
+      "answers": [
+        "a)  čitelná",
+        "b)  čitelná, ale s obtížemi",
+        "c)  dokonale čitelná"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "136.  Zkušební vysílání obsahuje",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "137.  Může zkušební vysílání obsahovat frázi „zkouška vysílání“?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "138.  Je složení tísňové zprávy správné?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "139.  Při uložení ticha se použije fráze",
+      "answers": [
+        "a)  zastavte vysílání",
+        "b)  MAY DAY",
+        "c)  zastavte vysílání - MAY DAY 3x"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "140.  Je složení pilnostní zprávy správné?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "141.  Je složení tísňové zprávy správné?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "142.  Zpráva rušící tísňový provoz a uloženého ticha obsahuje frázi",
+      "answers": [
+        "a)  období ticha ukončeno",
+        "b)  tísňový provoz ukončen",
+        "c)  MAY DAY ukončeno"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "143.  Stanice, která ví o tísňovém provozu a není řídící stanicí",
+      "answers": [
+        "a)  musí sledovat provoz do doby, kdy je zřejmé, že je pomoc poskytována",
+        "b)  může přejít na jinou frekvenci"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "144.  Tísňový a pilnostní provoz musí být veden na kmitočtu",
+      "answers": [
+        "a)  121,5 MHz",
+        "b)  který je v dané době používán",
+        "c)  na kterémkoliv jiném"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "145.  Pilnostní zpráva má přednost",
+      "answers": [
+        "a)  před všemi ostatními druhy spojení",
+        "b)  před všemi ostatními druhy spojení vyjma tísňového provozu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "146.  Tísňový provoz může ukončit",
+      "answers": [
+        "a)  stanice v tísni",
+        "b)  stanice řídící",
+        "c)  stanice v tísni nebo stanice řídící"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "147.  MAY DAY je radiotelefonní signál zprávy",
+      "answers": [
+        "a)  pilnostní",
+        "b)  tísňové",
+        "c)  pro zajištění bezpečnosti letu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "148.  PAN PAN MEDICAL je radiotelefonní signál zprávy",
+      "answers": [
+        "a)  pilnostní",
+        "b)  tísňové",
+        "c)  pro zajištění bezpečnosti letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "149.  Tísňová korespondence",
+      "answers": [
+        "a)  má přednost před všemi ostatními druhy spojení",
+        "b)  z hlediska přednosti následuje za pilnostní korespondencí",
+        "c)  nemá přednost před ostatním spojením"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "150.  Stanice, která ví o tísňovém provozu a není řídící",
+      "answers": [
+        "a)  nesmí vysílat na daném kmitočtu",
+        "b)  může vysílat za účelem poskytnutí pomoci"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "151.  Definice pilnosti „podmínky, týkající se bezpečnosti letadla nebo jiného dopravního prostředku, nebo bezpečnosti některých osob na jeho palubě nebo v dohledu, které ale nevyžadují okamžité pomoci“ je",
+      "answers": [
+        "a)  správná",
+        "b)  nesprávná"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "152.  Stanice, které je zpráva letadla v tísni adresována, nebo první stanice, která tísňovou zprávu potvrdila, musí",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "153.  Definice tísně „podmínky, hrozící vážným nebo bezprostředním nebezpečím, nevyžadující však okamžité pomoci“ je",
+      "answers": [
+        "a)  správná",
+        "b)  nesprávná"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "154.  PAN PAN je radiotelefonní signál zprávy",
+      "answers": [
+        "a)  tísňové",
+        "b)  pilnostní",
+        "c)  zprávy o radiovém zaměření"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "155.  Definice tísně „podmínky, hrozící vážným nebo bezprostředním nebezpečím, vyžadující okamžité pomoci“ je",
+      "answers": [
+        "a)  správná",
+        "b)  nesprávná"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "156.  Definice pilnosti „podmínky, týkající se bezpečnosti letadla nebo jiného dopravního prostředku nebo bezpečnosti některých osob na jeho palubě nebo v dohledu, vyžadující okamžité pomoci“ je",
+      "answers": [
+        "a)  správná",
+        "b)  nesprávná"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "157.  Kmitočet 121,5 MHz je vyhrazen",
+      "answers": [
+        "a)  pro tísňový provoz",
+        "b)  pro spojení při pátrání a záchraně"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "158.  Vyhlášením pilnostního stavu signálem 3x PAN PAN se vyžaduje přednost",
+      "answers": [
+        "a) - ve spojení",
+        "b) - ve spojení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "159.  Tísňový kmitočet je",
+      "answers": [
+        "a)  121,5 MHz",
+        "b)  120,5 kHz",
+        "c)  122,5 MHz"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "160.  Právo uložit ticho má",
+      "answers": [
+        "a)  pouze stanice řídící",
+        "b)  kterákoliv jiná stanice",
+        "c)  stanice v tísni a stanice řídící"
+      ],
+      "correct": 2
+    }
+  ],
+  "Aerodynamika a mechanika letu": [
+    {
+      "question": "1.  Podle Mezinárodní standardní atmosféry (MSA) hustota vzduchu s rostoucí výškou",
+      "answers": [
+        "a)  roste",
+        "b)  klesá v závislosti na tlaku a teplotě podle stavové rovnice pro suchý vzduch",
+        "c)  nejprve roste a potom prudce klesá"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "2.  Ve čtyřech dnech byly na letišti o nadmořské výšce 800 m naměřeny hodnoty tlaku a teploty. Které tyto hodnoty odpovídají podmínkám MSA pro výšku 800 m?",
+      "answers": [
+        "a)  tlak QFE 1013 hPa, teplota 10 °C",
+        "b)  tlak QFE 921 hPa, teplota -5 °C",
+        "c)  tlak QFE 921 hPa, teplota 10 °C"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "3.  Jestliže letadlo letí ve výšce, ve které je tlak vzduchu roven tlaku podle MSA pro tuto výšku, ale teplota je výrazně vyšší, než odpovídá průběhu MSA, pak",
+      "answers": [
+        "a)  hustota vzduchu je větší, než odpovídá MSA pro tuto výšku",
+        "b)  hustota vzduchu je menší, než odpovídá MSA pro tuto výšku",
+        "c)  hustota vzduchu má hodnotu odpovídající MSA pro tuto výšku, neboť teplot ji neovlivní"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "4.  Podle průběhu MSA tlak s rostoucí výškou",
+      "answers": [
+        "a)  klesá a dosahuje ve výšce 5,5 km poloviční hodnoty, než při hladině moře",
+        "b)  roste a dosahuje ve výšce 5,5 km dvojnásobné hodnoty, než odpovídá MSA",
+        "c)  zpočátku klesá a po dosažení izobarické hodnoty roste"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "5.  Podle průběhu MSA teplota s rostoucí výškou",
+      "answers": [
+        "a)  roste, a to o 0,65 °C na 100 m",
+        "b)  klesá, a to o 0,65 °C na 100 m",
+        "c)  klesá tak, že na horní hranici MSA dosahuje tzv. “absolutní nuly”"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "6.  Výchozí hodnoty MSA jsou",
+      "answers": [
+        "a)  tlak 1013,25 hPa, teplota 15 °C, hustota vzduchu 1,225 kg/m3, tíhové zrychlení 9,81 m/s2. Tyto hodnoty jsou vždy vztaženy na nadmořskou výšku letiště",
+        "b)  tlak 1013,25 hPa, teplota 15 °C, hustota vzduchu 1,225 kg/m3, tíhové zrychlení 9,81 m/s2. Tyto hodnoty jsou vztaženy na střední hladinu moře",
+        "c)  tlak 760 hPa, teplota 15 °C, hustota vzduchu 1,225 kg/m3, tíhové zrychlení 9,81 m/s2. Tyto hodnoty jsou vztaženy na střední hladinu moře"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "7.  Zkratka “IAS” uváděná např. v letové příručce znamená",
+      "answers": [
+        "a)  označení Mezinárodní standardní atmosféry",
+        "b)  označení “střední aerodynamické tětivy”",
+        "c)  indikovanou rychlost letu, tj. skutečnou rychlost letadla vůči zemi"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "8.  Vzduch proudí ustáleně trubicí kruhového proměnného průřezu nakreslenou na obrázku. V části II je ze všech tří částí trubice největší",
+      "answers": [
+        "a)  průřez trubice",
+        "b)  rychlost proudu",
+        "c)  statický tlak"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "9.  Vzduch proudí ustáleně trubicí kruhového proměnného průřezu nakreslenou na obrázku. V části I je ze všech tří částí trubice největší",
+      "answers": [
+        "a)  hmotnostní tok",
+        "b)  rychlost proudu",
+        "c)  statický tlak"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "10.  Vzduch proudí ustáleně trubicí kruhového proměnného průřezu nakreslenou na obrázku (viz otázka č. 8). Součet statického a dynamického tlaku je",
+      "answers": [
+        "a)  ve všech částech trubice stále stejný a je roven celkovému",
+        "b)  největší v části trubice I a III, v části II je menší o tu část, která způsobí urychlení proudu a vzrůst dynamického tlaku",
+        "c)  největší v části II, oproti části I a III je větší o tu část, která způsobí urychlení proudu a vzrůst dynamického tlaku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "11.Vzduch proudí ustáleně trubicí kruhového proměnného průřezu nakreslenou na obrázku. V části II je statický tlak ze všech tří částí trubice",
+      "answers": [
+        "a)  největší, proudění je nejvíce stlačené",
+        "b)  nejmenší, je zde největší dynamický tlak",
+        "c)  nejmenší, jsou zde nejvíce rozšířené proudnice"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "12.  Dynamický tlak je závislý na rychlosti letu. Zvětší-li se rychlost letu dvakrát, pak dynamický tlak se",
+      "answers": [
+        "a)  dvakrát zmenší",
+        "b)  dvakrát zvětší",
+        "c)  třikrát zvětší"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "13.  Dynamický tlak je závislý na konstantní rychlosti letu i na hustotě vzduchu. V důsledku toho je ovlivněn také",
+      "answers": [
+        "a)  vlhkostí vzduchu, neboť při vyšším obsahu vodní páry je vzduch hustší",
+        "b)  výškou letu, čím je výška letu větší, tím je hustota vzduchu také větší",
+        "c)  teplotou, se zvýšením teploty roste hustota vzduchu a tedy i dynamický tlak"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "14.  Dynamický tlak je závislý na konstantní rychlosti letu i na hustotě vzduchu. V důsledku toho je ovlivněn také",
+      "answers": [
+        "a)  výškou letu, čím je výška letu větší, tím klesá i dynamický tlak",
+        "b)  výškou letu, čím je výška letu větší, tím roste i dynamický tlak",
+        "c)  teplotou vzduchu, se zvýšením teploty roste hustota a tedy i dynamický tlak"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "15.  Jak se změní rychlost proudu a statický tlak, když se zhustí v nějakém místě proudnice?",
+      "answers": [
+        "a)  rychlost se zvýší, statický tlak se zvýší",
+        "b)  rychlost se zvýší, statický tlak klesne",
+        "c)  rychlost klesne, statický tlak klesne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "16.  Jak se změní rychlost proudu a statický tlak, když se rozšíří v nějakém místě proudnice?",
+      "answers": [
+        "a)  rychlost se zvýší, statický tlak klesne",
+        "b)  rychlost se zvýší, statický tlak vzroste",
+        "c)  rychlost klesne, statický tlak se zvýší"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "17.  Na obrázku je nakreslena pitot-statická sonda. Jaký tlak je odebírán snímačem 1 a jaký snímačem 2?",
+      "answers": [
+        "a)  1- statický  \t\t2 - dynamický",
+        "b)  1 - dynamický\t  2 - celkový",
+        "c)  1 - celkový\t\t  2 - statický"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "18.  Jaké geometrické charakteristiky profilu jsou označeny na obrázku?",
+      "answers": [
+        "a)  X - tloušťka   \t\tY - délka",
+        "b)  X - hloubka   \t\tY - tloušťka",
+        "c)  X - délka\t\t   Y - tloušťka"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "19.  Jaké geometrické charakteristiky profilu jsou označeny na obrázku?",
+      "answers": [
+        "a)  X - tětiva \t\tY - střední čára profilu  Z - max. prohnutí střední čáry",
+        "b)  X - tětiva\t\tY - prohnutí  Z - výška",
+        "c)  X - příčka\t\tY - prohnutí\t\t\t  Z - výška"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "20.  Která z geometrických charakteristik nakreslených na obrázku je tloušťka profilu a jak se vyjadřuje?",
+      "answers": [
+        "a)  B, v (mm) nebo (cm)",
+        "b)  A, v (m)",
+        "c)  C, v % hloubky profilu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "21.  Úhel náběhu je úhel, který",
+      "answers": [
+        "a)  svírá směr nabíhajícího proudu s tětivou profilu",
+        "b)  svírá tětiva profilu s vodorovnou rovinou (horizontem)",
+        "c)  svírá směr nabíhajícího proudu s vodorovnou rovinou (horizontem), tj. je nulový v horizontálním letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "22.  Který úhel označený na obrázku je úhel náběhu?",
+      "answers": [
+        "a)  I",
+        "b)  II",
+        "c)  III"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "23.  Při obtékání profilu vzniká výsledná aerodynamická síla R, která se rozkládá na dvě složky, Y a X. Který obrázek tuto situaci správně vystihuje?",
+      "answers": [
+        "a)  1/",
+        "b)  1/ a 3/",
+        "c)  1/ a 4/"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "24.  Při obtékání tělesa vznikají aerodynamické síly. Nazývají se",
+      "answers": [
+        "a)  vztlak, odpor a výsledná aerodynamická síla",
+        "b)  vztlak, tíha a odpor",
+        "c)  výsledná aerodynamická síla, která se rozkládá na vztlak a odpor"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "25.  Každá síla aerodynamického původu, která vzniká obtékáním tělesa je závislá pouze na",
+      "answers": [
+        "a)  dynamickém tlaku (tj. součinu hustoty vzduchu a druhé mocniny rychlosti letu), ploše křídla a součiniteli aerodynamické síly",
+        "b)  dynamickém tlaku (tj. součinu hustoty a druhé mocniny rychlosti letu), ploše křídla a tíze letadla",
+        "c)  dynamickém tlaku (tj. součinu hustoty a rychlosti letu), úhlu náběhu a tvaru tělesa"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "26.  Součinitel aerodynamické síly (vztlaku, odporu....) závisí pouze na dvou faktorech. Na kterých faktorech závisí a na kterých nezávisí?",
+      "answers": [
+        "a)  tvaru tělesa a úhlu náběhu\t\t\t                 -            velikosti tělesa, rychlosti letu a hustotě vzduchu",
+        "b)  velikosti tělesa, rychlosti letu a hustotě vzduchu            -             \t\t\ttvaru tělesa a úhlu náběhu",
+        "c)  velikosti tělesa a úhlu náběhu            -   \t\t\thustotě vzduchu, tvaru tělesa a rychlosti letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "27.  Jestliže se při stejném úhlu náběhu zvýší rychlost letu ze 110 km/h na 220 km/h, pak vztlak vzroste",
+      "answers": [
+        "a)  zůstane stejný",
+        "b)  čtyřikrát",
+        "c)  třikrát"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "28.  Kluzák o hmotnosti 500 kg letí klouzavým letem ustálenou rychlostí 110 km/h na úhlu náběhu 7 stupňů. Přejde-li tento kluzák do střemhlavého letu a při jeho vybrání dosáhne rychlosti 220 km/h na úhlu náběhu také 7 stupňů, pak vztlak",
+      "answers": [
+        "a)  vzrostl dvakrát a činí asi 10 000 N",
+        "b)  vzrostl nepatrně, neboť při vybrání působí setrvačné síly",
+        "c)  vzrostl čtyřikrát a činí asi 20 000 N"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "29.  Zvětší-li se úhle náběhu za letu dvakrát (při stejné rychlosti letu), pak vztlak",
+      "answers": [
+        "a)  vzroste součinitel vztlaku i vztlak čtyřikrát",
+        "b)  vzroste součinitel vztlaku čtyřikrát, vztlak  vzroste dvakrát",
+        "c)  součinitel vztlaku se nezmění, vztlak vzroste čtyřikrát"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "30.  Vzroste-li během letu rychlost dvakrát (při stále stejném úhlu náběhu), tak",
+      "answers": [
+        "a)  vzroste součinitel vztlaku i vztlak čtyřikrát",
+        "b)  vzroste součinitel vztlaku čtyřikrát, vztlak vzroste dvakrát",
+        "c)  součinitel vztlaku se nezmění, vztlak vzroste čtyřikrát"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "31.  Vzroste-li během letu rychlost dvakrát (při stále stejném úhlu náběhu), tak",
+      "answers": [
+        "a)  vzroste součinitel odporu i odpor čtyřikrát",
+        "b)  vzroste součinitel odporu dvakrát, odpor vzroste čtyřikrát",
+        "c)  součinitel odporu ani odpor se nezmění"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "32.  Během letu se vztlak kluzáku (při stejné konfiguraci) může měni pouze vlivem",
+      "answers": [
+        "a)  rychlosti letu, úhlu náběhu a výšky letu",
+        "b)  rychlosti letu",
+        "c)  úhlu náběhu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "33.  Během letu se odpor kluzáku (při stejné konfigurace) může měni pouze vlivem",
+      "answers": [
+        "a)  rychlosti letu",
+        "b)  výšky letu",
+        "c)  úhlu náběhu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "34.  Vztlak na profilu vzniká v důsledku",
+      "answers": [
+        "a)  zhuštění proudnic pod profilem, tím se pod profilem vytvoří přetlak, nad profilem se proudnice rozšíří a tím se nad profilem vytvoří podtlak",
+        "b)  zhuštěním proudnic nad profilem, tím se nad profilem vytvoří podtlak, pod profilem se proudnice rozšíří a tím se pod profilem vytvoří přetlak",
+        "c)  odtržení proudu na křídle"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "35.  Součinitel vztlaku profilu je nejvíce ovlivněn",
+      "answers": [
+        "a)  tloušťkou profilu",
+        "b)  hloubkou profilu",
+        "c)  zakřivením profilu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "36.  Kde začíná na profilu odtrhávání proudu?",
+      "answers": [
+        "a)  v mezní vrstvě na sací straně profilu u odtokové hrany",
+        "b)  v mezní vrstvě na sací straně profilu u náběžné hrany",
+        "c)  v úplavu na sací straně profilu u náběžné hrany"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "37.  Odtržení proudu na profilu má za následek",
+      "answers": [
+        "a)  náhlý pokles součinitele vztlaku, změnu součinitele klopivého momentu a vzrůst součinitele odporu",
+        "b)  náhlý pokles součinitele odporu a vztlaku",
+        "c)  vzrůst součinitele odporu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "38.  Jak se nazývají druhy odporu, který vzniká na profilu a v čem mají svůj původ?",
+      "answers": [
+        "a)  třecí odpor vzniká v mezní vrstvě a tlakový odpor vytvořením úplavu při odtrhávání proudu",
+        "b)  třecí odpor vzniká v mezní vrstvě a talkový odpor je vyvolán působením přetlaku v blízkosti náběžné hrany",
+        "c)  indukovaný odpor vzniká obtékáním profilu indukovanou rychlostí, třecí odpor třením vzduchu o konstrukční výčnělky profilu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "39.  Rozdílem tlaků nad a pod profilem při jeho obtékání vzniká",
+      "answers": [
+        "a)  vztlak a interferenční odpor",
+        "b)  vztlak a třecí odpor",
+        "c)  vztlak a tah"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "40.  Který profil na obrázku může mít při nulovém úhlu náběhu nulový vztlak",
+      "answers": [
+        "a)  A/",
+        "b)  B/",
+        "c)  B/ a C/"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "41.  Oblast proudění označená v obrázku číslem 2 je charakterizována tím, že je zde vzduch značně rozvířen. Jak se tato oblast nazývá a k jakému ději zde dochází?",
+      "answers": [
+        "a)  mezní vrstva, přechází zde laminární proudění na turbulentní",
+        "b)  úplav, přechází zde laminární proudění na turbulentní",
+        "c)  mezní vrstva, zabržděný vzduch prošlý mezní vrstvou je strháván za profil ve formě vírů"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "42.  Jaké oblasti proudění kolem profilu jsou na obrázku uvedeném k otázce č. 41 označeny čísly 1, 2, 3?",
+      "answers": [
+        "a)  1 - laminární mezní vrstva\t  2 - turbulentní mezní vrstva\t  3 - úplav",
+        "b)  1 - laminární mezní vrstva  \t2 - úplav\t\t\t  3 - turbulentní mezní vrstva",
+        "c)  1 - úplav  \t\t\t2 - zešikmení proudu\t\t  3 - náběžný bod"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "43.  Může dojít k odtržení proudu při laminárním proudění v mezní vrstvě?",
+      "answers": [
+        "a)  ne, neboť proudění nejprve musí přejít do turbulentního",
+        "b)  ano, je to zcela obvyklý postup při odtržení proudu, kdy odtržením se stane z laminárního proudění turbulentní",
+        "c)  ano, je to velmi nežádoucí jev, odtržením se vytvoří rozsáhlý úplav"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "44.  Který profil na obrázku je laminární a jaký režim letu nejvíce ovlivní znečištění jeho náběžné hrany?",
+      "answers": [
+        "a)  A/ a C/, znečištění nejvíce ovlivní vzlet kluzáku",
+        "b)  B/, znečištěním se značně snižuje max. součinitel vztlaku a tím vzrůstá min, rychlost letu",
+        "c)  B/, znečištěním jsou nejvíce ovlivněny výkony v klouzavém letu, neboť je narušené laminární proudění a tím značně snížen efekt tzv. “laminární boule”"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "45.  Který profil na obrázku je laminární a jak výrazně ovlivní znečištění jeho náběžné hrany max. klouzavost kluzáku? (obr. u otázky 44.)",
+      "answers": [
+        "a)  A/ a C/, max. klouzavost se zhorší až o 30 %",
+        "b)  B/, max. klouzavost se zhorší až o 30 %",
+        "c)  B/, max. klouzavost se zlepší až o 30 %"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "46.  Vztlak vzniká při obtékání profilu v důsledku vytvoření rozdílu tlaků nad a pod profilem. Jaký tlak je pod a nad profilem a jaký je při běžných úhlech náběhu poměr jejich velikostí?",
+      "answers": [
+        "a)  pod profilem vzniká přetlak, nad profilem podtlak, který je velký jako jedna třetina přetlaku",
+        "b)  pod profilem vzniká podtlak, nad profilem přetlak, který je asi třikrát větší, než podtlak",
+        "c)  pod profilem i nad ním vzniká podtlak, podtlak nad profilem je ale asi třikrát větší"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "47.  Klasický a laminární profil mají dost odlišný průběh součinitele vztlaku na součiniteli odporu (poláry). Přiřaďte profil na obrázku odpovídajícímu průběhu poláry.",
+      "answers": [
+        "a)  A/ (laminární profil) odpovídá čáře 1/",
+        "b)  B/ (laminární profil) odpovídá čáře 2/",
+        "c)  A/ (klasický profil) odpovídá čáře 1/"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "48.  Na obrázku je klasický a laminární profil. Který z nich obvykle dosahuje větší součinitel vztlaku a jak je na obrázku označen?",
+      "answers": [
+        "a)  A/ je laminární profil, který zpravidla dosáhne větší součinitel vztlaku",
+        "b)  B/ je klasický profil, který zpravidla dosáhne větší součinitel vztlaku",
+        "c)  B/ je laminární profil, který zpravidla dosáhne větší součinitel vztlaku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "49.  Indukovaný odpor lze zmenšit",
+      "answers": [
+        "a)  tloušťkou profilu a koncovými tělesy na koncích křídla",
+        "b)  štíhlostí křídla a koncovými tělesy na koncích křídla",
+        "c)  šípem křídla a tloušťkou profilu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "50.  Které křídlo má nejmenší součinitel indukovaného odporu?",
+      "answers": [
+        "a)  A/",
+        "b)  B/",
+        "c)  C/"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "51.  Které křídlo má největší štíhlost, jestliže jejich plocha je stejná? (obr. u otázky č. 50.)",
+      "answers": [
+        "a)  A/",
+        "b)  B/",
+        "c)  C/"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "52.  Které geometrické charakteristiky křídla jsou nakresleny v obrázku?",
+      "answers": [
+        "a)  A - rozpětí\t  B - koncová hloubka\t  C - hloubka\t\t  D - vzepětí",
+        "b)  A - rozpětí\t  B - kořenová hloubka\t  C - koncová hloubka\t  D - úhel šípu",
+        "c)  A-délka křídla B - šířka křídla\t\t  C - koncová šířka křídla\t  D - úhel zešikmení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "53.  Obtékání křídla se na rozdíl od profilu vyznačuje",
+      "answers": [
+        "a)  tloustnutím mezní vrstvy, zvětšením součinitele odporu a vzrůstem součinitele vztlaku",
+        "b)  vytvořením vírů na jeho koncích, zvětšením součinitele odporu a změnou průběhu vztlakové čáry",
+        "c)  vytvořením vírů na jeho koncích, poklesem součinitele odporu a změnou průběhu vztlakové čáry"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "54.  Ve kterých letových režimech je velký součinitel indukovaného odporu?",
+      "answers": [
+        "a)  při malých úhlech náběhu, např. ve střemhlavém letu",
+        "b)  při malých úhlech náběhu, např. v kroužení a při letu  minimální rychlostí",
+        "c)  při velkých úhlech náběhu, např. v kroužení a při letu malou rychlostí"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "55.  Ve kterých letových režimech je součinitel indukovaného odporu velmi malý nebo nulový?",
+      "answers": [
+        "a)  při malých úhlech náběhu, např. ve střemhlavém letu",
+        "b)  při malých úhlech náběhu, např. v kroužení a při letu malou rychlostí",
+        "c)  při velkých úhlech náběhu, např. v kroužení a při letu malou rychlostí"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "56.  Čím je způsobeno značné snížení indukovaného odporu za letu a jaké jsou jeho projevy?",
+      "answers": [
+        "a)  ke snížení induk. odporu dojde za letu v těsné blízkosti země, kdy malá vzdálenost křídla od země omezí vznik koncových vírů. Zmenší se tak klesání v kroužení",
+        "b)  ke snížení induk. odporu dojde za letu v těsné blízkosti země, kdy malá vzdálenost křídla od země zabrání vytvoření koncových víru. Výrazně se tak zvýší klouzavost",
+        "c)  ke snížení induk. odporu dojde za letu ve velké výšce, kdy se vlivem malé hustoty vzduchu nevytvoří dostatečně velký tlakový spád pro vznik koncových vírů. Výrazně se tak zvýší klouzavost"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "57.  V blízkosti země kluzák “plave”. To je způsobeno",
+      "answers": [
+        "a)  zvětšením klouzavosti, neboť vlivem blízkosti země se omezí vznik koncových vírů na křídle",
+        "b)  zmenšením minimální rychlosti letu v důsledku větší hustoty vzduchu v menších výškách",
+        "c)  zvětšenou účinností výškového kormidla u země, která umožní přivést kluzák na mnohem vyšší úhel náběhu, než je tomu ve volné atmosféře"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "58.  Výraznější účinek blízkosti země lze očekávat u kluzáku",
+      "answers": [
+        "a)  s vysunutými vztlakovými a brzdícími klapkami",
+        "b)  se zasunutými vztlakovými a brzdícími klapkami",
+        "c)  s vysunutým podvozkem"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "59.  V letové příručce je uvedena minimální rychlost kluzáku ve vzletové konfiguraci 65 km/h. Je možné očekávat, že v blízkosti země, kdy na kluzák působí “přízemní efekt” bude minimální rychlost",
+      "answers": [
+        "a)  také 65 km/h, neboť blízkost země nemá vliv na součinitel vztlaku",
+        "b)  také 65 km/h, neboť vzletové příručce je vždy minimální rychlost ve vzletové a přistávací konfiguraci uváděna s vlivem země",
+        "c)  větší než 65 km/h"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "60.  Do jaké výšky lze počítat s “přízemní efektem” v blízkosti země?",
+      "answers": [
+        "a)  asi do výšky jako je polovina rozpětí křídla",
+        "b)  do výšky 1 m",
+        "c)  do výšky 30 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "61.  Který kluzák bude mít zřejmě nejmenší součinitel indukovaného odporu? Kluzák s",
+      "answers": [
+        "a)  předním závěsem vlečného lana",
+        "b)  obdélníkovým křídlem",
+        "c)  ocasními plochami ve tvaru “T”"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "62.  Který průběh součinitele vztlaku po rozpětí přísluší nakresleným půdorysným tvarům křídel?",
+      "answers": [
+        "a)  A/ i B/ platí pro 1/",
+        "b)  A/ i B/ platí pro 2/",
+        "c)  A/ - 1/, B/ - 2/"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "63.  Na kterém obrázku je správně nakreslena oblast, kde dojde nejdříve k odtržení proudu na nezkrouceném lichoběžníkovém křídle, (oblast je vyznačen šrafováním)?",
+      "answers": [
+        "a)  A/",
+        "b)  B/",
+        "c)  C/"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "64.  Na kterém obrázku je správně nakreslena oblast, kde dojde nejdříve k odtržení proudu na obdélníkovém křídle (oblast je vyznačena šrafováním)?",
+      "answers": [
+        "a)  A/",
+        "b)  B/",
+        "c)  C/"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "65.  Na kterém obrázku je správně nakreslena oblast odtržení proudu na křídle vyvolaném poškozením jeho náběžné hrany (oblast je vyznačena šrafováním)?",
+      "answers": [
+        "a)  A/",
+        "b)  B/",
+        "c)  C/"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "66.  Aerodynamickým a geometrickým zkroucením křídla se",
+      "answers": [
+        "a)  zmenšuje indukovaný odpor",
+        "b)  zabraňuje odtrhávání proudu na koncích lichoběžníkového křídla",
+        "c)  zabraňuje odtrhávání proudu u kořene lichoběžníkového křídla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "67.  V čem spočívá princip aerodynamického zkroucení lichoběžníkového křídla, které zabraňuje odtržení proudu na jeho koncích v oblasti křidélek?",
+      "answers": [
+        "a)  na konci křídla je použit profil, který dosahuje později kritického úhlu náběhu, než profil použitý u kořene",
+        "b)  na konci křídla je profil nastaven na menší úhel, než profil u kořene",
+        "c)  u lichoběžníkového křídla se obvykle aerodynamické zkroucení nepoužívá"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "68.  V čem spočívá princip geometrického zkroucení lichoběžníkového křídla, které zabraňuje odtržení proudu na jeho koncích v oblasti křidélek?",
+      "answers": [
+        "a)  na konci křídla je použit profil, který dosahuje později kritického úhlu náběhu, než profil použitý u kořene",
+        "b)  na konci křídla je profil nastaven na menší úhel, než profil u kořene",
+        "c)  u lichoběžníkového křídla se obvykle geometrické zkroucení nepoužívá"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "69.  V čem spočívá princip zkroucení obdélníkového křídla, které zabraňuje odtržení proudu na koncích křídla v oblasti křidélek?",
+      "answers": [
+        "a)  na konci křídla je použit profil, který dosahuje později kritického úhlu náběhu, než profil použitý u kořene",
+        "b)  na konci křídla je profil nastaven na menší úhel, než profil u kořene",
+        "c)  u obdélníkového křídla se zkroucení obvykle nepoužívá"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "70.  Vysunutím brzdících klapek vznikne oblast proudění na křídle, kde je zrušen vztlak. Jaký tvar má tato oblast?",
+      "answers": [
+        "a)  vztlak je zrušen pouze na té části křídla, ze které se vysunuly brzdící klapky",
+        "b)  pokrývá celé křídlo",
+        "c)  Klínovitě se zužuje za brzdícími klapkami po celé hloubce křídla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "71.  Při zvětšování úhlu náběhu",
+      "answers": [
+        "a)  roste součinitel vztlaku a odporu",
+        "b)  klesá součinitel vztlaku a odporu",
+        "c)  roste součinitel vztlaku, součinitel odporu klesá"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "72.  Při kritickém úhlu náběhu",
+      "answers": [
+        "a)  dochází k náhlému poklesu součinitele odporu",
+        "b)  dosahuje součinitel vztlaku max. hodnoty, při dalším zvyšování úhlu náběhu prudce klesá",
+        "c)  hrozí nebezpečí deformace konstrukce kluzáku, protože je dosažen vždy max. povolený násobek"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "73.  Jak je v aerodynamické poláře vynesen úhel náběhu?",
+      "answers": [
+        "a)  úhel náběhu nejprve roste ve směru šipky A, pak klesá a při cymax. dosahuje 0",
+        "b)  polára platí vždy jen pro jeden úhel náběhu",
+        "c)  každému bodu odpovídá vždy jeden úhel náběhu. Úhel náběhu roste ve směru šipky A"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "74. Jak je v aerodynamické poláře označen bod max. klouzavosti? (obr. u otázky č. 73)",
+      "answers": [
+        "a)  1",
+        "b)  2",
+        "c)  5"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "75.  Jak je v aerodynamické poláře označen bod, kdy je dosaženo kritického úhlu náběhu?",
+      "answers": [
+        "a)  1",
+        "b)  2",
+        "c)  4"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "76.  Jak je v aerodynamické poláře označen bod, kdy je úhel náběhu nejvhodnější let kluzáku s nejmenším klesáním? (obr. u otázky č. 75)",
+      "answers": [
+        "a)  2",
+        "b)  3",
+        "c)  4"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "77.  Jak je v aerodynamické poláře označen bod, kdy je úhel náběhu nejvhodnější pro stoupání motorového kluzáku? (obr. u otázky č. 75)",
+      "answers": [
+        "a)  2",
+        "b)  3",
+        "c)  4"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "78.  Jak je v aerodynamické poláře označen bod, kdy je úhle náběhu takový, že kluzák letí střemhlavým letem? (obr. u otázky č. 75)",
+      "answers": [
+        "a)  1",
+        "b)  3",
+        "c)  5"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "79.  Jak je v aerodynamické poláře označen bod, kdy akrobatický kluzák letí na zádech? (obr. u otázky č. 75)",
+      "answers": [
+        "a)  1",
+        "b)  2",
+        "c)  5"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "80.  Při klouzavém letu je úhel náběhu",
+      "answers": [
+        "a)  větší než při kroužení",
+        "b)  menší než ve střemhlavém letu",
+        "c)  roven nule, neboť let probíhá téměř v horizontální rovině"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "81.  Při střemhlavém letu je úhlel náběhu",
+      "answers": [
+        "a)  “kritický”, neboť letu dojde snadno k překročení max. povoleného zatížení konstrukce",
+        "b)  větší než v klouzavém letu",
+        "c)  blízký nule, součinitel vztlaku je velmi malý nebo nulový"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "82.  Při cestovním letu motorového kluzáku je úhel náběhu",
+      "answers": [
+        "a)  menší než v střemhlavém letu",
+        "b)  stejně velký jako v střemhlavém letu",
+        "c)  větší než ve stoupání, tzv. kritický"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "83.  Který bod nakreslené vztlakové čáry odpovídá nulovému vztlaku kluzáku?",
+      "answers": [
+        "a)  A",
+        "b)  C",
+        "c)  D"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "84.  Záporný součinitel vztlaku (a tím i vztlak kluzáku) může být pouze jen",
+      "answers": [
+        "a)  při záporném úhlu náběhu",
+        "b)  při kladném úhlu náběhu",
+        "c)  při úhlu náběhu větším, než je “kritický”"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "85.  Při překročení kritického úhlu náběhu",
+      "answers": [
+        "a)  nedochází ke změně klopivého momentu",
+        "b)  se mění klopivý moment kluzáku",
+        "c)  klopivý moment způsobí pád kluzáku do vývrtky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "86.  Vysunutí podvozku způsobí převážně",
+      "answers": [
+        "a)  vzrůst součinitel vztlaku",
+        "b)  pokles součinitele odporu a změnu klopivého momentu",
+        "c)  snížení hmotnosti motorového kluzáku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "87.  Vytvoření námrazy na nosných plochách kluzáku má za následek",
+      "answers": [
+        "a)  značný vzrůst součinitele odporu, součinitel vztlaku zůstává stejný",
+        "b)  změnu všech aerodynamických charakteristik, max. součinitel vztlaku výrazně klesá, roste součinitel odporu, průběh klopivého momentu se stává nepravidelný",
+        "c)  přírůstek hmotnosti, aerodynamické charakteristiky obvykle neovlivní"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "88.  Který obrázek podává vysvětlení vzniku interferenčního odporu?",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "89.  Hlavní příčinou odtržení proudu je vždy",
+      "answers": [
+        "a)  snížení rychlosti letu pod hodnotu minimální rychlosti ve vodorovném přímočarém ustáleném letu",
+        "b)  přechod laminárního proudění na turbulentní",
+        "c)  překročení kritického úhlu náběhu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "90.  Může dojít k  překročení kritického úhlu náběhu i při vyšší rychlosti, než je minimální rychlost uváděná letovou příručkou a označovaná obvykle vs?",
+      "answers": [
+        "a)  ne, nikdy",
+        "b)  může, ale jen na kluzáku, který má nosné plochy pokryté námrazou",
+        "c)  může, neboť odtržení proudu je způsobeno překročením kritického úhlu náběhu, které nastane i při vyšší rychlosti"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "91.  Při překročení kritického úhlu náběhu dochází k odtržení proudu nejdříve",
+      "answers": [
+        "a)  na křídle",
+        "b)  na vodorovných ocasních plochách",
+        "c)  v okolí kabiny kluzáku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "92.  Podle obrázku určete, jak je velký úhel náběhu kluzáku letícího klouzavým letem?",
+      "answers": [
+        "a)  8°",
+        "b)  3°",
+        "c)  11°"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "93.  Podle obrázku určete, jak je velký úhel náběhu kluzáku při navijákovém vzletu?",
+      "answers": [
+        "a)  29°",
+        "b)  15°",
+        "c)  11°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "94.  Podle obrázku určete, jak je velký úhel náběhu stoupajícího motorového kluzáku?",
+      "answers": [
+        "a)  11°",
+        "b)  10°",
+        "c)  8°"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "95.  Vysunutí vztlakových klapek převážně způsobí",
+      "answers": [
+        "a)  vzrůst součinitel vztlaku a odporu",
+        "b)  vzrůst součinitele vztlaku a odporu, mimo to se projeví klopivý moment ve smyslu “těžký na hlavu”",
+        "c)  vzrůst součinitele vztlaku, pokles součinitele odporu a mimo to se projeví klopivý moment ve smyslu “těžký na ocas”"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "96.  Vysunutí vztlakových klapek",
+      "answers": [
+        "a)  zhorší klouzavost",
+        "b)  zlepší klouzavost",
+        "c)  zlepší obratnost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "97.  Na obrázku jsou poláry kluzáku se zasunutými a vysunutými vztlakovými klapkami (na kladnou výchylku). Jak je označena polára, která patří kluzáku s vysunutými vztlakovými klapkami?",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  A i B"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "98.  V tabulce jsou uvedeny minimální rychlosti čtyř kluzáku ze zasunutými a vysunutými vztlakovými klapkami. U kterého kluzáku jsou tyto charakteristiky zcela neobvyklé?",
+      "answers": [
+        "a)  65 km/h  \t\t\t\t55 km/h",
+        "b)  90 km/h  \t\t\t\t82 km/h",
+        "c)  65 km/h  \t\t\t\t73 km/h"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "99.  Vysunutím vztlakových klapek za letu",
+      "answers": [
+        "a)  vzroste vztlak kluzáku, neboť vzroste součinitel vztlaku",
+        "b)  vzroste součinitel vztlaku, ale vztlak zůstane stejný",
+        "c)  vztlak se zmenší, protože vzroste součinitel odporu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "100.  Při letu s vysunutými vztlakovými klapkami rychlostí blízkou max. povolené rychlosti pro let s vysunutými vztlakovými klapkami působí vzduch na klapky tak, že",
+      "answers": [
+        "a)  se je snaží více vysunout",
+        "b)  vyvolá ohybově torsní kmity křídla",
+        "c)  se je snaží zasunout"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "101.  Jak vypadá rozložení vztlaku po rozpětí křídla při letu s vysunutými vztlakovými klapkami?",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "102.  Při stejném úhlu náběhu je součinitel vztlaku kluzáku s vysunutými vztlakovými klapkami",
+      "answers": [
+        "a)  vždy maximální",
+        "b)  vždy nulový",
+        "c)  menší než když má kluzák klapky zasunuty"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "103.  Z jakého důvodu je omezena maximální rychlost letu s vysunutými vztlakovými klapkami?",
+      "answers": [
+        "a)  kluzák by měl příliš velký vztlak a stále by stoupal, až by přešel do pádu na vysoké rychlosti",
+        "b)  velké zešikmení proudu za křídlem by zvětšilo účinnost ocasních ploch natolik, že by kluzák přešel do střemhlavého letu",
+        "c)  velký klopivý moment na křídle by vedl ke ztrátě řiditelnosti a kluzák by přešel do střemhlavého letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "104.  Štěrbinová vztlaková klapka způsobí",
+      "answers": [
+        "a)  zlepšení stability kluzáku kolem kolmé osy",
+        "b)  zlepšení stability kluzáku kolem bočné osy",
+        "c)  zlepšení klouzavosti"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "105.  Štěrbinová vztlaková klapka je účinná",
+      "answers": [
+        "a)  i v případě, kdy štěrbina mezi křídlem a klapkou je zanesena (např. sněhem)",
+        "b)  i v případě, že štěrbina mezi křídlem a klapkou je deformována",
+        "c)  pouze je-li štěrbina mezi křídlem a klapkou nepoškozená a volná"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "106.  Které pořadí prostředků pro zvýšení vztlaku je seřazeno správně podle jejich klesající účinnosti?",
+      "answers": [
+        "a)  štěrbinová klapka na odtokové hraně, slot, odklápěcí vztlaková klapka, zařízení na vyfukování mezní vrstvy",
+        "b)  zařízení na vyfukování mezní vrstvy, odklápěcí vztlaková klapka, štěrbinová vztlaková klapka, slot",
+        "c)  slot, štěrbinová vztlaková klapka, zařízení na vyfukování mezní vrstvy, odklápěcí vztlaková klapka"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "107.  Vysunutím vztlakových klapek na zápornou výchylku se",
+      "answers": [
+        "a)  kluzák stane způsobilý letu ve třídě akrobatické",
+        "b)  zvýší klouzavost při vyšších rychlostech letu",
+        "c)  zmenší klouzavost při vyšších rychlostech letu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "108.  Mezi prostředky pro zvýšení odporu lze zejména zahrnout",
+      "answers": [
+        "a)  sloty a vztlakové klapky",
+        "b)  námrazu vytvořenou na náběžných hranách, znečištění křídla a rozměklou travnatou VPD",
+        "c)  zasunuté vztlakové klapky, brzdící štíty, spoilery, brzdící padák"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "109.  Vysunutím brzdících klapek se",
+      "answers": [
+        "a)  zvětší součinitel odporu i vztlaku",
+        "b)  zvětší součinitel odporu, součinitel vztlaku se zmenší",
+        "c)  zmenší součinitel odporu i vztlaku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "110.  Vysunutím brzdících klapek se",
+      "answers": [
+        "a)  zmenší klouzavost i minimální rychlost letu",
+        "b)  zmenší klouzavost, minimální rychlost letu se zvětší",
+        "c)  zvětší klouzavost i minimální rychlost letu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "111.  Zasunutím brzdících klapek se",
+      "answers": [
+        "a)  zvětší klouzavost i minimální rychlost letu",
+        "b)  zmenší klouzavost, minimální rychlost letu se zvětší",
+        "c)  zvětší klouzavost, minimální rychlost letu se zmenší"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "112.  Za letu (obzvláště vyšší rychlostí) může dojít vlivem intenzivnějšího tlakového působení na horní (sací) straně křídla",
+      "answers": [
+        "a)  k intenzivnímu vzniku vírů v úplavu za křídlem a tím k rozkmitání konstrukce kluzáku",
+        "b)  k tomu, že brzdící klapky lze vysunout jen velkou silou",
+        "c)  k zasunutí vysunutých brzdících klapek"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "113.  Vrtulový list je na své délce zkroucen, protože",
+      "answers": [
+        "a)  je tak zachován stejný úhel nastavení všech jeho profilů",
+        "b)  všechny profily listu vrtule potom pracují zhruba na stejném úhlu náběhu",
+        "c)  se tak sníží hlučnost vrtule"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "114.  Účinnost pevné vrtule navržené pro cestovní let je nejhorší",
+      "answers": [
+        "a)  ve stoupání",
+        "b)  v cestovním letu",
+        "c)  při rozjezdu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "115.  Úhel nastavení automaticky stavitelné vrtule při vzletu je",
+      "answers": [
+        "a)  větší než při cestovním letu",
+        "b)  menší než při cestovním letu",
+        "c)  stejný jako při cestovním letu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "116.  Stavitelná vrtule má na rozdíl od pevné",
+      "answers": [
+        "a)  větší účinnost při vzletu, ale dosáhne se s ní menší rychlost v horizontálním letu",
+        "b)  větší  účinnost v horizontálním letu, ale horší účinnost při vzletu",
+        "c)  větší účinnost téměř ve všech režimech letu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "117.  S jakou vrtulí dosáhne motorový kluzák největší zrychlení při vzletu?",
+      "answers": [
+        "a)  s vrtulí pracující na nízkých otáčkách",
+        "b)  s vrtulí s malým úhlem nastavení",
+        "c)  s vrtulí s velkým úhlem nastavení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "118.  S jakou vrtulí dosáhne motorový kluzák (nebo vlečný letoun) největší zrychlení při vzletu?",
+      "answers": [
+        "a)  s pevnou vrtulí",
+        "b)  s pevnou vrtulí s velkým úhlem nastavení",
+        "c)  s pevnou vrtulí navrženou pro cestovní let"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "119.  Přejde-li motorový kluzák s pevnou vrtulí do klesání beze změny přípusti motoru, potom",
+      "answers": [
+        "a)  se rychlost letu a otáčky vrtule zvýší jen na určitou hodnotu do té doby, než vrtule začne brzdit",
+        "b)  mohou být velmi snadno překročeny max. přípustné otáčky vrtule",
+        "c)  může zamrznout karburátor"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "120.  Přejde-li motorový kluzák s automaticky stavitelnou vrtulí (vrtulí stálých otáček) do klesání beze změny přípusti motoru, potom",
+      "answers": [
+        "a)  se rychlost letu a otáčky vrtule zvýší jen na určitou hodnotu, než vrtule začne brzdit",
+        "b)  mohou být velmi snadno překročeny max. přípustné otáčky vrtule",
+        "c)  může zamrznout karburátor"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "121.  Přejde-li motorový kluzák s pevnou vrtulí do strmého stoupání beze změny přípusti, potom",
+      "answers": [
+        "a)  se rychlost letu ani otáčky motoru nezmění",
+        "b)  se zmenší rychlost letu, ale otáčky motoru se výrazně nezmění",
+        "c)  se rychlost letu nezmění, ale otáčky náhle vzrostou"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "122.  Přejde-li motorový kluzák s automaticky stavitelnou vrtulí (vrtulí stálých otáček) beze změny přípusti do strmého stoupání, potom",
+      "answers": [
+        "a)  se rychlost letu ani otáčky motoru nezmění",
+        "b)  se zmenší rychlost letu, ale otáčky motoru se výrazně nezmění",
+        "c)  se rychlost letu nezmění, ale otáčky náhle vzrostou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "123.  Úhel nastavení stavitelné vrtule v cestovním letu je",
+      "answers": [
+        "a)  větší než při vzletu",
+        "b)  menší než při vzletu",
+        "c)  stejný jako při vzletu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "124.  Při otáčení listu pracujíc vrtule vznikají na každém jeho profilu dvě síly, které jsou příčinou vzniku tahu a kroutícího momentu vrtule, Jak se tyto dvě síly nazývají?",
+      "answers": [
+        "a)  odstředivá a dostředivá síla",
+        "b)  odstředivá síla a vztlak",
+        "c)  vztlak a odpor"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "125.  Vlivem nesymetrického obtékání motorového kluzáku v důsledku práce levotočivé vrtule (otáčí se doelva z pohledu pilota) bude",
+      "answers": [
+        "a)  vznikat na svislé ocasní ploše síla směřující doprava, proto aby pilot zabránil zatočení motorového kluzáku doprava, musí vyšlápnutím pravé nohy vychýlit směrovku doprava",
+        "b)  motorový kluzák spirálově divergentní",
+        "c)  motorový kluzák podélně nestabilní"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "126.  Vliv nesymetrického obtékání motorového kluzáku v důsledku pracující vrtule se bude nejvýrazněji projevovat",
+      "answers": [
+        "a)  v zatáčkách, při přechodu do stoupání nebo klesání",
+        "b)  když kluzák poletí malou rychlostí při plné přípusti",
+        "c)  když kluzák poletí malou rychlostí při stažené přípusti"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "127.  Vlivem pracující vrtule vlečného letounu",
+      "answers": [
+        "a)  vzniká za vrtulí oblast vzduchu s vyšší rychlostí, než je rychlost letu, tato oblast se nazývá vrtulový proud",
+        "b)  vzniká za vrtulí oblast vzduchu s nižší rychlostí, než je rychlost letu, tato oblast se nazývá vrtulový proud",
+        "c)  vzniká před vrtulí oblast vzduchu s vyšší rychlostí, než je rychlost letu, tato oblast se nazývá vrtulový proud"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "128.  Letové vlastnosti kluzáku ve vleku za motorovým letounem jsou mimo jiné ovlivněni i",
+      "answers": [
+        "a)  výfukovými plyny motoru vlečného letounu",
+        "b)  vrtulovým proudem před pracující vrtulí vlečného letounu",
+        "c)  vrtulovým proudem za pracující vrtulí vlečného letounu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "129.  Co nemá vliv na letové vlastnosti kluzáku ve vleku za motorovým letounem?",
+      "answers": [
+        "a)  úplav za křídlem vlečného letounu",
+        "b)  zešikmení vrtulového proudu od pracující vrtule vlečného letounu",
+        "c)  zvýšení rychlosti ve vrtulovém proudu za vrtulí vlečného letounu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "130.  Vliv reakčního momentu vrtule se bude nejvýrazněji projevovat",
+      "answers": [
+        "a)  v zatáčkách, při přechodu do stoupání nebo klesání",
+        "b)  když motorový kluzák poletí malou rychlostí a pilot náhle zvýší výkon motoru",
+        "c)  když motorový kluzák poletí malou rychlostí při stažené přípusti"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "131.  Jak bude působit na motorový kluzák gyroskopický moment levotočivé vrtule při jeho rychlém naklonění na pravé křídlo?",
+      "answers": [
+        "a)  motorový kluzák začne stoupat",
+        "b)  motorový kluzák začne klesat",
+        "c)  motorový kluzák zatočí doprava"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "132.  Motorový kluzák s ostruhovým podvozkem a levotočivou vrtulí při vzletu je pilotem převeden rychlým nadzdvihnutím ocasu do polohy “na kola” (tj. nadzdvihnutím záďového podvozku). Jaký bude účinek působení gyroskopického momentu vrtule?",
+      "answers": [
+        "a)  motorový kluzák začne stoupat",
+        "b)  motorový kluzák začne klesat",
+        "c)  motorový kluzák zatočí doprava"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "133.  Motorový kluzák s levotočivou vrtulí při prudkém vybrání ze střemhlavého letu zatáčí samovolně doleva. Co je toho nejpravděpodobnější příčinou?",
+      "answers": [
+        "a)  pád na vysoké rychlosti",
+        "b)  působení gyroskopického momentu vrtule",
+        "c)  působení reakčního momentu vrtule"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "134.  Účinek gyroskopického momentu vlivem pracující vrtule bude tím větší, čím",
+      "answers": [
+        "a)  je větší rychlost otáčení motorového kluzáku kolem bočné nebo kolmé osy",
+        "b)  je menší rychlost otáčení motorového kluzáku kolem bočné nebo kolmé osy",
+        "c)  je menší rychlost otáčení motorového kluzáku kolem podélné osy"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "135.  Kolik souřadnicových os má letadlo a jak se nazývají?",
+      "answers": [
+        "a)  4, podélná, stranová, příčná a kolmá",
+        "b)  3, podélná, stranová a zemská",
+        "c)  2, souměrnosti a nesouměrnosti"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "136.  Podélná osa letadla svírá v rovině souměrnosti s rychlostí letu úhel, který",
+      "answers": [
+        "a)  v případě, že úhel nastavení křídla je nulový, je roven úhlu náběhu",
+        "b)  je vždy roven nule",
+        "c)  pilot vnímá jako úhel natažení kluzáku nad horizont a je indikován umělým horizontem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "137.  Na obrázku je úhlem ẞ označen",
+      "answers": [
+        "a)  úhel snosu",
+        "b)  úhel náklonu",
+        "c)  úhel vybočení"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "138.  Pohyb letadla, při kterém se otáčí kolem své podélné osy se nazývá",
+      "answers": [
+        "a)  klopení",
+        "b)  zatáčení",
+        "c)  klonění"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "139.  Pohyb letadla, při kterém se otáčí kolem své bočné osy se nazývá",
+      "answers": [
+        "a)  klopení",
+        "b)  zatáčení",
+        "c)  klonění"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "140.  Pohyb letadla, při kterém se otáčí kolem své kolmé osy se nazývá",
+      "answers": [
+        "a)  klopení",
+        "b)  zatáčení",
+        "c)  klonění"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "141.  Pohyb, při kterém se letadlo za letu pohybuje i ve směru své bočné osy, se nazývá",
+      "answers": [
+        "a)  klesání nebo stoupání",
+        "b)  boční posuv (bočení)",
+        "c)  smyk"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "142.  Pohyb, při kterém se letadlo pohybuje i ve směru své kolmé osy, se nazývá",
+      "answers": [
+        "a)  klesání nebo stoupání",
+        "b)  boční posuv (bočení)",
+        "c)  vlastní rotace"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "143.  Pohyb letadla ve směru jeho podélné osy se nazývá",
+      "answers": [
+        "a)  klesání nebo stoupání",
+        "b)  dopředný let",
+        "c)  přistání"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "144.  V horizontálním ustáleném letu je v rovnováze",
+      "answers": [
+        "a)  tah s tíhovou silou, odpor se vztlakem",
+        "b)  tah s odporem, tíhová a setrvačná síla se vztlakem",
+        "c)  tah s odporem, tíhová síla se vztlakem"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "145.  Za jakých podmínek je dosažena max. rychlost v horizontálním ustáleném letu?",
+      "answers": [
+        "a)  při max. výkonu motoru a malém úhlu náběhu",
+        "b)  při maximálním výkonu motoru a velkém úhlu náběhu",
+        "c)  při max. výkonu motoru a záporném úhlu náběhu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "146.  Při kolika úhlech náběhu je možné při plném výkonu motoru dosáhnout max. rychlost v ustáleném horizontálním letu?",
+      "answers": [
+        "a)  při třech",
+        "b)  při dvou",
+        "c)  při jednom"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "147.  Jaké možnosti mohou nastat, jestliže pilot v cestovním letu zvýší výkon motoru?",
+      "answers": [
+        "a)  zmenšením úhlu náběhu (potlačením řídící páky) může motorový kluzák pokračovat v cestovním letu vyšší rychlostí, nebo zvětšením úhlu náběhu (přitažením) může motorový kluzák klesat původní rychlostí",
+        "b)  zmenšením úhlu náběhu (potlačením řídící páky) může motorový kluzák pokračovat v cestovním letu vyšší rychlostí, nebo zvětšením úhlu náběhu (přitažením) může motorový kluzák stoupat původní rychlostí",
+        "c)  zvětšením úhlu náběhu (přitažením řídící páky) může motorový kluzák pokračovat v cestovním letu vyšší rychlostí, nebo zmenšením úhlu náběhu (potlačením) může motorový kluzák stoupat původní rychlostí"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "148.  Největší úhel ustáleného stoupání se dosáhne",
+      "answers": [
+        "a)  jestliže motorový kluzák stoupe max. stoupací rychlostí",
+        "b)  jestliže motorový kluzák stoupe větší rychlostí letu, než při které je stoupací rychlost maximální",
+        "c)  jestliže motorový kluzák stoupe menší rychlostí letu, než při které je stoupací rychlost maximální"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "149.  Největší stoupání dosáhne motorový kluzák letící na",
+      "answers": [
+        "a)  velkém úhlu náběhu",
+        "b)  malém úhlu náběhu",
+        "c)  kritickém úhlu náběhu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "150.  Při ustáleném stoupání musí být výkon motoru",
+      "answers": [
+        "a)  vždy maximální",
+        "b)  stejně velký, jako když motorový kluzák letí stejnou rychlostí v horizontu",
+        "c)  menší, než když motorový kluzák letí stejnou rychlostí v horizontu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "151.  Skutečnost, že motorový kluzák je schopen stoupat jen do určité výšky (na hodnotu tzv. “dostupu”), je způsobena",
+      "answers": [
+        "a)  poklesem tlaku s výškou, který vyvolá u pilota výškovou nemoc",
+        "b)  vytvořením námrazy na celém kluzáku, neboť ve větších výškách klesá teplota pod bod mrazu",
+        "c)  zmenšením hustoty vzduchu s výškou, která zmenší výkon motoru"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "152.  Největšího doletu motorový kluzák dosáhne",
+      "answers": [
+        "a)  při letu na úhlu náběhu odpovídajícímu optimální klouzavosti",
+        "b)  při letu s plnou přípustí motoru",
+        "c)  při letu na vyšším úhlu náběhu, kdy tah motoru je nejmenší možný, aby motorový kluzák letěl v horizontálním letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "153.  V klouzavém letu je rovnováha mezi",
+      "answers": [
+        "a)  tíhovou silou a vztlakem",
+        "b)  tíhovou silou a odporem",
+        "c)  tíhovou silou a vztlakem, odporem a rychlostí letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "154.  Klouzavost (uvažujeme vůči vzduchu) je ovlivněna jen",
+      "answers": [
+        "a)  letovou hmotností",
+        "b)  úhlem náběhu (tj. součinitelem vztlaku a odporu)",
+        "c)  rychlostí větru"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "155.  Hodnota optimální klouzavosti kluzáků cvičné kategorie (L 13, L 23 a pod) se pohybuje kolem",
+      "answers": [
+        "a)  0,8",
+        "b)  8",
+        "c)  28"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "156.  Hodnota optimální klouzavosti kluzáků standardní kategorie FAI (VSO 10, Discus a pod.) se pohybuje kolem",
+      "answers": [
+        "a)  0,8",
+        "b)  8",
+        "c)  40"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "157.  Hodnota optimální klouzavosti kluzáků volné kategorie FAI (ASW 22, Nimbus 4 a pod.) se pohybuje kolem",
+      "answers": [
+        "a)  0,8",
+        "b)  8",
+        "c)  40"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "158.  Optimální klouzavostí lze letět při",
+      "answers": [
+        "a)  jednom úhlu náběhu",
+        "b)  dvou úhlech náběhu",
+        "c)  max. úhlu náběhu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "159.  Letí-li kluzák klouzavým letem při takovém úhlu náběhu, že jeho klouzavost je např. 28, pak to znamená, že",
+      "answers": [
+        "a)  doletí z výšky 1 km do vzdálenosti 28 km (při bezvětří), přičemž vztlak kluzáku je 28 krát menší než jeho odpor",
+        "b)  doletí z výšky 1 km do vzdálenosti 28 km (při bezvětří), přičemž vztlak kluzáku je 28 krát větší než jeho odpor",
+        "c)  kluzák letí k zemi pod úhlem 28°, přičemž vztlak kluzáku je 28 krát větší než jeho odpor"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "160.  Který úhel na obrázku kluzáku v klouzavém letu je úhel klouzání?",
+      "answers": [
+        "a)  I",
+        "b)  II",
+        "c)  III"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "161.  Jak se nazývají úhly, které jsou na obrázku kluzáku v klouzavém letu označeny I a III? (obr. u otázky č. 160.)",
+      "answers": [
+        "a)  I je úhel klouzání, III je úhle náběhu",
+        "b)  I je úhle náběhu, III je úhel klouzání",
+        "c)  I i III je úhle klouzání"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "162.  Jaký význam mají rychlosti v, vx, vy na obrázku kluzáku v klouzavém letu a jaký úhel svírá v s vx ?  (obr. u otázky č. 160)",
+      "answers": [
+        "a)  v je rychlost letu, vx je rychlost klouzání, vy je rychlost klesání, rychlost letu a rychlost klouzání svírají úhel náběhu",
+        "b)  v je rychlost klesání, vx je rychlost letu, vy je rychlost klesání, rychlost letu a rychlost klesání svírají úhel klouzání",
+        "c)  v je rychlost letu, vx je rychlost dopředná, vy je rychlost klesání, rychlost letu a rychlost dopředná svírají úhel klouzání"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "163.  Kluzák letí klouzavým letem, kterému odpovídá v rychlostní poláře bod A. Jakým zásahem řízení přejde kluzák do klouzavého letu charakterizovaného bodem X a jak se změní přitom úhel náběhu, úhel klouzání a rychlost letu:",
+      "answers": [
+        "a)  přitažením řídící páky se zmenší  úhel náběhu, úhel klouzání se nezmění, rychlost letu se zmenší",
+        "b)  přitažením řídící páky se zvětší úhel náběhu, úhel klouzání se zmenší, rychlost letu se zmenší",
+        "c)  přitažením řídící páky se zvětší úhel náběhu, úhel klouzání se zmenší, rychlost letu se zvětší"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "164.  Kluzák letí klouzavým letem, kterému odpovídá v rychlostní poláře bod B. Jakým zásahem řízení přijde kluzák do klouzavého letu charakterizovaného bodem X a jak se změní přitom úhel náběhu, úhel klouzání a rychlost letu? (obr. u otázky č. 163)",
+      "answers": [
+        "a)  potlačením řídící páky se zmenší úhel náběhu, úhel klouzání se nezmění, rychlost letu se zvětší",
+        "b)  potlačením řídící páky se zmenší úhel náběhu, úhel klouzání se zmenší, rychlost letu se zvětší",
+        "c)  přitažením řídící páky se zvětší úhel náběhu, úhel klouzání se zmenší, rychlost letu se zvětší"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "165.  Na obrázku je rychlostní polára kluzáku. Jak je označen bod, který odpovídá letu s max. klouzavostí, tj. min. úhlu klouzání?",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  C"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "166.  Na obrázku je rychlostní polára kluzáku. Jak je označen bod, který odpovídá letu s minimální rychlostí? (obr. u otázky č. 165.)",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "167.  Na obrázku je rychlostní polára kluzáku. Jak je označen bod, který odpovídá letu s minimální rychlostí klesání? (obr. u otázky č. 165.)",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  C"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "168.  Na obrázku je rychlostní polára kluzáku. Jak je označen bod, který odpovídá letu střemhlav? (obr. u otázky č. 165.)",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "169.  Jak je v rychlostní poláře označen bod, kdy kluzák dolétne z dané výšky nejdále? (obr. u otázky č. 165.)",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  C"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "170.  Jak je v rychlostní poláře označen bod, kdy kluzák vydrží z dané výšky nejdéle v letu? Jaká je přitom rychlost letu vůči rychlosti, při níž má kluzák max. klouzavost? (obr. u otázky č. 165.)",
+      "answers": [
+        "a)  A, rychlost letu při nejmenším klesání je menší než při max. klouzavosti",
+        "b)  B, rychlost letu při nejmenším klesání je větší než při max. klouzavosti",
+        "c)  B, rychlost letu při nejmenším klesání je menší než při max. klouzavosti"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "171.  Na rychlostní poláře jsou vyznačené tři  body. Pro které z nich platí, že úhly klouzání se navzájem neliší, zatímco rychlosti letu jsou rozdílné?",
+      "answers": [
+        "a)  X,Y a Z",
+        "b)  X a Y",
+        "c)  Y a Z"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "172.  Na obrázku je rychlostní polára kluzáku v obsazení “SOLO”. Čárkovaně jsou vyznačeny tři rychlostní poláry, z nichž některá odpovídá rychlostní poláře téhož kluzák ve “DVOJÍM” obsazení. Určete která.",
+      "answers": [
+        "a)  I, II a III",
+        "b)  I a II",
+        "c)  I"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "173.  Tři stejné kluzáky o stejné hmotnosti začnou ze stejného místa klouzat ke stoupavému proudu. Kluzák A letí rychlostí odpovídající optimální klouzavosti v klidném ovzduší, kluzák B letí vyšší rychlostí a kluzák C ještě vyšší rychlostí (obr. 1). Kluzáky postupně dosáhnou stoupavého proudu a začnou stoupat stejnou rychlostí průměrného stoupání vst. Stejnou výšku jako na začátku získá první kluzák B (obr. 2). Který kluzák měl největší přeskokovou rychlost v a který největší cestovní rychlost vc?",
+      "answers": [
+        "a)  největší přeskokovou rychlost měl kluzák C, největší cestovní rychlost měl kluzák B",
+        "b)  největší přeskokovou rychlost měl kluzák C, největší cestovní rychlost měl kluzák A",
+        "c)  největší přeskokovou rychlost měl kluzák B, největší cestovní rychlost měl kluzák C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "174.  Z rychlosti poláry kluzáku L 13 určete optimální přeskokovou rychlost a cestovní rychlost kluzáku o hmotnosti 400 kg při hodnotě průměrného stoupání 0 m/s.",
+      "answers": [
+        "a)  optimální přeskoková rychlost je 78 km/h, cestovní rychlost je 0 km/h.",
+        "b)  optimální přeskoková rychlost je 85 km/h, cestovní rychlost je 0 km/h",
+        "c)  optimální přeskoková rychlost je 112 km/h, cestovní rychlost je 64 km/h"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "175.  Z rychlostní poláry kluzáku L 13 určete optimální přeskokovou rychlost a cestovní rychlost kluzáku o hmotnosti 480 kg při hodnotě průměrného stoupání 0 m/s (obr. u otázky č. 174.)",
+      "answers": [
+        "a)  optimální přeskoková rychlost je 78 km/h, cestovní rychlost je 0 km/h",
+        "b)  optimální přeskoková rychlost je 85 km/h, cestovní rychlost je 0 km/h",
+        "c)  optimální přeskoková rychlost je 112 km/h, cestovní rychlost je 64 km/h"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "176.  Z rychlostní poláry kluzáku L-13 určete optimální přeskokovou rychlost a cestovní rychlost kluzáku o hmotnosti 400 kg při hodnotě průměrného stoupání 1 m/s (obr. u otázky č. 174.)",
+      "answers": [
+        "a)  optimální přeskoková rychlost je 78 km/h, cestovní rychlost je 0 km/h",
+        "b)  optimální přeskoková rychlost je 96 km/h, cestovní rychlost je 0 km/h",
+        "c)  optimální přeskoková rychlost je 96 km/h, cestovní rychlost je 46 km/h"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "177.  Z rychlostní poláry kluzáku L-13 určete optimální přeskokovou rychlost a cestovní rychlost kluzáku o hmotnosti 480 kg při hodnotě průměrného stoupání 1 m/s (obr. u otázky č. 174.)",
+      "answers": [
+        "a)  optimální přeskoková rychlost je 78 km/h, cestovní rychlost je 0 km/h",
+        "b)  optimální přeskoková rychlost je 85 km/h, cestovní rychlost je 49 km/h",
+        "c)  optimální přeskoková rychlost je 119 km/h, cestovní rychlost je 68 km/h"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "178.  Z rychlostní poláry kluzáku L-13 určete optimální přeskokovou rychlost a cestovní rychlost kluzáku o hmotnosti 400 kg při hodnotě průměrného stoupání 2 m/s (obr. u otázky č. 174.)",
+      "answers": [
+        "a)  optimální přeskoková rychlost je 78 km/h, cestovní rychlost je 0 km/h",
+        "b)  optimální přeskoková rychlost je 85 km/h, cestovní rychlost je 0 km/h",
+        "c)  optimální přeskoková rychlost je 112 km/h, cestovní rychlost je 64 km/h"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "179.  Z rychlostní poláry kluzáku L-13 určete optimální přeskokovou rychlost a cestovní rychlost kluzáku o hmotnosti 480 kg při hodnotě průměrného stoupání 2 m/s",
+      "answers": [
+        "a)  optimální přeskoková rychlost je 78 km/h, cestovní rychlost je 0 km/h",
+        "b)  optimální přeskoková rychlost je 85 km/h, cestovní rychlost je 0 km/h",
+        "c)  optimální přeskoková rychlost je 112 km/h, cestovní rychlost je 64 km/h"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "180.  Jaké jsou fáze vzletu motorového kluzáku?",
+      "answers": [
+        "a)  rozjezd, odtržení, mírné stoupání, strmé stoupání až do předepsané výšky",
+        "b)  rozjezd, nadzdvihnutí, rozlet, přechodový oblouk, stoupání až do doby než je dosažena cestovní rychlost",
+        "c)  rozjezd, nadzdvihnutí, rozlet, přechodový oblouk, stoupání do předepsané výšky"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "181.  Během vzletu motorového kluzáku nebo vzletu kluzáku v aerovleku lze počítat s přízemním efektem",
+      "answers": [
+        "a)  při rozjezdu a nadzdvihnutí",
+        "b)  při rozjezdu, nadzdvihnutí a rozletu",
+        "c)  nejvíce v přechodovém oblouku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "182.  Rychlost při nadzdvihnutí během vzletu motorového kluzáku nebo kluzáku v aerovleku nebo navijákem je",
+      "answers": [
+        "a)  přibližně o 10 až 15% větší, než minimální rychlost",
+        "b)  přibližně o 10 až 15% menší, než minimální rychlost",
+        "c)  stejně velká jako rychlost, kdy je dosaženo max. klouzavosti"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "183.  Která fáze vzletu motorového kluzáku je nejnebezpečnější a proč?",
+      "answers": [
+        "a)  stoupání, protože v této fázi vzletu je největší úhel náběhu",
+        "b)  odpoutání, v této fázi vzletu prudce klesne vztlak kluzáku, který je až do této chvíle vytvářen přízemním efektem",
+        "c)  nadzdvihnutí, neboť při náhlém odpoutání od země může dojít k překročení max. přípustných otáček vrtule v důsledku jejího odlehčení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "184.  Jak bude ovlivněna délka vzletu motorového kluzáku, jestliže kluzák od počátku rozjezdu se bude pohybovat na úhlu náběhu v blízkosti kritického úhlu?",
+      "answers": [
+        "a)  délka vzletu se výrazně zkrátí, neboť kluzák dosáhne velkého součinitele vztlaku",
+        "b)  délka vzletu se nepatrně prodlouží",
+        "c)  kluzák v důsledku značného součinitele odporu bude velice pomalu zrychlovat, takže délka vzletu se výrazně prodlouží"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "185.  Které faktory prodlouží délku vzletu motorového kluzáku nebo kluzáku při vzletu aerovlekem?",
+      "answers": [
+        "a)  větší nadmořská výška letiště, měkký a travnatý povrch dráhy, vítr do zad, vyšší teplota ovzduší",
+        "b)  větší nadmořská výška letiště, měkký a travnatý povrch dráhy, protivítr, vyšší teplota ovzduší",
+        "c)  větší nadmořská výška letiště, suchý a zpevněný povrch dráhy, vítr do zad, vyšší teplota ovzduší"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "186.  Které faktory prodlouží délku vzletu motorového kluzáku nebo kluzáku",
+      "answers": [
+        "a)  vyšší letová hmotnost, vyšší teplota ovzduší, vzletová dráha proti svahu, protivítr",
+        "b)  vyšší letová hmotnost, nižší teplota ovzduší, vzletová dráha proti svahu, vítr do zad",
+        "c)  vyšší letová hmotnost, vyšší teplota ovzduší, vzletová dráha proti svahu, vítr do zad"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "187.  Vysunuté brzdící klapky při vzletu motorového kluzáku způsobí, že",
+      "answers": [
+        "a)  se značně prodlouží rozjezd kluzáku, po nadzdvihnutí se již vliv brzdících klapek neprojeví",
+        "b)  se kluzák vůbec nepohne z místa, jestliže se ale rozjede, pak již vzlet má obvyklý charakter",
+        "c)  vzlet kluzáku je prakticky nemožný, neboť pohonná jednotka nemá přebytek výkonu vzhledem k výrazně zhoršené aerodynamické jemnosti kluzáku"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "188.  V první fázi rozjezdu během vzletu kluzáku v aerovleku s bočním větrem má kluzák snahu se vlivem vrtulového proudu vznikajícího za vlečným letounem",
+      "answers": [
+        "a)  výrazně vychylovat ze směru, a to proti větru",
+        "b)  naklánět se na návětrné křídlo",
+        "c)  naklánět se na závětrné křídlo"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "189.  Jaký je obvyklý průběh vzletu kluzáku v aerovleku?",
+      "answers": [
+        "a)  kluzák se nadzdvihne společně s vlečným letounem a během rozletu má v důsledku zvyšující se rychlosti snahu stoupat",
+        "b)  kluzák se nadzdvihne, až když vlečný letoun je již ve fázi rozletu a proto má v důsledku zvyšující se rychlosti snahu stoupat",
+        "c)  během rozletu a rozjezdu vlečného letounu má kluzák v důsledku zvyšující se rychlosti snahu přejít do pádu na vysoké rychlosti"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "190.  Letí-li kluzák během rozletu při vzletu aerovlekem s velkým převýšením vzhledem k vlečnému letounu, tak",
+      "answers": [
+        "a)  zvedáním zadní části trupu přivádí vlečný letoun na menší úhel náběhu a prodlužuje tak rozjezd vlečného letounu",
+        "b)  zvedáním zadní části trupu přivádí vlečný letoun na větší úhel náběhu a prodlužuje tak rozjezd vlečného letounu",
+        "c)  zvedání zadní části trupu pomáhá vlečnému letounu dříve se nadzdvihnout a tím zkracuje délku vzletu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "191.  Jakou silou je nejvíce napínáno při ustáleném horizontálním letu kluzáku v aerovleku vlečné lano?",
+      "answers": [
+        "a)  tahem motoru vlečného letounu, tj. asi kolem 2000N",
+        "b)  tíhovou silou kluzáku, tj. asi kolem 5000N",
+        "c)  odporem kluzáku, tj. asi kolem 200N"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "192.  Jaká je poloha kluzáku vůči vrtulovému proudu a úplavu za vlečným letounem, letí-li kluzák při horizontálním ustáleném letu ve stejné výšce jako vlečný letoun nebo výrazně pod ním?",
+      "answers": [
+        "a)  ve stejné výšce nad vrtulovým proudem a úplavem, při letu výrazně pod vlečným letounem pod vrtulovým proudem a úplavem",
+        "b)  ve stejné výšce nad vrtulovým proudem a úplavem, při letu výrazně pod vlečným letounem nad vrtulovým proudem a úplavem",
+        "c)  ve stejné výšce pod vrtulovým proudem a úplavem, při letu výrazně pod vlečným letounem pod vrtulovým proudem a úplavem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "193.  Při sestupném letu v aerovleku je v důsledku rozdílné aerodynamické jemnosti kluzáku a vlečného letounu",
+      "answers": [
+        "a)  nutné, aby pilot kluzáku povysunul brzdící klapky a tím brzdil sestup, jinak by motorový letoun snadno dosáhl vyšší rychlost, než je max. povolená pro let v aerovleku a kluzák  by se musel vypnout",
+        "b)  nutné, aby pilot kluzáku povysunul brzdící klapky, jinak by při zachování stejného úhlu klouzání předlétl vlečný letoun",
+        "c)  nutné, aby pilot kluzáku plně vysunul brzdící a vztlakové klapky, jinak by při zachování stejného úhlu klouzání předlétl vlečný letoun"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "194.  Jaké jsou fáze vzletu kluzáku navijákem?",
+      "answers": [
+        "a)  rozjezd, odtržení, mírné stoupání, strmé stoupání až do předepsané výšky",
+        "b)  rozjezd, nadzdvihnutí, rozlet, přechodový oblouk, stoupání až do doby, než je zvlet obsluhou navijáku ukončen",
+        "c)  rozjezd, nadzdvihnutí, rozlet, přechodový oblouk, stoupání do předepsané výšky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "195.  Jaký vliv má při vzletu kluzáku navijákem vítr?",
+      "answers": [
+        "a)  prakticky žádný",
+        "b)  při vzletu proti větru není nutný příliš vysoký výkon navijáku, vlečné lano se proto pomalu zkracuje, čímž se prodlužuje doba vzletu a dosažená výška je tak větší. Při vzletu po větru je nutný vysoký výkon navijáku, vlečné lano se rychle zkracuje a dosažená výška je tak malá",
+        "c)  při vzletu po větru není nutný příliš vysoký výkon navijáku, vlečné lano se proto pomalu zkracuje, čímž se prodlužuje doba vzletu a dosažená výška je tak větší. Při vzletu proti větru je nutný vysoký výkon navijáku, vlečné lano se rychle zkracuje a dosažená výška je tak malá"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "196.  Jaké největší nebezpečí hrozí, jestliže pilot kluzáku při vzletu navijákem přejde do stoupání prudkým přechodovým obloukem?",
+      "answers": [
+        "a)  pád kluzáku při přerušení tahu navijáku, ke kterému může dojít v tomto případě mnohem snáze jednak v důsledku přetržení vlečného lana nebo přetížením motoru navijáku",
+        "b)  přetažení a pád kluzáku na vysoké rychlosti",
+        "c)  nadměrně vysoká spotřeba paliva navijáku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "197.  Boční závěsy kluzáku pro vzlet navijákem jsou umístěny",
+      "answers": [
+        "a)  v těžišti kluzáku",
+        "b)  poněkud před těžištěm kluzáku",
+        "c)  poněkud za těžištěm kluzáku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "198.  Na obrázku jsou dva způsoby provedení přechodového oblouku při vzletu kluzáku navijákem. Písmenem A je označen případ, kdy je v přízemním efektu dosažena vyšší rychlost, která umožňuje prudký přechodový oblouk a strmé stoupání. V případě B je kluzák plynule převeden do stoupání. Který způsob zajišťuje bezpečný průběh vzletu a při kterém je obvykle výška získaná při vzletu větší?",
+      "answers": [
+        "a)  bezpečný způsob: A, obvykle větší výška: A",
+        "b)  bezpečný způsob: A, obvykle větší výška: B",
+        "c)  bezpečný způsob: B, obvykle větší výška: A"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "199.  V případě přerušení tahu při navijákovém vzletu za boční závěsy zbylá část vlečného lana v bočních závěsech způsobí",
+      "answers": [
+        "a)  úplnou ztrátu směrové řiditelnosti kluzáku",
+        "b)  přídavný klopivý moment ve smyslu “na ocas”",
+        "c)  přídavný klopivý moment ve smyslu “na hlavu”"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "200. Na kterém obrázku je správně ukázána rovnováha sil v ustáleném stoupání kluzáku při navijákovém vzletu?",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  C"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "201.  Jak je velký násobek v ustáleném stoupání při vzletu kluzáku navijákem?",
+      "answers": [
+        "a)  přestože pilot nepociťuje přetížení, neboť násobek není způsobený setrvačnou silou, je jeho velikost kolem 2 a může být i vyšší",
+        "b)  vždy 1, protože pilot nepociťuje žádné přetížení",
+        "c)  vždy 0, protože pilot nepociťuje žádné přetížení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "202.  Proč je při vzletu kluzáku navijákem omezena max. rychlost letu?",
+      "answers": [
+        "a)  při vleku vysokou rychlostí by pracoval naviják na příliš vysokém výkonu, aby k tomu nedocházelo, je rychlost vleku omezena",
+        "b)  kluzák je při rychlosti, kterou letí ve vleku navijákem na mnohem vyšším úhlu náběhu, než je tomu při stejné rychlosti v klouzavém letu, a proto by mohl překročit max. povolený násobek",
+        "c)  kluzák je při rychlosti, kterou letí ve vleku navijákem, na mnohem menším úhlu náběhu, než je tomu při stejné rychlosti v klouzavém letu, a proto by mohl překročit max. povolený násobek"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "203.  Jaké jsou fáze přistání?",
+      "answers": [
+        "a)  klouzání z předepsané výšky, přechodový oblouk (vyrovnání), výdrž (podrovnání), dosednutí, dojezd",
+        "b)  klouzání z výšky 4. okruhové zatáčky, přechodový oblouk (vyrovnání), výdrž (podrovnání), dosednutí, dojezd",
+        "c)  klouzání z předepsané výšky, přechodový oblouk (vyrovnání), vyplavání, dosednutí, dojezd"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "204.  Které faktory prodlužují délku přistání?",
+      "answers": [
+        "a)  vyšší letová hmotnost, vyšší teplota ovzduší, vzletová dráha ze svahu, protivítr",
+        "b)  vyšší letová hmotnost, nižší teplota ovzduší, vzletová dráha proti svahu, vítr do zad",
+        "c)  vyšší letová hmotnost, vyšší teplota ovzduší, vzletová dráha ze svahu, vítr do zad"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "205.  Ve které fázi přistání může nejsnáze dojít k  pádu na vysoké rychlosti?",
+      "answers": [
+        "a)  v klouzání",
+        "b)  v přechodovém oblouku",
+        "c)  ve výdrži"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "206.  Na obrázku jsou rychlostní poláry kluzáku v letové konfiguraci, s vysunutými vztlakovými klapkami a s vysunutými brzdícími klapkami. Jak je označena rychlostní polára, která odpovídá rychlostní poláře kluzáku s vysunutými vztlakovými klapkami?",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  C"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "207.  Na obrázku jsou rychlostní poláry kluzáku v letové konfiguraci, s vysunutými vztlakovými klapkami a s vysunutými brzdícími klapkami. Jak je označena rychlostní polára, která odpovídá rychlostní poláře kluzáku s vysunutými brzdícími klapkami? (obr. u otázky č. 206)",
+      "answers": [
+        "a)  A",
+        "b)  B",
+        "c)  C"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "208.  Proč je při přistání velmi nebezpečné již vysunuté vztlakové klapky znovu zasunout? Protože",
+      "answers": [
+        "a)  se zmenší odpor a proto výrazně klesne rychlost",
+        "b)  se zvětší rychlost a kluzák začne znovu sám stoupat",
+        "c)  se zmenší podstatně vztlak a kluzák se prosedne"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "209.  Který bod v rychlostní poláře kluzáku odpovídá max. klouzavosti vůči zemi, jestliže kluzák letí proti větru o rychlosti 10 m/s (tj. 36 km/h)",
+      "answers": [
+        "a)  žádný",
+        "b)  A",
+        "c)  B"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "210.  Který bod v rychlostní poláře kluzáku odpovídá max. klouzavosti vůči zemi, jestliže kluzák letí po větru o rychlosti 10m/s (tj. 36 km/h) (obr. u otázky č. 209.)",
+      "answers": [
+        "a)  žádný",
+        "b)  A",
+        "c)  B"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "211.  Násobek zatížení udává",
+      "answers": [
+        "a)  o kolik je v daném okamžiku letu vztlak kluzáku větší, než jeho tíha",
+        "b)  kolikrát je v daném okamžiku vztlak kluzáku větší než vztlak, jaký má kluzák při stejné rychlosti v ustáleném klouzavém letu",
+        "c)  kolikrát jsou ocasní plochy kluzáku více zatíženy než jeho křídlo"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "212.  Násobek zatížení udává",
+      "answers": [
+        "a)  kolikrát je v daném okamžiku letu vztlak kluzáku větší, než jeho tíha",
+        "b)  o kolik je v daném okamžiku vztlak kluzáku větší, než vztlak, jaký má kluzák při stejné rychlosti v ustáleném klouzavém letu",
+        "c)  kolikrát jsou ocasní plochy kluzáku více zatíženy než jeho křídlo"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "213.  V horizontálním ustáleném letu motorového kluzáku nebo klouzavém letu kluzáku je násobek roven",
+      "answers": [
+        "a)  0",
+        "b)  2",
+        "c)  -4,5"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "214.  Okamžitá velikost násobku za letu závisí na",
+      "answers": [
+        "a)  velikosti vztlaku, tj. především na rychlosti letu a úhlu náběhu",
+        "b)  max. povolené letové hmotnosti",
+        "c)  rychlosti letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "215.  Nejvíce pilot ovlivní velikost násobku",
+      "answers": [
+        "a)  přitažením nebo potlačením řídící páky",
+        "b)  vysunutím podvozku",
+        "c)  vyvážením “těžký na ocas”"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "216.  Velikost násobku +3 znamená",
+      "answers": [
+        "a)  že pilot o hmotnosti 80 kg je tažen ze sedačky silou přibližně 2400N",
+        "b)  že pilot o hmotnosti 80 kg je tlačen do sedačky silou přibližně 2400N (tj. jako kdyby vážil 240 kg)",
+        "c)  že pilot o hmotnosti 80 kg je tlačen do sedačky silou přibližně 3200N (tj. jako kdyby vážil 320 kg)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "217.  Největší možný násobek při dané rychlosti letu lze dosáhnout",
+      "answers": [
+        "a)  při letu s úhlem náběhu pro max. klouzavost",
+        "b)  ve skluzu",
+        "c)  při max. součiniteli vztlaku (tj. při kritickém úhlu náběhu)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "218.  Násobek větší než +1 je dosažen vždy, když",
+      "answers": [
+        "a)  je kluzák přiveden na kritický úhel náběhu při rychlosti větší, než odpovídá minimální rychlosti v horizontálním ustáleném letu",
+        "b)  pilot přidá nebo ubere výkon motoru, u kluzáku vysune nebo zasune brzdící klapky",
+        "c)  pilot vychýlí směrovku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "219.  Při letu se záporným násobkem",
+      "answers": [
+        "a)  je pilot tlačen do sedačky a vztlak ohýbá křídlo kluzáku směrem dolů",
+        "b)  hrozí nebezpečí rozkmitání konstrukce kluzáku",
+        "c)  je pilot tažen ze sedačky a vztlak ohýbá křídlo kluzáku směrem nahoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "220.  Jaké nebezpečí hrozí, když kluzák za letu překročí nejvyšší povolený provozní násobek o 30%?",
+      "answers": [
+        "a)  dojde ke zničení konstrukce kluzáku",
+        "b)  popraská lak na lakovaných částech konstrukce kluzáku",
+        "c)  na konstrukci kluzáku se objeví trvalé deformace, nedojde ale k jejímu zničení"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "221.  Jaké nebezpečí hrozí, když kluzák za letu překročí nejvyšší povolený provozní násobek o 70%?",
+      "answers": [
+        "a)  dojde ke zničení konstrukce kluzáku",
+        "b)  popraská lak na lakovaných částech konstrukce kluzáku",
+        "c)  na konstrukci kluzáku se objeví trvalé deformace, nedojde ale k jejímu zničení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "222.  Jaký průběh bude mít vybírání střemhlavého letu, když ho provede na velkém úhlu náběhu?",
+      "answers": [
+        "a)  let bude stranově nestabilní",
+        "b)  let bude probíhat po dráze o velkém poloměru s malým násobkem",
+        "c)  let bude probíhat po dráze o malém poloměru s velkým násobkem"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "223.  Při vybrání ze střemhlavého letu velkou rychlostí se obvykle dosáhne",
+      "answers": [
+        "a)  velkého násobku",
+        "b)  malého násobku",
+        "c)  max. povoleného záporného násobku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "224.  Jaký význam má silně vytažená čára, omezující na obrázku obálku obratů v rozsahu od rychlosti minimální (označené Vs1) až do návrhové rychlosti obratů (označené va)?",
+      "answers": [
+        "a)  v tomto rozsahu rychlostí není možné provádět žádné akrobatické obraty, jinak hrozí nebezpečí úplného zničení konstrukce",
+        "b)  v tomto rozsahu rychlostí nelze dosáhnout většího násobku, než udává grafická závislost, protože tato čára odpovídá letu s max. součinitelem vztlaku",
+        "c)  v tomto rozsahu rychlostí se nesmí dosáhnout větší násobek, než udává grafická závislost, protože by při dalším zvyšování úhlu náběhu hrozilo nebezpečí úplného zničení konstrukce kluzáku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "225.  Ve kterém rozsahu rychlostní obálky obratů je možné při použití plné výchylky výškovky překročit max. povolený násobek a jaká barva oblouku na rychloměru tomu odpovídá?",
+      "answers": [
+        "a)  vs1 až vne, zelená",
+        "b)  vs1 až va, žlutá",
+        "c)  vs1 až va, zelená"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "226.  Jaký význam má silně vytažená čára, omezující na obrázku obálku obratů v rozsahu od návrhové rychlosti obratů (značené VA) do max. přípustné rychlosti letu (označené VNE)?",
+      "answers": [
+        "a)  v tomto rozsahu rychlostí je možné provádět veškeré akrobatické obraty, přitom hrozí nebezpečí úplného zničení konstrukce",
+        "b)  v tomto rozsahu rychlostí nelze dosáhnout většího násobku, než udává grafická závislost, protože tato čára odpovídá letu s max. Součinitelem vztlaku",
+        "c)  v tomto rozsahu rychlostí se nesmí dosáhnout větší násobek, než udává grafická závislost, protože by při dalším zvyšováním úhlu náběhu hrozilo nebezpečí úplného zničení konstrukce kluzáku"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "227.  Ve kterém rozsahu rychlostí obálky obratů není možné i při použití plné výchylky výškovky překročit max. povolený násobek a jaká barva podstatné části oblouku na rychloměru tomu odpovídá? (obr. u otázky č. 226)",
+      "answers": [
+        "a)  Vs1 až VNE, zelená",
+        "b)  Vs1 až VA, žlutá",
+        "c)  Vs1 až VA, zelená"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "228.  Jaký význam má čára omezující obálku obratů při maximální přípustné rychlosti (označené VNE)?",
+      "answers": [
+        "a)  pevnostní, při vyšší rychlosti by došlo k  porušení konstrukce kluzáku",
+        "b)  při větší rychlosti by bylo dosaženo místní rychlosti zvuku",
+        "c)  při větší rychlosti by mohlo dojít k překročení max. povolených otáček vrtule"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "229.  Velikost násobku při průletu poryvem se zvětšuje, když kluzák",
+      "answers": [
+        "a)  letí větší rychlostí, má větší letovou hmotnost poryv je slabý",
+        "b)  letí větší rychlostí, má větší letovou hmotnost a poryv je silný",
+        "c)  letí větší rychlostí, má menší letovou hmotnost a poryv je silný"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "230.  V jaké rozsahu obálky poryvů není možné, aby poryv způsobil zničení konstrukce kluzáku? (obr. u otázky č. 228.)",
+      "answers": [
+        "a)  Vs1 až VNE, v tomto rozsahu rychlostí dojde k pádu kluzáku",
+        "b)  Vs1 až VA, v tomto rozsahu rychlostí dojde ke snížení řiditelnosti kluzáku",
+        "c)  VA až VNE, v tomto rozsahu rychlostí dojde k pádu kluzáku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "231.  ve správné zatáčce musí být vztlak",
+      "answers": [
+        "a)  stejně velký jako při stejné rychlosti v horizontálním ustáleném letu (u kluzáku v klouzavém letu)",
+        "b)  větší než při stejné rychlosti v horizontálním ustáleném letu (u kluzáku v klouzavém letu)",
+        "c)  menší než při stejné rychlosti v horizontálním ustáleném letu (u kluzáku v klouzavém letu)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "232.  Ve správné zatáčce musí být úhel náběhu",
+      "answers": [
+        "a)  stejně velký, jako při stejné rychlosti v horizontálním ustáleném letu (u kluzáku v klouzavém letu)",
+        "b)  větší než při stejné rychlosti v horizontálním ustáleném letu (u kluzáku v klouzavém letu)",
+        "c)  menší než při stejné rychlosti v horizontálním ustáleném letu (u kluzáku v klouzavém letu)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "233.  Na obrázku je kluzák v zatáčce při pohledu ze shora. V jaké zatáčce kluzák letí",
+      "answers": [
+        "a)  správné",
+        "b)  skluzové",
+        "c)  výkluzové"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "234.  Na obrázku je kluzák v zatáčce při pohledu ze shora. V jaké zatáčce kluzák letí (obr. u otázky č. 233.)",
+      "answers": [
+        "a)  správné",
+        "b)  skluzové",
+        "c)  výkluzové"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "235.  Ve správné ustálené zatáčce o náklonu 60° je násobek",
+      "answers": [
+        "a)  60.0",
+        "b)  1.0",
+        "c)  6.3"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "236.  Jak souvisí hodnota náklonu v zatáčce (ustálená správná zatáčka) s velikostí násobku?",
+      "answers": [
+        "a)  násobek klesá s rostoucím náklonem zatáčky",
+        "b)  násobek roste s rostoucím náklonem zatáčky",
+        "c)  náklon a násobek v zatáčce spolu nesouvisí, záleží výlučně na rychlosti letu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "237.  Proč se musí v ostrých zatáčkách v horizontu zvyšovat výkon motoru?",
+      "answers": [
+        "a)  aby kluzák překonal tíhovou a odstředivou sílu, potřebuje větší vztlak. Zvětšení vztlaku je dosaženo větším úhlem náběhu v zatáčce než je tomu při stejné rychlosti v horizontálním letu, tím se zvyšuje nejen součinitel vztlaku , ale i odporu",
+        "b)  aby kluzák překonal odstředivou sílu, potřebuje dostatečně velkou sílu dostředivou. Jednou z jejích složek je v zatáčce tah motoru",
+        "c)  protože to je hlavní způsob, jak opravit výkluzovou nebo skluzovou zatáčku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "238.  Minimální poloměr ustálené správné zatáčky je omezen",
+      "answers": [
+        "a)  max. součinitelem vztlaku, max. povoleným násobkem a nepřekročitelnou rychlostí zn. VNE",
+        "b)  max. součinitelem vztlaku, tahem motoru (u motorového kluzáku) a max. povoleným násobkem",
+        "c)  max. povoleným násobkem a úhlem náklonu 90°"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "239.  Minimální rychlost kluzáku uvedená v letové příručce je 60km/h. Jakou bude mít tento kluzák min. rychlost při stejné konfiguraci v 60° ustálené zatáčce?",
+      "answers": [
+        "a)  60 km/h",
+        "b)  55 km/h",
+        "c)  120 km/h"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "240.  Minimální rychlost letu v ustálené zatáčce v horizontu",
+      "answers": [
+        "a)  je tím větší, čím je zatáčka ostřejší",
+        "b)  je dána letovou příručkou a platí pro všechny režimy letu",
+        "c)  je tím menší, čím je zatáčka ostřejší"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "241.  Závislost klesací rychlosti na poloměru kroužení je znázorněna na obrázku. Jak souvisí náklon v kroužení s vyznačenými body A, B, C a D?",
+      "answers": [
+        "a)  bodu A odpovídá náklon 15°, B - 30°, C - 45°, D - 60°",
+        "b)  bodu A odpovídá náklon 60°, B - 45°, C - 30°, D - 15°",
+        "c)  bodu A odpovídá náklon 15°, B - 45°, C - 30°, D - 60°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "242.  Závislost klesací rychlosti na poloměru kroužení je znázorněna na obrázku. Jak souvisí minimální rychlost v kroužení s vyznačenými body A, B, C a D? (obr. u otázky č. 241.)",
+      "answers": [
+        "a)  bodu A odpovídá min. rychlost 85 km/h, B - 72 km/h, C - 65 km/h, D - 62 km/h",
+        "b)  bodu A odpovídá min. rychlost 62 km/h, B - 65 km/h, C - 72 km/h, D - 85 km/h",
+        "c)  bodu A odpovídá min. rychlost 85 km/h, B - 62 km/h, C - 65 km/h, D - 72 km/h"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "243.  Jaký vliv má na klesací rychlost v kroužení vyšší letová hmotnost?",
+      "answers": [
+        "a)  při velkých poloměrech kroužení výrazně zvyšuje klesání, při malých poloměrech zmenšuje klesání",
+        "b)  žádný",
+        "c)  při velkých poloměrech kroužení výrazně zvyšuje klesání, při malých poloměrech zvyšuje klesání málo"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "244.  Přivedení kluzáku za letu do blízkosti kritického úhlu náběhu se projeví",
+      "answers": [
+        "a)  zvýšením rychlosti letu",
+        "b)  znatelným snížením velikosti sil v řízení",
+        "c)  zvětšením sil v řízení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "245.  Přivedení kluzáku za letu do blízkosti kritického úhlu náběhu se projeví",
+      "answers": [
+        "a)  zvýšením rychlosti letu",
+        "b)  zvětšením sil v řízení",
+        "c)  chvěním kluzáku, patrným i v řízení kluzáku, způsobené tím, že proud vzduchu, který se odtrhává na křídle zasahuje ocasní plochy"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "246.  K pádu kluzáku dochází pouze tehdy, když",
+      "answers": [
+        "a)  rychlost letu klesne pod hodnotu minimální rychlosti",
+        "b)  se kluzák dostane za kritický úhel náběhu",
+        "c)  je letová hmotnost kluzáku větší, než je max. povolená"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "247.  Zelený oblouk na rychloměru začíná blízko rychlosti",
+      "answers": [
+        "a)  minimální pro konfiguraci s vysunutými vztlakovými klapkami",
+        "b)  0 km/h",
+        "c)  optimální pro dosažení max. aerodynamické jemnosti kluzáku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "248.  Bílý oblouk na rychloměru začíná blízko rychlosti",
+      "answers": [
+        "a)  minimální pro konfiguraci s vysunutými vztlakovými klapkami",
+        "b)  0 km/h",
+        "c)  optimální pro dosažení max. aerodynamické jemnosti kluzáku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "249.  V horizontálním letu dochází k pádu kluzáku vždy",
+      "answers": [
+        "a)  při vyšší rychlosti letu, než v zatáčce",
+        "b)  při vyšší rychlosti letu, než při které kluzák přejde do vývrtky",
+        "c)  při nižší rychlosti letu, než v zatáčce"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "250.  K pádu do vývrtky dochází v důsledku",
+      "answers": [
+        "a)  nesymetrického odtržení proudění na levé a pravé polovině křídla",
+        "b)  symetrického odtržení proudění na křídle",
+        "c)  uvedení kluzáku do zatáčky s příliš velkým náklonem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "251.  Princip vybrání kluzáku z vývrtky spočívá",
+      "answers": [
+        "a)  ve srovnání náklonu vychýlením křidélek na opačnou stranu, než je smysl vývrtky",
+        "b)  v převedení kluzáku do strmého letu potlačením řídící páky, otáčení se potom zastaví vychýlením směrovky",
+        "c)  v urychlení vnitřního křídla vychýlením směrovky na opačnou stranu, než je smysl vývrtky a převedením kluzáku do strmého letu následným potlačením řídící páky"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "252.  K pádu kluzáku do vývrtky dochází nejčastěji",
+      "answers": [
+        "a)  při nadzdvihnutí kluzáku při vzletu",
+        "b)  při letu ve skluzu",
+        "c)  při letu v zatáčce"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "253.  Je-li kluzák podélně staticky stabilní, pak",
+      "answers": [
+        "a)  když dojde v důsledku vnější poruchy ke zvětšení úhlu náběhu křídla, vzroste aerodynamická síla tak, že vrací kluzák do původního stavu",
+        "b)  když dojde v důsledku vnější poruchy ke zvětšení úhlu náběhu křídla, zmenší se aerodynamická síla tak, že vrací kluzák do původního stavu",
+        "c)  když dojde v důsledku vnější poruchy ke zmenšení úhlu náběhu křídla, zmenší se aerodynamická síla tak, že vrací kluzák do původního stavu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "254.  Těžiště kluzáku je",
+      "answers": [
+        "a)  působiště výsledné aerodynamické síly",
+        "b)  působiště výsledné aerodynamické síly a tíhové síly",
+        "c)  působiště tíhové síly"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "255.  Poloha těžiště kluzáku za letu se vztahuje",
+      "answers": [
+        "a)  na jednotku plochy křídla",
+        "b)  ke střední aerodynamické tětivě (SAT)",
+        "c)  k poloze nivelačního bodu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "256.  Aby byl kluzák podélně staticky stabilní, musí",
+      "answers": [
+        "a)  mít těžiště v kabině pilota",
+        "b)  být těžiště v neutrálním bodě",
+        "c)  být těžiště před neutrálním bodem"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "257.  Co je centráž kluzáku a jak se vyjadřuje?",
+      "answers": [
+        "a)  vzdálenost těžiště kluzáku od náběžného bodu střední aerodynamické tětivy (SAT), vyjadřuje se v procentech hloubky SAT",
+        "b)  vzdálenost SAT od těžiště kluzáku, vyjadřuje se v procentech hloubky SAT",
+        "c)  bod kluzáku takový, že kdybychom kluzák v tomto bodě zavěsili, tak by se ani neklopil, ani neklonil. Vyjadřuje se v procentech SAT"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "258.  Když je těžiště kluzáku posunuto směrem dozadu za krajní zadní centráž, potom",
+      "answers": [
+        "a)  bude kluzák podélně nestabilní",
+        "b)  bude kluzák podélně stabilní",
+        "c)  bude kluzák velmi těžko ovladatelný, např. při vybrání střemhlavého letu nebo při vzletu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "259.  Když je těžiště kluzák posunuto směrem dozadu za krajní zadní centráž, potom",
+      "answers": [
+        "a)  převedení kluzáku na větší úhel náběhu bude vyžadovat značné síly v jeho řízení",
+        "b)  kluzák bude mít snahu samovolně přecházet na větší úhly náběhu, až nakonec dojde k jeho pádu",
+        "c)  bude nadměrně zatěžován hlavní podvozek kluzáku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "260.  Podélnou statickou stabilitu kluzáku může pilot snadno porušit",
+      "answers": [
+        "a)  použitím krajní výchylky vyvažovací plošky výškovky",
+        "b)  vysunutím vztlakových klapek",
+        "c)  zvýšením výkonu motoru motorového kluzáku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "261.  Staticky podélně nestabilní kluzák snadno a samovolně",
+      "answers": [
+        "a)  přechází do pádu nebo vývrtky",
+        "b)  přechází do skluzu",
+        "c)  přechází do střemhlavého letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "262.  Vysunutí vztlakových klapek způsobí převážně",
+      "answers": [
+        "a)  změnu tíživosti",
+        "b)  sníží zásobu statické stability",
+        "c)  změnu účinnosti směrovky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "263.  Co se rozumí pod pojmem “těžký na hlavu”?",
+      "answers": [
+        "a)  snaha kluzáku překlopit se při zabrzdění směrem dopředu",
+        "b)  vyjádření vzájemné polohy neutrálního bodu a těžiště, v tomto případě je těžiště před neutrálním bodem",
+        "c)  vyjádření vzájemné polohy neutrálního bodu a těžiště, v tomto případě je těžiště za neutrálním bodem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "264.  Jaký pohyb řídící pákou musí pilot vykonat, aby kluzák přešel do letu na větším úhlu náběhu, jak se přitom vychýlí výškové kormidlo?",
+      "answers": [
+        "a)  tlačit na řídící páku, výškovka se vychýlí nahoru",
+        "b)  tlačit na řídící páku, výškovka se vychýlí dolů",
+        "c)  přitáhnout řídící páku, výškovka se vychýlí nahoru"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "265.  Jaký pohyb řídící pákou musí pilot vykonat, aby kluzák dosáhl vyšší kladné násobky, jak se přitom vychýlí výškové kormidlo?",
+      "answers": [
+        "a)  tlačit na řídící páku, výškovka se vychýlí nahoru",
+        "b)  tlačit na řídící páku, výškovka se vychýlí dolů",
+        "c)  přitáhnout řídící páku, výškovka se vychýlí nahoru"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "267.  Jaký pohyb řídící pákou musí pilot vykonat, aby kluzák dosáhl záporné násobky",
+      "answers": [
+        "a)  tlačit na řídící páku, výškovka se vychýlí nahoru",
+        "b)  tlačit na řídící páku, výškovka se vychýlí dolů",
+        "c)  přitáhnout řídící páku, výškovka se vychýlí nahoru"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "268.  Co se rozumí pod pojmem “těžký na ocas”?",
+      "answers": [
+        "a)  snaha kluzáku překlopit se při zabrzdění dozadu, tj. na zadní část trupu",
+        "b)  vyjádření vzájemné polohy neutrálního bodu a těžiště, v tomto případě je těžiště před neutrálním bodem",
+        "c)  vyjádření vzájemné polohy neutrálního bodu a těžiště, v tomto případě je těžiště za neutrálním bodem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "269.  Potlačením řídící páky kluzáku obvyklé konstrukce v klouzavém letu vznikne na vodorovných ocasních plochách",
+      "answers": [
+        "a)  přírůstek vztlaku směřující nahoru a vyvolá tak moment k těžišti, který překlopí kluzák ve smyslu “na ocas”",
+        "b)  přírůstek vztlaku směřující nahoru a vyvolá tak moment k těžišti, který překlopí kluzák ve smyslu “na hlavu”",
+        "c)  vztlak směřující nahoru, který poruší silovou rovnováhu a vyvolá stoupání kluzáku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "270.  Kritického úhlu náběhu lze dosáhnou",
+      "answers": [
+        "a)  vysunutím brzdících klapek",
+        "b)  plným vyšlápnutím směrového řízení",
+        "c)  přitažením řídící páky, bez ohledu na polohy vyvážení výškovky"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "271.  Velikost síly, kterou je pilot nucen vyvinout na řídící páku při přechodu z letu o jednom úhlu náběhu na druhý je závislá na",
+      "answers": [
+        "a)  rychlosti letu a velikosti výchylky výškovky, kterou pilot použil",
+        "b)  rychlosti letu",
+        "c)  velikosti výchylky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "272.  Nastavením vhodné výchylky vyvažovací plošky výškovky se",
+      "answers": [
+        "a)  ustaví správná poloha těžiště",
+        "b)  zvýší vztlak",
+        "c)  odstraní trvalé působení sil v řízení"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "273.  Když pilot uvolní řídící páku kluzáku letícího ustáleným klouzavým letem, který má vyvažovací plošku výškovky vychýlenou tak, jak je na obrázku, přejde kluzák do",
+      "answers": [
+        "a)  strmého klesání",
+        "b)  stoupání",
+        "c)  pravé zatáčky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "274. Když pilot uvolní řídící páku kluzáku letícího ustáleným klouzavým letem, který má vyvažovací plošku výškovky vychýlenou tak, jak je na obrázku, přejde kluzák do",
+      "answers": [
+        "a)  strmého klesání",
+        "b)  stoupání",
+        "c)  pravé zatáčky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "275.  Ploška na výškovém kormidle, která se automaticky vychyluje v závislosti na výchylce výškovky se nazývá",
+      "answers": [
+        "a)  vyvažovací",
+        "b)  rohové odlehčení",
+        "c)  osové odlehčení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "276.  Jaký účel má pevná odlehčovací ploška na kormidle?",
+      "answers": [
+        "a)  hmotové vyvážení kormidel",
+        "b)  oddálení odtržení proudění při přetažení",
+        "c)  v určitém režimu letu sníží stálé působení sil v řízení"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "277.  Jaký je účel hmotového vyvážení kormidla?",
+      "answers": [
+        "a)  posunout těžiště kormidla do jeho osy závěsu, aby nedocházelo za letu k jeho třepetání (tzv. flutter)",
+        "b)  odstranit trvalé působení sil v řízení",
+        "c)  zmenšit velikost řídící síly, potřebné pro zvětšení násobku nebo změnu rychlosti"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "278.  Vyšlápnutím pravého pedálu směrového řízení",
+      "answers": [
+        "a)  se vychýlí směrovka doprava, kluzák zatočí doprava a vzápětí se nakloní doleva",
+        "b)  se vychýlí směrovka doprava, kluzák zatočí doprava a vzápětí se nakloní doprava",
+        "c)  se vychýlí směrovka doleva, kluzák zatočí doprava a vzápětí se nakloní doprava"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "279.  Jaký je druhotný účinek směrového řízení a co je jeho příčinou?",
+      "answers": [
+        "a)  klopení ve smyslu “na ocas”, protože při zatočení kluzáku je na jeho vnějším křídle větší vztlak",
+        "b)  zatáčení způsobené odstředivou silou při hlavním účinku, který je též zatáčení",
+        "c)  klonění, protože vnitřní křídlo má při zatáčení větší vztlak, než vnější"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "280.  Vychýlením řídící pák vlevo se",
+      "answers": [
+        "a)  vychýlí levé křidélko nahoru, pravé dolů a kluzák se nakloní doleva",
+        "b)  vychýlí levé křidélko nahoru, pravé dolů a kluzák se nakloní doprava",
+        "c)  vychýlí levé křidélko dolů, pravé nahoru a kluzák se nakloní doleva"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "281.  Jaký účinek má vychýlení řídící páky doprava?",
+      "answers": [
+        "a)  kluzák se nakloní doprava, začne bočit doprava a v důsledku toho začne zatáčet doleva",
+        "b)  kluzák se nakloní doprava, začne bočit doprava a v důsledku toho začne zatáčet doprava",
+        "c)  kluzák se nakloní doprava, začne bočit doleva a v důsledku toho začne zatáčet doprava"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "282.  Když je kluzák stranově stabilní a proletí-li poryvem, který ho nakloní doprava, potom",
+      "answers": [
+        "a)  aby byla tato porucha odstraněna je potřeba, aby pilot energicky vychýlil křidélka doleva",
+        "b)  začne bočit doprava a jeho náklon se bude zvětšovat",
+        "c)  začne bočit doprava a v důsledku toho se náklon postupně srovná"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "283.  Stranová statická stabilita kluzáku je zachována především vlivem",
+      "answers": [
+        "a)  vzájemné polohy těžiště a neutrálního bodu",
+        "b)  velikostí svislých ocasních ploch",
+        "c)  konfigurací vztlakových klapek"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "284.  Který uvedený režim letu je ustálený (tj. kluzák má stále stejnou rychlost)?",
+      "answers": [
+        "a)  rozjezd",
+        "b)  skluz a vývrtka",
+        "c)  vybrání ze střemhlavého letu a vývrtka"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "285.  Jak se změní klouzavost kluzáku ve skluzu?",
+      "answers": [
+        "a)  zlepší se, protože při letu s vybočením má kluzák menší součinitel odporu, než při jeho symetrickém obtékání",
+        "b)  zůstane stejná",
+        "c)  zhorší se, protože při letu s vybočením má kluzák větší součinitel odporu, než při jeho symetrickém obtékání"
+      ],
+      "correct": 2
+    }
+  ],
+  "Konstrukce letadel": [
+    {
+      "question": "1.  Rozdělení letadel - základní pojmy",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1.  Podle principu letu se rozdělují letadla na",
+      "answers": [
+        "a)  letouny, letadla a vrtulníky",
+        "b)  lehčí vzduchu a těžší vzduchu",
+        "c)  motorové a bezmotorové"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "2.  Pojem „letadlo“ je definován následovně",
+      "answers": [
+        "a)  zařízení, u něhož je vztlak potřebný k letu vyvozován aerostatickými silami obklopujícího ovzduší",
+        "b)  jedná se o motorové letadlo schopné řízeného letu v atmosféře",
+        "c)  zařízení schopné vyvozovat síly nesoucí jej v atmosféře z reakcí vzduchu, které nejsou reakcemi vůči zemskému povrchu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "3.  Pojem „letoun“ je definován takto",
+      "answers": [
+        "a)  letadlo těžší než vzduch s pohonem, vyvozující vztlak za letu hlavně z aerodynamických sil na plochách, které za daných podmínek letu zůstávají vůči letadlu nepohyblivé",
+        "b)  motorové letadlo schopné řízeného letu v atmosféře",
+        "c)  letadlo těžší než vzduch, u něhož je vztlak potřebný k letu vyvozován jiným způsobem než aerodynamickými silami na nosných plochách"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "4.  Pojem „vrtulník“ je definován následujícím způsobem",
+      "answers": [
+        "a)  letadlo těžší než vzduch schopné letu převážně působením aerodynamických sil vznikajících na jednom nebo více poháněných rotorech, jejichž osy jsou v podstatě svislé",
+        "b)  motorové letadlo těžší než vzduch, u něhož je vztlak potřebný k letu vyvozován současně s aerodynamickými silami jak na nepohyblivém křídle, tak na otáčejícím se rotoru",
+        "c)  motorové letadlo těžší než vzduch, u něhož je možno za letu měnit způsob získávání vztlaku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "5.  Letoun typu „kachna“ je",
+      "answers": [
+        "a)  letoun, jehož vodorovné stabilizační plochy jsou umístěny před nosnou plochou",
+        "b)  letoun bez ocasních ploch",
+        "c)  letoun se dvěma nosnými plochami nad sebou"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "6.  Pojem _dopravní letadlo“ je vymezen takto",
+      "answers": [
+        "a)  letadlo určené pro dopravu nákladů",
+        "b)  letadlo určené pro veřejnou dopravu osob nebo jiného nákladu",
+        "c)  letadlo používané pro účely civilního letectví a zapsané v civilním leteckém rejstříku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "7.  Klasifikační třídy letadel jsou",
+      "answers": [
+        "a)  třídy letadel podle účelu",
+        "b)  třídy, do nichž se zařazují letadla na základě splnění příslušných předpisů způsobilosti, a to z těchto hledisek: řiditelnosti a namáhání, účel použití, stupeň provozní bezpečnosti",
+        "c)  třídy rozdělení letadel podle délky vzletu a přistání"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "8.  Letadla těžší vzduchu rozdělujeme podrobněji na",
+      "answers": [
+        "a)  bezmotorová a motorová",
+        "b)  motorová, bezmotorová a vzducholodě",
+        "c)  letadla, letouny a kluzáky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "9.  Podle umístění nosných ploch rozdělujeme letadla na",
+      "answers": [
+        "a)  dolnoplošníky, středoplošníky, hornoplošníky",
+        "b)  jednoplošníky a dvouplošníky",
+        "c)  jednoplošníky, středoplošníky a hornoplošníky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "10.  Podle druhu pohonu rozeznáváme letecké pohonné jednotky",
+      "answers": [
+        "a)  vrtulové a tryskové",
+        "b)  pístové a turbovrtulové",
+        "c)  bezlopatkové, lopatkové a raketové"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "11.  Motorová letadla rozdělujeme podle způsobu vzniku vztlaku na",
+      "answers": [
+        "a)  letadla s nepohyblivými nosnými plochami, letadla s rotujícími nosnými plochami",
+        "b)  letadla s nepohyblivými nosnými plochami, letadla s rotujícími nosnými plochami, letadla s kombinovanými nosnými plochami, letadla s mávavými nosnými plochami",
+        "c)  letadla s nepohyblivými nosnými plochami, letadla s rotujícími nosnými plochami, letadla s kombinovanými nosnými plochami"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "12.  Podle půdorysného tvaru křídla rozdělujeme letouny do následujících skupin",
+      "answers": [
+        "a)  s přímým křídlem, se šípovým křídlem, s trojúhelníkovým křídlem, s proměnnou geometrií křídla",
+        "b)  s přímým křídlem, se šípovým křídlem, eliptická, s trojúhelníkovým křídlem, se speciálním tvarem křídla",
+        "c)  s přímým křídlem, s lichoběžníkovým křídlem, eliptická, se šípovým křídlem, s trojúhelníkovým křídlem, se speciálním tvarem křídla, s proměnnou geometrií křídla"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "13.  Každý „letoun“ vyhovující definici pojmu „letoun“ má tyto hlavní části",
+      "answers": [
+        "a)  drak, systémy, pohonnou soustavu, výstroj",
+        "b)  drak, systémy, pohonnou soustavu",
+        "c)  drak, výstroj, pohonnou soustavu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "14.  „Drak letadla“ tvoří",
+      "answers": [
+        "a)  konstrukce letadla (nosná soustava, trup, ocasní plochy, řízení a přistávací zařízení) s pohonnými jednotkami a výstrojí",
+        "b)  konstrukce letadla (nosná soustava, trup, ocasní plochy, řízení a přistávací zařízení) bez pohonných jednotek a jejich příslušenství, výstroje a instalace",
+        "c)  nosná soustava, trup, řízení, přistávací zařízení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "15.  Nosná soustava letadla je",
+      "answers": [
+        "a)  hlavní část nosné plochy letadla",
+        "b)  část draku vytvářející při letu rozhodující podíl vztlaku",
+        "c)  část draku sloužící k vytvoření převážné části vztlaku, patří do ní i ta zařízení, která s její funkcí úzce souvisí nebo jsou její neoddělitelnou součástí (kormidla příčného řízení, klapky, rušiče vztlaku apod.)."
+      ],
+      "correct": 2
+    },
+    {
+      "question": "16.  Trup letadla je charakterizován následovně",
+      "answers": [
+        "a)  část draku letadla, sloužící hlavně kde spojení jednotlivých částí draku a k umístění posádky, cestujících, nákladu, výstroje popř. hnací jednotky",
+        "b)  sestavený drak letadla bez potahu a křídel",
+        "c)  utěsněná část letadla s vnitřním vybavením a výstrojí"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "17.  Ocasní plochy letadla jsou",
+      "answers": [
+        "a)  zařízení, které vyvozuje reakční moment",
+        "b)  vodorovné a svislé plochy zpravidla na konci trupu, jak nepohyblivé, tak i pohyblivé (kormidla), stabilizující letadlo podélně a směrově, umožňují jeho podélné a směrové řízení",
+        "c)  otočné plochy, jimiž se mění za letu klopení a zatáčení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "18.  Řízení letadel je",
+      "answers": [
+        "a)  ovládací prvek v kabině pilota",
+        "b)  soustava prvků řízení umožňující přenos řídící činnosti z řídidel na řídící orgány",
+        "c)  řídící páka nebo volant v pilotní kabině"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "19.  Pojem „přistávací zařízení“ je definován v souladu s technickými normami takto",
+      "answers": [
+        "a)  část letadla umožňující vzlet, přistání a pojíždění",
+        "b)  soustava kol na letadle",
+        "c)  část letadla umožňující přistání"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "20.  „Primární“ konstrukce letadla zahrnuje",
+      "answers": [
+        "a)  součásti, jejichž poruchy letadlo po pevnostní stránce vážně neohrozí",
+        "b)  součásti, jejichž poruchy mohou mít vliv na velký rozsah údržby letadla",
+        "c)  součásti, jejichž poruchy letadlo po pevnostní stránce vážně ohrozí"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "21.  „Sekundární“ konstrukce letadla zahrnuje",
+      "answers": [
+        "a)  součásti, jejichž poruchy letadlo po pevnostní stránce vážně ohrozí",
+        "b)  součásti, jejichž poruchy letadlo po pevnostní stránce vážně neohrozí",
+        "c)  součásti, jejichž poruchy mají významný vliv na rozsah údržby letadla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "22.  Podélná soustava v konstrukci draku letounu je",
+      "answers": [
+        "a)  soubor nenosných konstrukčních prvků trupu letounu",
+        "b)  soubor podélných nosných prvků v konstrukci křídla, trupu a ocasních ploch",
+        "c)  soustava podélného vyvážení letounu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "23.  Příčná soustava v konstrukci draku letounu je",
+      "answers": [
+        "a)  soubor nenosných konstrukčních prvků trupu letounu",
+        "b)  soubor příčných nosných prvků v konstrukci křídla, trupu a ocasních ploch",
+        "c)  soustava příčného vyvážení letounu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "24.  Typ letadla je",
+      "answers": [
+        "a)  letadlo charakterizované v typovém osvědčení: koncepcí, konstrukcí, výkony a vlastnostmi",
+        "b)  letadlo charakterizované v typovém osvědčení: konstrukcí a výkony",
+        "c)  letadlo charakterizované v typovém osvědčení: konstrukcí, výkony a vlastnostmi"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "25.  Poloskořepinová konstrukce je",
+      "answers": [
+        "a)  konstrukce, u níž je použito dvou nebo více typů konstrukcí",
+        "b)  konstrukce, jejíž krutová a ohybová pevnost a tuhost je zajišťována potahem",
+        "c)  konstrukce sestávající z nosného potahu v ohybu a smyku, zesíleného podélnými, popř. příčnými výztuhami"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "26.  Násobek zatížení je",
+      "answers": [
+        "a)  poměr vztlaku a odporu na letadle",
+        "b)  poměr specifikovaného zatížení k celkové tíze letadla. Udává, kolikrát je vztlak letadla v daném časovém okamžiku větší než jeho tíha",
+        "c)  poměr statického a dynamického zatížení na letadle"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "27.  Na letadlo působí během provozu řada zatížení, která musí jeho konstrukce zachytit. Zatížení rozdělujeme na",
+      "answers": [
+        "a)  dynamická a proměnná",
+        "b)  statická a dynamická",
+        "c)  statická, dynamická, manévrovací a poryvová"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "28.  Za dynamické zatížení letadla považujeme tato zatížení",
+      "answers": [
+        "a)  zatížení způsobená vertikálními poryvy vzduchu, zatížení od manévrů a obratů, zatížení od sil při vzletu a přistání, zatížení související s přetlakováním kabiny",
+        "b)  zatížení od tíhy paliva v křídlech při plnění nádrží",
+        "c)  zatížení od pohybu cestujících na palubě za letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "29.  Statické zatížení určitého prvku nebo části letadla je definováno následovně",
+      "answers": [
+        "a)  je to zatížení, jehož velikost se s časem nemění nebo se mění poměrně pomalu (vliv jeho časového průběhu je zanedbatelný)",
+        "b)  je to zatížení, jehož velikost se s časem mění pozvolna",
+        "c)  je ta zatížení, jehož velikost se s časem mění náhle"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "30.  Dynamické zatížení určitého prvku nebo části letadla je definováno následovně",
+      "answers": [
+        "a)  je to zatížení, jehož velikost se s časem nemění",
+        "b)  je to zatížení, jehož velikost se mění s časem poměrně rychle",
+        "c)  je to zatížení, jehož velikost se s čase mění pomalu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "31.  Provozní zatížení letadlové konstrukce nebo její části je",
+      "answers": [
+        "a)  zatížení, používané při pevnostním průkazu jako maximální hodnota, která se u letadla za provozu může vyskytnout",
+        "b)  maximální zatížení, při kterém napětí v konstrukci právě stačí k udržení rovnovážného stavu",
+        "c)  početní zatížení násobené požadovaným součinitelem bezpečnosti"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "32.  Početní zatížení letadlové konstrukce nebo její části je",
+      "answers": [
+        "a)  provozní zatížení násobené součinitelem bezpečnosti",
+        "b)  zatížení letadlové konstrukce stanovené výpočtem",
+        "c)  součet statického a dynamického zatížení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "33.  Součinitel bezpečnosti (nominální) je",
+      "answers": [
+        "a)  poměr mezi ověřovacím a provozním zatížením, obvykle bývá 1,5",
+        "b)  poměr mezi početním a provozním zatížením, obvykle se volí 1,5",
+        "c)  poměr mezi zatížením na mezi únosnosti a provozním zatížením"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "34.  Při předepsaném maximálním provozním zatížení (stanoveno v leteckých předpisech)",
+      "answers": [
+        "a)  musí správně fungovat všechny části nezbytné pro bezpečný provoz letadla ve vzduchu i na zemi",
+        "b)  nemusí správně fungovat všechny části nezbytné pro bezpečný provoz letadla ve vzduchu i na zemi",
+        "c)  musí správně fungovat všechny části pro bezpečný provoz letadla ve vzduchu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "35.  Při rovnoměrném přímočarém letu působí na konstrukci letadla tato zatížení",
+      "answers": [
+        "a)  tíha, vzdušné (aerodynamické) zatížení, síly od pohonné skupiny, síly setrvačné",
+        "b)  tíha, vzdušné (aerodynamické) zatížení, síly od pohonné skupiny",
+        "c)  tíha, vzdušné (aerodynamické) zatížení, síly od pohonné skupiny, síly setrvačné, reakce od země"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "36.  Obálka obratů je",
+      "answers": [
+        "a)  obalová čára maximálních hodnot obratových násobků vynesených v závislosti na rychlosti letu",
+        "b)  obalová čára minimálních hodnot obratových násobků vynesených v závislosti na rychlosti letu",
+        "c)  obalová čára maximálních hodnot obratových násobků vynesených v závislosti na úhlu náběhu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "37.  Obálka poryvů je",
+      "answers": [
+        "a)  obalová čára minimálních hodnot poryvových násobků vynesených v závislosti na rychlosti letu",
+        "b)  obalová čára maximálních hodnot poryvových násobků vynesených v závislosti na úhlu náběhu",
+        "c)  obalová čára maximálních hodnot poryvových násobků vynesených v závislosti na rychlosti letu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "38.  Pro konstrukci jednotlivých částí letadel a jejich systémů se v obecném souhrnu používají tyto druhy materiálů",
+      "answers": [
+        "a)  slitiny lehkých kovů, oceli, titanové slitiny, zušlechtěná dřeva, plasty, ostatní materiály (pryže, nátěry, lepidla), nové materiály (komposity, keramické materiály)",
+        "b)  slitiny lehkých kovů, titan a jeho slitiny, plasty, ostatní materiály (pryže, nátěry, lepidla), nové materiály (komposity, keramické materiály)",
+        "c)  duraly, oceli, plasty, komposity"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "39.  Z hlediska konstrukčních prvků a materiálového použití lze rozdělit konstrukce draků letadel na tyto druhy",
+      "answers": [
+        "a)  konstrukce kovové a konstrukce smíšené",
+        "b)  konstrukce kovové, konstrukce dřevěné, konstrukce kompositní a konstrukce smíšené",
+        "c)  konstrukce kovové, konstrukce dřevěné a konstrukce kompositní"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "40.  V konstrukci draku klasického letadla převládají tyto materiály",
+      "answers": [
+        "a)  hořčíkové slitiny",
+        "b)  hliníkové slitiny",
+        "c)  oceli různých tříd"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "41.  Oceli jsou materiálem pro značně namáhané části konstrukce letadel. Oceli se používají hlavně pro",
+      "answers": [
+        "a)  závěsná kování, podvozky, čepy, šrouby, pružiny",
+        "b)  náběžné hrany křídel a ocasních ploch",
+        "c)  hlavní nosníky křídel a ocasních ploch"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "42.  V letecké výrobě kluzáků a malých letadel se používají tyto druhy dřev (zušlechtěných)",
+      "answers": [
+        "a)  smrk, borovice, jasan, bříza",
+        "b)  borovice, smrk, bříza, buk, olše, lípa, jasan, jilm",
+        "c)  bříza, buk, jasan, jilm"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "43.  Výhodou plastů je, že jsou jimi nahrazeny u mnoha konstrukčních částí letadel zejména kovy a dřevo. Plasty jsou materiály získané technickou cestou, které z hlediska zpracování dělíme na",
+      "answers": [
+        "a)  termosety a termoplasty",
+        "b)  termosety a bakelity",
+        "c)  termoplasty, termosety a plexiskla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "44.  Kompositní materiály - komposity používané v leteckých konstrukcích jsou nejčastěji materiály",
+      "answers": [
+        "a)  jednosložkové",
+        "b)  dvousložkové",
+        "c)  vícesložkové"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "45.  Kompositní materiály používané v letectví mají celou řadu výhod zejména pevnostních a hmotnostních. Mají ale rovněž nevýhody. Např. kompositní materiály jsou „anizotropní“. To znamená v praxi, že",
+      "answers": [
+        "a)  nemají ve všech směrech zatížení stejné vlastnosti - nevýhoda při opravách",
+        "b)  neodolávají korosi - nevýhoda v provozu",
+        "c)  těžko lze rozvinutou poruchu odhalit - nevýhoda v provozu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "46.  Lepidla se v leteckých konstrukcích většinou používají pro spojování",
+      "answers": [
+        "a)  dřeva, plastů a podobných materiálů",
+        "b)  kovových materiálů, nekovových materiálů",
+        "c)  nenosných součástí (zásadně)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "47.  Do skupiny novodobých materiálů používaných na přelomu tisíciletí v konstrukcích letadel patří",
+      "answers": [
+        "a)  kompositní materiály, technická keramika, slitiny lithia a berylia",
+        "b)  hořčíkové slitiny, elektron, silumin, pantal",
+        "c)  vysoce ušlechtěné oceli"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "48.  Dřevo jako letecký stavební materiál je často využíván ve formě překližek. Překližky jsou vyráběny sklížením tenkých listů loupané dýhy v počtu 3 až 5, při čemž první a poslední vrstva má směr vláken shodný a zbývající jsou pootočeny. Je charakteristika překližky správná?",
+      "answers": [
+        "a)  počet vrstev (listů) je mnohem větší (10 a více)",
+        "b)  všechny vrstvy mají směr vláken shodný",
+        "c)  správná charakteristika letecké překližky"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "49.  Nejperspektivnějším typem materiálů pro letecké konstrukce na přelomu 20. a 21. století jsou materiály",
+      "answers": [
+        "a)  kompositní",
+        "b)  na bázi titanových slitin",
+        "c)  jednosložkové"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "50.  Hlavní charakteristiky nosných ploch letadla jsou",
+      "answers": [
+        "a)  rozpětí, profily nosných ploch, velikost nosných ploch, štíhlost, zúžení",
+        "b)  poloha nosných ploch vůči trupu, půdorysný tvar, rozpětí, profily nosných ploch, velikost nosných ploch, štíhlost, zúžení, úhel šípu, úhel vzepětí, úhel seřízení, zkroucení",
+        "c)  poloha nosných ploch vůči trupu, půdorysný tvar, rozpětí, profily nosných ploch, velikost nosných ploch, štíhlost, zúžení, úhel šípu, úhel vzepětí"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "51.  Podle tvaru nosných ploch rozeznáváme křídla letounů",
+      "answers": [
+        "a)  přímá, lichoběžníková, eliptická, šípová, trojúhelníková, speciální, s měnitelnou geometrií",
+        "b)  přímá, lichoběžníková, speciální",
+        "c)  přímá, šípová, eliptická, speciální, s měnitelnou geometrií"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "52.  Jednotlivé druhy konstrukcí křídel rozdělujeme do těchto skupin",
+      "answers": [
+        "a)  konstrukce nosníkové, nosníkové poloskořepiny, ploskořepiny, skořepiny, smíšené konstrukce, plná křídla",
+        "b)  konstrukce nosníkové, poloskořepinové a smíšené konstrukce",
+        "c)  konstrukce nosníkové, nosníkové poloskořepiny, poloskořepiny, skořepiny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "53.  Hlavními nosnými členy přenášejícími ohyb u nosníkových křídel jsou",
+      "answers": [
+        "a)  žebra",
+        "b)  nosníky",
+        "c)  žebra a potah"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "54.  Poloskořepinová konstrukce křídla je charakterizována následovně",
+      "answers": [
+        "a)  charakteristické je členění křídla na panely s podélníky a stojinami",
+        "b)  je provedena se značným počtem podélných výztuh (podélníků) po obvodě profilu křídla. Pásnice nosníků jsou v podstatě jen zesílené výztuhy spojující potah se stojinou",
+        "c)  je provedena s malým počtem podélných výztuh (podélníků) po obvodě profilu křídla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "55.  Skořepinová konstrukce křídla je z hlediska konstrukčního charakterizována následovně",
+      "answers": [
+        "a)  charakteristické je použití silného potahu integrálně podélně vyztuženého",
+        "b)  charakteristické je použití nosného potahu s velkým množstvím podélných výztuh (nýtovaných)",
+        "c)  charakteristické je provedení s malým počtem podélných výztuh po obvodě profilu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "56.  Běžné používané typy (druhy) skořepinových konstrukcí křídel jsou",
+      "answers": [
+        "a)  vícenosníkové s stojinové konstrukce",
+        "b)  integrální konstrukce, mnohostojinová konstrukce, vícevrstvá (sendvičová) konstrukce",
+        "c)  panelová konstrukce"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "57.  Konstrukční prvky nosné soustavy jsou",
+      "answers": [
+        "a)  nosníky, žebra, potahy, závěsná a spojovací kování",
+        "b)  nosníky, žebra, podélné výztuhy",
+        "c)  nosníky, žebra, podélné výztuhy, potahy, závěsná a spojovací kování"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "58. Centroplán je",
+      "answers": [
+        "a)  samostatná střední část křídla spojená s trupem nebo tvořící s ním celek, k níž jsou připevněny vnější části křídla",
+        "b)  kloubové zavěšení křídla nad trupem, podepřené vzpěrami",
+        "c)  soustava vzpěr, popř. konstrukce upevňující křídlo umístěné nad trupem k trupu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "59.  Torzní skříň křídla je",
+      "answers": [
+        "a)  část konstrukce křídla zachycující zejména ohybové momenty. Je tvořena nosným potahem a stojinami nosníků",
+        "b)  část konstrukce křídla zachycující kroutící momenty a posouvající síly (smyková napětí), popř. část ohybových momentů. Je tvořena nosným potahem a stojinami nosníků",
+        "c)  část konstrukce křídla zachycující převážně smyková zatížení. Je tvořena nosným potahem a stojinami nosníků"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "60.  Geometrická štíhlost křídla je",
+      "answers": [
+        "a)  poměr prvé mocniny rozpětí křídla k ploše křídla",
+        "b)  poměr druhé mocniny rozpětí křídla k ploše křídla",
+        "c)  poměr třetí mocniny rozpětí křídla k ploše křídla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "61.  Skořepinová konstrukce je s hlediska přenosu zatížení charakterizována takto",
+      "answers": [
+        "a)  konstrukce, jejíž krutová a ohybová pevnost a tuhost je zajišťována potahem",
+        "b)  konstrukce sestávající z nosného potahu zesíleného podélnými, popř. příčnými výztuhami",
+        "c)  konstrukce zachycující kroutící momenty sítí prostorově zakřivených prvků"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "62.  Sendvič v konstrukci draku (např. křídla, trupu apod.) letadla je",
+      "answers": [
+        "a)  konstrukce, u níž je použito dvou nebo více typů konstrukcí",
+        "b)  konstrukční prvek sestávající ze dvou desek spojených lehkou výplní (voštinovou, pěnovou apod.)",
+        "c)  střední vrstva sendvičové desky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "63.  Poloskořepinová konstrukce křídla je",
+      "answers": [
+        "a)  konstrukce sestávající z nosného potahu zesíleného podélnými výztuhami",
+        "b)  konstrukce sestávající z nenosného potahu zesíleného podélnými výztuhami",
+        "c)  konstrukce sestávající z nosného potahu nezesíleného podélnými výztuhami"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "64.  Nosníková konstrukce křídla je",
+      "answers": [
+        "a)  konstrukce sestávající z jednoho nebo více nosníků, žeber a potahu. Nosníky přenášejí převážně krutové zatížení",
+        "b)  konstrukce sestávající z jednoho nebo více nosníků, žeber a potahu. Nosníky přenášejí ohybové zatížení",
+        "c)  konstrukce sestávající z jednoho nebo více nosníků, žeber a potahu. Nosníky přenášejí převážně smykové zatížení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "65.  Dvounosníková konstrukce křídla je",
+      "answers": [
+        "a)  konstrukce se dvěma hlavními nosníky",
+        "b)  konstrukce s jedním hlavním a jedním pomocným nosníkem",
+        "c)  konstrukce se dvěma hlavními a jedním pomocným nosníkem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "66.  Nenosný potah křídla je",
+      "answers": [
+        "a)  potah nepřenášející žádné síly",
+        "b)  část konstrukce vytvářející vnější povrch křídla, přejímá aerodynamické síly a přenáší je na konstrukci křídla",
+        "c)  část konstrukce vytvářející vnější povrch křídla a podílející se na přenosu všech zatížení na křídle"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "67.  Nosný potah křídla je",
+      "answers": [
+        "a)  potah přenášející výhradně aerodynamické síly",
+        "b)  potah křídla vytvořený jako sendvič",
+        "c)  potah, který se kromě tvarování povrchu a přenosu místního aerodynamického zatížení podílí též na přenosu zatížení působícího na křídlo"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "68.  Dělené křídlo je",
+      "answers": [
+        "a)  křídlo podepřené k trupu jednou vzpěrou",
+        "b)  křídlo sestavené ze dvou nebo více rozpojitelných částí",
+        "c)  křídlo, jehož jednotlivé části mají různý úhel šípu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "69.  Křídlo s kladným šípem je konstrukce, která má",
+      "answers": [
+        "a)  vychýlené spojnice aerodynamických středů křídla vůči příčné ose letadla dozadu",
+        "b)  vychýlené spojnice aerodynamických středů křídla vůči příčné ose letadla dopředu",
+        "c)  vychýlené spojnice aerodynamických středů křídla vůči podélné ose letadla dozadu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "70.  Samonosné křídlo je",
+      "answers": [
+        "a)  křídlo s vnějším vyztužením",
+        "b)  křídlo bez vnějšího vyztužení",
+        "c)  křídlo podepřené k trupu vzpěrou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "71.  Polosamonosné křídlo je",
+      "answers": [
+        "a)  křídlo podepřené k trupu jednou vzpěrou",
+        "b)  křídlo zavěšené v kloubových závěsech a upevněné k trupu soustavou vzpěr a lna",
+        "c)  křídlo bez vnějšího vyztužení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "72.  Účelem potahu v konstrukci křídla je",
+      "answers": [
+        "a)  spojit všechny části křídla v jeden celek",
+        "b)  přijímat zatížení od tlakových změn na povrchu křídla a vytvořit vnější povrch křídla s nejmenšími odchylkami od teoretických tvarů",
+        "c)  přenášet ohybové zatížení křídla na nosníky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "73.  Co je to jednodutinové křídlo?",
+      "answers": [
+        "a)  křídlo jednonosníkové konstrukce",
+        "b)  křídlo skořepinové konstrukce",
+        "c)  křídlo, jehož tuhá přední část nosného potahu spolu s nosníkem tvoří torzní skříň. V některých případech bývá torzní skříň tvořena dvěma nosníky a nosným potahem."
+      ],
+      "correct": 2
+    },
+    {
+      "question": "74.  Účelem žeber v konstrukci křídla je",
+      "answers": [
+        "a)  zachytit ohybová zatížení (ohybové momenty) po rozpětí křídla",
+        "b)  zachytit smyková zatížení křídla",
+        "c)  přenášet zatížení z potahu na nosnou konstrukci a v některých případech může zavádět do konstrukce osamělé síly (např. přes uchycení závěsů podvozku apod.)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "75.  Smíšená konstrukce křídla je charakterizována takto",
+      "answers": [
+        "a)  konstrukce, u níž je použito dvou nebo více typů konstrukcí (např. konstrukce nosníková a poloskořepinová) nebo konstrukce, u níž je použito dvou nebo více hlavních konstrukčních materiálů",
+        "b)  konstrukce sestávajíc ze dvou desek spojených lehkou výplní",
+        "c)  soubor podélných a příčných prvků v konstrukci křídla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "76.  Trup letadla je",
+      "answers": [
+        "a)  část draku letadla sloužící hlavně ke spojení jednotlivých částí draku mezi sebou",
+        "b)  část draku letadla sloužící hlavně ke spojení jednotlivých částí draku a k umístění posádky, cestujících, nákladu, výstroje, popř. hnací jednotky",
+        "c)  část letadla vytvořené nosníkovou konstrukcí a sloužící hlavně ke spojení jednotlivých částí draku mezi sebou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "77.  Příhradový trup letadla je",
+      "answers": [
+        "a)  sestavený trup bez potahu. Obsahuje nosníky, podélníky, přepážky a výztuhy",
+        "b)  trup vytvořený smíšenou konstrukcí",
+        "c)  trup vytvořený prostorovou prutovinovou soustavou potaženou většinou nenosným potahem"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "78.  Poloskořepinová konstrukce trupu má podélnou soustavu tvořenou hustě rozmístěnými podélnými výztuhami (podélníky). Ohybové momenty u této konstrukce zachycují",
+      "answers": [
+        "a)  podélné výztuhy a účinné šířky nosného potahu",
+        "b)  příčné výztuhy (přepážky, přehrady)",
+        "c)  pouze podélné výztuhy"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "79.  Poloskořepinová konstrukce trupu má podélnou soustavu tvořenou hustě rozmístěnými podélnými výztuhami (podélníky). Kroucení trupu (kroutící moment) u této konstrukce zachycují",
+      "answers": [
+        "a)  podélné výztuhy",
+        "b)  přepážky",
+        "c)  nosný potah, vyztužený podélníky a přepážkami"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "80.  Skořepinová konstrukce trupu je",
+      "answers": [
+        "a)  konstrukce, jejíž krutová a ohybová pevnost a tuhost je zajišťována potahem",
+        "b)  konstrukce, jejíž krutová a ohybová pevnost a tuhost je zajišťována přepážkami",
+        "c)  konstrukce, jejíž krutová a ohybová pevnost a tuhost je zajišťována přehradami"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "81.  Co je hlavní příčinou krutu a ohybu trupu letounu za letu?",
+      "answers": [
+        "a)  především kombinovaná zatížení přejímaná od ocasních ploch",
+        "b)  otáčivé pohyby letounu",
+        "c)  účinek hmotových sil, které působí jako jednotlivé osamělé síly"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "82.  Přetlaková část trupu je",
+      "answers": [
+        "a)  cel vnitřní část tj. užitkový prostor trupu",
+        "b)  utěsněná část trupu, v níž se udržuje potřebný tlak ve velkých výškách",
+        "c)  utěsněná část trupu, v níž se udržuje stejný tlak za letu jako je na zemi"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "83.  Přetlaková kabina trupu je zpravidla konstrukčně vytvořena následujícím způsobem",
+      "answers": [
+        "a)  vložené přetlakové těleso do konstrukce trupu",
+        "b)  integrální řešení (nosná konstrukce trupu je zároveň utěsněna)",
+        "c)  vložené přetlakové těleso nebo integrální řešení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "84.  Podle celkové koncepce lze konstrukce trupů rozdělit do následujících druhů konstrukcí",
+      "answers": [
+        "a)  samonosná, příhradová, poloskořepinová, nosníková poloskořepinová, skořepinová, smíšená konstrukce",
+        "b)  samonosná, příhradová, poloskořepinová, nosníková poloskořepinová, skořepinová konstrukce",
+        "c)  samonosná trubková, příhradová, poloskořepinová, nosníková poloskořepinová, skořepinová konstrukce"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "85.  Smíšená konstrukce trupu je charakterizována takto",
+      "answers": [
+        "a)  konstrukce sestávající ze dvou, tří nebo více skořepinových panelů (desek)",
+        "b)  konstrukce, u níž je použito dvou nebo více typů konstrukcí (např. konstrukce poloskořepinová a příhradová) nebo konstrukce, u níž je použito dvou nebo více hlavních konstrukčních materiálů",
+        "c)  soubor podélných a příčných nosných prvků v konstrukci trupu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "86.  O jaký druh konstrukce trupu se jedná, je-li tato konstrukce charakterizována následovně:základní částí této konstrukce je silnostěnná trubka, nesoucí na jednom konci sedačku pro pilota s gondolou, baldachýn pro křídlo, motorové lože a závěsy podvozku a na druhém konci ocasní plochy",
+      "answers": [
+        "a)  příhradová konstrukce",
+        "b)  samonosná trubková konstrukce",
+        "c)  smíšená konstrukce"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "87.  Interiéry a doplňková vybavení kabiny letadel jsou jejich nedílnými funkčními součástmi. Tyto části konstrukce letadla patří do",
+      "answers": [
+        "a)  primární konstrukce draku letadla",
+        "b)  sekundární konstrukce draku letadla",
+        "c)  nepatří ani do a) ani do b)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "88.  Základními prostředky stability a řiditelnosti klasického letadla jsou",
+      "answers": [
+        "a)  kormidla příčného řízení",
+        "b)  ocasní plochy a kormidla příčného řízení",
+        "c)  ocasní plochy"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "89.  Která z uvedených letadlových částí tvoří ocasní plochy letadla",
+      "answers": [
+        "a)  stabilizátor a kýlová plocha",
+        "b)  plovoucí stabilizátor a směrové kormidlo",
+        "c)  vodorovné ocasní plochy, svislé ocasní plochy"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "90.  Kolik souřadných os má letadlová souřadnicová soustava a jaké jsou jejich správné názvy",
+      "answers": [
+        "a)  tři, podélná, příčná a svislá",
+        "b)  dvě, svislá a stranová",
+        "c)  čtyři, podélná, svislá, stranová, časová"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "91.  Jak se nazývá pohyb (otáčení) letadla kolem podélné osy",
+      "answers": [
+        "a)  bočení",
+        "b)  klonění",
+        "c)  klopení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "92.  Kolem příčné osy se letoun řídí",
+      "answers": [
+        "a)  křidélky",
+        "b)  směrovým kormidlem",
+        "c)  výškovým kormidlem"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "93.  Jak se nazývá otáčení letadla okolo svislé osy",
+      "answers": [
+        "a)  zatáčení",
+        "b)  klopení",
+        "c)  klonění"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "94.  Vodorovné ocasní plochy (VOP) zajišťují",
+      "answers": [
+        "a)  podélnou stabilitu a výškové řízení",
+        "b)  příčnou stabilitu a výškové řízení",
+        "c)  stranovou stabilitu a výškové řízení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "95.  Svislé ocasní plochy (SOP) zajišťují",
+      "answers": [
+        "a)  podélnou stabilitu a směrové řízení",
+        "b)  stranovou stabilitu a směrové řízení",
+        "c)  příčnou stabilitu a směrové řízení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "96.  Svislé ocasní plochy (SOP) jsou nejčastěji konstrukčně uspořádány jako",
+      "answers": [
+        "a)  dvojité",
+        "b)  sdružené",
+        "c)  jednoduché"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "97.  Kormidla příčného řízení slouží k zajištění změny úhlu příčného sklonu letadla kolem",
+      "answers": [
+        "a)  podélné osy (v letadlové souřadnicové soustavě)",
+        "b)  bočné osy  (v letadlové souřadnicové soustavě)",
+        "c)  kolmé osy  (v letadlové souřadnicové soustavě)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "98.  Kormidla příčného řízení se na letadlech vyskytují v tomto konstrukčním provedení",
+      "answers": [
+        "a)  křidélka a diferencovaná křidélka",
+        "b)  křidélka a zvláštní typy kormidel příčného řízení (např. spoilery)",
+        "c)  křidélka a Friseho křidélka"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "99.  Diferencovaná křidélka jsou křidélka, jejichž úhlové výchylky jsou",
+      "answers": [
+        "a)  nahoru a dolů přibližné stejné",
+        "b)  nahoru a dolů rozdílné",
+        "c)  dolů větší"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "100.  Rušiče vztlaku (spoilery) jsou zařízení, která se vychylují na horní straně křídla z obrysu profilu. Po vychýlení na jednom křídle poruší obtékání, sníží vztlak na tomto křídle, čímž vznikne tento hlavní účinek",
+      "answers": [
+        "a)  klonivý moment",
+        "b)  klopivý moment",
+        "c)  zatáčivý moment"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "101.  Plovoucí ocasní plochy jsou",
+      "answers": [
+        "a)  pohyblivá část vodorovných ocasních ploch",
+        "b)  pohyblivá část svislých ocasních ploch",
+        "c)  ocasní plochy bez pevné části, pohyblivé jako celek"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "102.  Odlehčovací ploška (fletner) je",
+      "answers": [
+        "a)  ploška umístěná na odtokové hraně kormidla, jejíž výchylka nezávisí na výchylce kormidla. Vychyluje se v opačném smyslu a snižuje závěsový moment",
+        "b)  ploška umístěná na odtokové hraně kormidla, jejíž výchylka závisí na výchylce kormidla. Vychyluje se v opačném smyslu a snižuje závěsový moment",
+        "c)  ploška umístěná na odtokové hraně kormidla, jejíž výchylka závisí na výchylce kormidla. Vychyluje se v opačném smyslu a zvyšuje závěsový moment"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "103.  Vyvažovací ploška (trimer) je",
+      "answers": [
+        "a)  ploška na odtokové hraně kormidla, která slouží k vyvážení ustáleného režimu letu",
+        "b)  ploška na odtokové hraně kormidla, která slouží k vyvážení neustáleného režimu letu",
+        "c)  ploška na odtokové hraně kormidla, která po vychýlení slouží k snížení přírůstku sil v řízení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "104.  Aerodynamické vyvážení (vyvažovací plošky, přestavitelné za letu nebo na zemi, přestavitelný stabilizátor) zajišťuje následující funkci",
+      "answers": [
+        "a)  ochranu kormidla před vznikem nepříznivého aeroelastického  jevu - samobuzeného rezonančního kmitání",
+        "b)  rozložení hmoty po hloubce kormidla tak, že osa otáčení kormidla se ztotožňuje s osou spojující těžiště jednotlivých řezů kormidla",
+        "c)  snížení řídící síly na páce pilota v určitém rozsahu provozních rychlostí na nulovou hodnotu při změnách přípusti, konfigurace, centráže a při vzniku nesymetrických sil nebo momentů"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "105.  Jak se nazývá divergentní samobuzené kmitání některé části letounu vyvolané vzájemným působením aerodynamických sil, setrvačných sil a pružných vrtaných sil?",
+      "answers": [
+        "a)  třepání (buffeting)",
+        "b)  třepetání (flutter)",
+        "c)  volné kmitání"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "106.  K čemu slouží pevná odlehčovací ploška na kormidle?",
+      "answers": [
+        "a)  k hmotovému vyvážení kormidla (vyvažovací hmota)",
+        "b)  k oddálení odtržení proudění při přetažení",
+        "c)  k odstranění nežádoucí tíživosti"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "107.  Hlavní podvozek letadla je",
+      "answers": [
+        "a)  základní konstrukční skupina přistávacího zařízení",
+        "b)  podvozek zachycující převážnou část energie po zemi se pohybujícího letadla",
+        "c)  podvozek zachycující veškerou energii pohybujícího se letadla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "108.  U letadel se záďovým podvozkem (ostruhou) je zřejmá při pojíždění vyšší citlivost na vítr",
+      "answers": [
+        "a)  boční a zadní",
+        "b)  čelní",
+        "c)  přízemní"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "109.  Typické rozdělení podvozku letounů podle jejich konstrukce je následující",
+      "answers": [
+        "a)  pružinové a vozíkové podvozky",
+        "b)  teleskopické, pákové a pružinové podvozky",
+        "c)  teleskopické a pákové podvozky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "110.  Teleskopický podvozek je konstrukční uspořádání podvozku",
+      "answers": [
+        "a)  u něhož je osa kola pevně spojena s pístnicí tlumiče a koná s ní posuvný pohyb",
+        "b)  u něhož osa kola není pevně spojena s pístnicí tlumiče a koná s ní posuvný pohyb",
+        "c)  u něhož je osa kola pevně spojena s pístnicí tlumiče a koná s ní otáčný pohyb"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "111.  Pákový podvozek je konstrukční uspořádání podvozku",
+      "answers": [
+        "a)  jenž může být za letu zatažen do draku",
+        "b)  u něhož není osa kola spojena pákou s tlumičem",
+        "c)  u něhož je osa kola spojena pákou  s tlumičem"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "112.  Podvozek s pružinovou nohou je",
+      "answers": [
+        "a)  podvozek, u něhož je noha vytvořena z ploché pružiny, nesoucí na konci podvozkové kolo",
+        "b)  podvozek, jehož noha tvoří výkyvnou poloosu pro kolo",
+        "c)  podvozek umístěný zpravidla na konci křídla nebo na zádi trupu, chránící uvedené části letadla při pohybu po zemi"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "113.  Tlumič podvozku je konstrukční část podvozku, která",
+      "answers": [
+        "a)  přejímá většinou potenciální energie nárazů při vzletu, přistání a pojíždění",
+        "b)  přejímá většinu kinetické energie nárazů při vzletu, přistání a pojíždění",
+        "c)  přejímá většinu kinetické energie při vzletu a přistání letadla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "114.  Hydropneumatický tlumič je typ konstrukčního uspořádání tlumiče",
+      "answers": [
+        "a)  u něhož se k pružení používá stlačeného plynu a k tlumení kapaliny",
+        "b)  který používá výhradně kapalinové tlumení",
+        "c)  u něhož se k pružení používá kapaliny a k tlumení stlačeného plynu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "115.  Tlumič bočních kmitů je",
+      "answers": [
+        "a)  tlumič, u něhož komprese pružného média probíhá jen při bočním nárazu (kmitu)",
+        "b)  tlumič k potlačení bočního kmitání směrově natáčivého kola",
+        "c)  tlumič s kapalinovým tlumením bez pružícího členu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "116.  Vozíkový podvozek je následující konstrukční uspořádání podvozku",
+      "answers": [
+        "a)  hlavní podvozek, jehož noha tvoří výkyvnou poloosu pro kola",
+        "b)  hlavní podvozek se dvěma koly uspořádanými za sebou",
+        "c)  hlavní podvozek se dvěma nebo více páry kol umístěnými na obu koncích vahadla, kloubově zavěšený na podvozkové noze"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "117.  Boční kmitání kola podvozku, tzv. shimmy (šimy) je",
+      "answers": [
+        "a)  samobuzené kmitání kolem osy jeho směrového natáčení",
+        "b)  nebuzené kmitání kolem osy jeho směrového natáčení",
+        "c)  samobuzené vertikální kmitání kolem osy jeho směrového natáčení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "118.  Zámek podvozku letadla je",
+      "answers": [
+        "a)  zařízení zajišťující příďový podvozek v neutrální poloze",
+        "b)  zařízení zajišťující podvozek proti nevhodné manipulaci s ním",
+        "c)  zařízení zajišťující zatahovací podvozek proti nežádoucí změně jeho polohy"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "119.  Protiskluzové zařízení podvozku je",
+      "answers": [
+        "a)  zařízení rušící protitlak v brzdové soustavě",
+        "b)  zařízení k odstranění vzduchu se systému hydraulické brzdy",
+        "c)  zařízení zabraňující blokování kol"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "120.  Podle konstrukce dělíme brzdy letadlových podvozků na",
+      "answers": [
+        "a)  čelisťové, komorové, bezkomorové",
+        "b)  čelisťové, komorové, diskové, lamelové",
+        "c)  čelisťové, diskové, lamelové"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "121.  Diskové (lamelové) brzdy letadel se podobají diskovým třecím spojkám. U větších letadel se osvědčilo několik disků vedle sebe - tzv. lamelové brzdy. Lamelové brzdy se skládají z těchto částí",
+      "answers": [
+        "a)  disk - je spojen s pohyblivou částí, pracovní jednotka s obložením - na pevné části",
+        "b)  disk - je spojen s pevnou částí, pracovní jednotka s obložením - na pohyblivé části",
+        "c)  disk - je spojen s pohyblivou částí, pracovní jednotka s obložením - na pohyblivé části"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "122.  Dvě skloubená ramen kyvně připojená k noze teleskopického podvozku, zajišťující neotočnost pístnice vůči válci a umožňující jejich vzájemný posuv se nazývají",
+      "answers": [
+        "a)  zlamovací vzpěra podvozku",
+        "b)  dvojitý zámek podvozku",
+        "c)  podvozkové nůžky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "123.  Vysokotlaké pneumatiky podvozku mají tlak vyšší než",
+      "answers": [
+        "a)  0,4 MPa",
+        "b)  1,0 MPa",
+        "c)  2,0 MPa"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "124.  Součást zatahovacího mechanismu podvozku, sestávající ze dvou kloubově spojených ramen provedených tak, že v napřímeném stavu upevňují podvozek ve vytažené poloze a při nuceném svírání podvozek zatahují se nazývá",
+      "answers": [
+        "a)  zámek podvozku",
+        "b)  zlamovací vzpěra podvozku",
+        "c)  podvozkové nůžky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "125.  Kmitání příďového kola (shimmy) může být způsobeno některým z uvedených faktorů",
+      "answers": [
+        "a)  nedostatkem oleje v tlumiči bočních kmitů",
+        "b)  závadou ložisek kola nebo nevyhovujícím tlakem v pneumatice příďového kola",
+        "c)  může být způsobeno faktory dle a) a b)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "126.  V jaké fázi v průběhu dojezdu letounu při přistání mají brzdy hlavního podvozku nejvyšší účinnost?",
+      "answers": [
+        "a)  při minimálním vztlaku na křídle",
+        "b)  při vysoké pojížděcí rychlosti",
+        "c)  dojde-li k zablokování brzd"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "127.  Hlavní soustava řízení letadla je",
+      "answers": [
+        "a)  soustava řízení umožňující přenos řídící činnosti z řídidel na řídící orgány",
+        "b)  soustava řízení, kterou je za letu řízeno klopení, klonění a zatáčení letadla",
+        "c)  soustava řízení, ve které je pro přenos řídící činnosti z řídidel na řídící orgány použito táhel i lan"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "128.  Vedlejší soustava řízení letadla je",
+      "answers": [
+        "a)  soustava zařízení, jejichž činností vzniká moment kolem příslušné osy letadla. Jsou to např. kormidla, řídící trysky, rotory apod.",
+        "b)  soustava zařízení, jimiž příslušný člen posádky působí na soustavu řízení",
+        "c)  soustava zařízení sloužící k přenosu činnosti z ovládače na ovládanou část, např. na podvozek, vztlakové klapky, na ovládání nákladových dveří apod."
+      ],
+      "correct": 2
+    },
+    {
+      "question": "129.  Smíšená soustava řízení letadla je",
+      "answers": [
+        "a)  soustava řízení, ve které je pro přenos řídící činnosti z řídidel na řídící orgány použito táhel i lan",
+        "b)  soustava řízení, kterou je za letu řízeno klopení, klonění a zatáčení letadla",
+        "c)  soustava řízení umožňující ovládání řídidel ze dvou sedadel"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "130.  Soustava podélného řízení letadla je",
+      "answers": [
+        "a)  část hlavní soustavy řízení, kterou se řídí zatáčení letadla",
+        "b)  část hlavní soustavy řízení, kterou se řídí klopení letadla",
+        "c)  část hlavní soustavy řízení, kterou se řídí klonění letadla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "131.  Soustava směrového řízení letadla je",
+      "answers": [
+        "a)  část hlavní soustavy řízení, kterou se řídí klopení letadla",
+        "b)  část hlavní soustavy řízení, kterou se řídí klonění letadla",
+        "c)  část hlavní soustavy řízení, kterou se řídí zatáčení letadla"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "132.  soustava příčného řízení letadla je",
+      "answers": [
+        "a)  část hlavní soustavy řízení, kterou se řídí klonění letadla",
+        "b)  část hlavní soustavy řízení, kterou se řídí zatáčení letadla",
+        "c)  část hlavní soustavy řízení, kterou se řídí klopení letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "133.  Jakou funkci plní za letu stavitelný stabilizátor?",
+      "answers": [
+        "a)  vyvažuje letoun okolo příčné osy",
+        "b)  zlepšuje příčnou stabilitu",
+        "c)  posunuje polohu těžiště"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "134.  Posilovač řízení (bustr) v systému řízení je",
+      "answers": [
+        "a)  zařízení sloužící ke snížení přírůstku síly působící na řídidlo",
+        "b)  zařízení sloužící k znásobení síly působící na řídidlo",
+        "c)  zařízení sloužící ke snížení síly působící na řídidlo"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "135.  Umělý cit s systému řízení je",
+      "answers": [
+        "a)  zařízení sloužící ke znásobení síly působící na řídidlo (u nepřímého řízení)",
+        "b)  zařízení zajišťující, aby síly na řídidle byly přiměřené (u nepřímého řízení)",
+        "c)  zařízení zvyšující citlivost řízení (u nepřímého řízení)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "136.  Řízení letadla rozdělujeme podle druhu konstrukcí řídidel (řídících orgánů) na",
+      "answers": [
+        "a)  pákové a volantové",
+        "b)  volantové a s ovladačem (ručka)",
+        "c)  pákové, volantové, s rukojetí na páce, s ovladačem (elektroimpulsní řízení)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "137.  Podle typu převodu řízení rozeznáváme následující druhy řízení letadel",
+      "answers": [
+        "a)  s tuhým převodem, s ohebným převodem",
+        "b)  s tuhým převodem, s ohebným převodem, smíšené, elektroimpulsní",
+        "c)  s tuhým převodem, s ohebným převodem, smíšené"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "138.  Soustava řízení s tuhým převodem je částí mechanické soustavy řízení letadla, ve které jsou použita pro přenos sil",
+      "answers": [
+        "a)  lana nebo řetízky",
+        "b)  táhla",
+        "c)  lana a táhla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "139.  Je-li použito v systému řízení letounu při mezním režimu varování pomocí třesení sloupku řízení, pak se jedná o řízení letounu",
+      "answers": [
+        "a)  nepřímé",
+        "b)  přímé",
+        "c)  elektroimpulsní"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "140.  Vyvažovací ploška na výškovce je vychýlena nahoru. Ve které poloze se nachází příslušný ovladač?",
+      "answers": [
+        "a)  v neutrální poloze",
+        "b)  v poloze „těžký na hlavu“",
+        "c)  v poloze „těžký na ocas“"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "141.  Pevné plošky na horní straně křídla, které jsou konstrukčně provedeny jako malé destičky kolmo upevněné k povrchu křídla a šikmo ke směru proudění (příp. ve tvaru čtyřstěnu nebo malé trojúhelníkové desky - rampy) se nazývají",
+      "answers": [
+        "a)  sloty",
+        "b)  vířiče",
+        "c)  rušiče vztlaku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "142.  Slot (náběžná ploška) je",
+      "answers": [
+        "a)  ploška před náběžnou částí křídla. Zabraňuje odtržení proudu vzduchu při větších úhlech náběhu",
+        "b)  horní část náběžné části křídla, která se vysouvá směrem dopředu",
+        "c)  náběžná část křídla sklopená směrem dolů"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "143.  Sklopná náběžná hrana je",
+      "answers": [
+        "a)  horní část náběžné části křídla, která se vysouvá směrem dopředu",
+        "b)  spodní část náběžné hrany, která se odklápí směrem dopředu",
+        "c)  náběžná část křídla sklopná směrem dolů"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "144.  Rušič vztlaku (spoiler, interceptor) je",
+      "answers": [
+        "a)  zařízení tvaru desky upevněný kolmo k povrchu křídla a šikmo na směr proudění",
+        "b)  zařízení, které po vysunutí z povrchu křídla poruší obtékání, sníží vztlak a zvýší odpor na křídle",
+        "c)  zařízení ve tvaru trojúhelníkové desky vyčnívající z povrchu křídla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "145.  Jak je konstrukčně provedena odklápěcí klapka?",
+      "answers": [
+        "a)  při větším úhlu náběhu se vysune část náběžné hrany křídla",
+        "b)  klapka se vychýlí ze zadní části spodní hrany křídla dolů",
+        "c)  ze zadní části křídla se vysune klapka ve tvaru profilu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "146.  Jak je konstrukčně provedena Fowlerova klapka?",
+      "answers": [
+        "a)  zadní část nosné plochy se vychýlí dolů",
+        "b)  klapka se vychýlí ze zadní části spodní hrany křídla",
+        "c)  ze zadní části křídla se vysune klapka ve tvaru profilu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "147.  Spodní část náběžné hrany, která se odklápí směrem dopředu je",
+      "answers": [
+        "a)  náběžná výsuvná klapka",
+        "b)  náběžná odklápěcí klapka - Krügerova klapka",
+        "c)  sklopná náběžná hrana"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "148.  Vztlaková klapka využívající efektu zvýšení energie vzdušného proudu přitékajícího ze spodní části profilu na horní část se nazývá",
+      "answers": [
+        "a)  jednoštěrbinová vztlaková klapka",
+        "b)  jednoduchá vztlaková klapka",
+        "c)  odklápěcí vztlaková klapka"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "149.  Vztlaková klapka zvyšující zakřivení střední křivky profilu jednoduchým odklopením zadní části profilu dolů se nazývá",
+      "answers": [
+        "a)  odklápěcí vztlaková klapka",
+        "b)  jednoduchá vztlaková klapka",
+        "c)  jednoštěrbinová vztlaková klapka"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "150.  Běžně používané velikosti výchylek vztlakových klapek u klasických konstrukcí letadel jsou",
+      "answers": [
+        "a)  30° vzlet / 30° přistání",
+        "b)  25° vzlet / 45° přistání",
+        "c)  15° vzlet / 40° přistání"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "151.  Vířič tvaru desky upevněný kolmo k povrchu křídla a šikmo na směr proudění je",
+      "answers": [
+        "a)  klínový vířič",
+        "b)  deskový vířič",
+        "c)  rampová vířič"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "152.  Soustava ovládání vztlakových klapek je soubor zařízení sloužící k přenosu činností (úkonů) pilota z ovladače na ovládanou část (vztlakové klapky). Tato soustava je převážně provedena na principu",
+      "answers": [
+        "a)  pneumatické soustavy ovládání klapek",
+        "b)  mechanické nebo hydraulicko-mechanické soustavy ovládání klapek",
+        "c)  zpětné vazby"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "153.  Náběžná část křídla sklopná směrem dolů se nazývá",
+      "answers": [
+        "a)  náběžná odklápěcí klapka",
+        "b)  Krügerova klapka",
+        "c)  sklopná náběžná hrana"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "154.  Horní část náběžné části křídla, která se vysouvá směrem dopředu je",
+      "answers": [
+        "a)  náběžná výsuvná klapka",
+        "b)  Krügerova klapka",
+        "c)  sklopná náběžná hrana"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "155.  Nosný rotor vrtulníku je",
+      "answers": [
+        "a)  soustava otáčejících se nosných ploch (listů) vyvozujících vztlakové síly",
+        "b)  soustava otáčejících se nosných ploch (listů) vyvozujících vztlakové síly a řídící síly",
+        "c)  soustava otáčejících se nosných ploch - rotorových listů"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "156.  Ocasní rotor vrtulníku (vyrovnávací rotor) je",
+      "answers": [
+        "a)  rotor sloužící k vyrovnávání reakčního momentu nosného rotoru a ke směrovému řízení vrtulníku",
+        "b)  rotor sloužící k vyrovnávání reakčního momentu nosného rotoru",
+        "c)  rotor sloužící k vyrovnávání reakčního momentu nosného rotoru a k podélnému řízení vrtulníku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "157.  Cyklika listů rotoru vrtulníku (křidélkování listu rotoru) je",
+      "answers": [
+        "a)  současná změna úhlu nastavení všech listů, ovládaná soustavou řízení cykliky",
+        "b)  neperiodická změna úhlu nastavení listu rotoru v průběhu jedné otáčky, ovládaná soustavou řízení cykliky",
+        "c)  periodická změna úhlu nastavení listu rotoru v průběhu jedné otáčky, ovládaná soustavou řízení cykliky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "158.  Kolektiv listů rotoru vrtulníku je",
+      "answers": [
+        "a)  současná změna úhlu nastavení všech listů o stejný úhel, ovládaná soustavou řízení kolektivu",
+        "b)  současná změna úhlu nastavení všech listů o různý úhel, ovládaná soustavou řízení kolektivu",
+        "c)  periodická změna úhlu nastavení listu rotoru v průběhu jedné otáčky, ovládaná soustavou řízení kolektivu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "159.  Disk rotoru vrtulníku je definován následovně",
+      "answers": [
+        "a)  jedná se o poměr součtu ploch všech listů rotoru k ploše rotoru",
+        "b)  jedná se součást (letadlový celek) soustavy řízení vrtulníku",
+        "c)  jedná se o kruh vymezený dráhou špiček listů rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "160.  Kývání listu rotoru vrtulníku znamená, že jde o",
+      "answers": [
+        "a)  natáčivý pohyb list kolem odporového čepu",
+        "b)  natáčivý pohyb listu kolem vztlakového čepu",
+        "c)  natáčivý pohyb listu kolem osového čepu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "161.  Mávání listu rotoru vrtulníku znamená, že jde o",
+      "answers": [
+        "a)  natáčivý pohyb listu kolem odporového čepu",
+        "b)  natáčivý pohyb listu kolem vztlakového čepu",
+        "c)  natáčivý pohyb listu kolem osového čepu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "162.  Reakční moment rotoru vrtulníku je",
+      "answers": [
+        "a)  moment, kterým působí hřídelem poháněný rotor na trup vrtulníku",
+        "b)  moment, kterým působí hřídelem poháněný rotor na řízení vrtulníku",
+        "c)  moment, kterým působí hřídelem poháněný rotor na ocasní rotor"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "163.  Rovina disku rotoru vrtulníku je",
+      "answers": [
+        "a)  rovina kolmá k hřídeli rotoru",
+        "b)  rovina proložená drahou špiček rotoru",
+        "c)  rovina, vzhledem k níž se úhel nastavení listu nemění"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "164.  Plnost rotoru vrtulníku je definována jako",
+      "answers": [
+        "a)  plocha disku rotoru",
+        "b)  poměr součtu ploch všech listů rotoru k ploše rotoru",
+        "c)  součet ploch všech listů rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "165.  Pojem tah rotoru vrtulníku je definován následovně",
+      "answers": [
+        "a)  složka výsledné aerodynamické síly na rotoru ve směru jeho osy kolmé ke vztažné rovině rotoru",
+        "b)  složka výsledné aerodynamické síly na rotoru v podélném směru",
+        "c)  složka výsledné aerodynamické síly na rotoru ve směru vodorovném ke vztažné rovině rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "166.  Úhel náběhu rotoru vrtulníku je",
+      "answers": [
+        "a)  úhel mezi rovinou rotoru a rotorovým listem",
+        "b)  úhel mezi vektorem rychlosti a rotorem",
+        "c)  úhel sevřený rovinou disku nosného rotoru a vektorem rychlosti proudění"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "167.  Úhel zkroucení listu rotoru vrtulníku je",
+      "answers": [
+        "a)  rozdíl úhlů nastavení profilu listu u kořene a na špičce",
+        "b)  součet úhlů nastavení profilu listu u kořene a na špičce",
+        "c)  podíl úhlů nastavení profilu listu u kořene a na špičce"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "168.  Doraz listu rotoru vrtulníku má následující konstrukční podobu",
+      "answers": [
+        "a)  opěrka, na níž spočívá list při svěšení listu v klidu, za činnosti rotoru nemusí být mezi opěrkou a listem v mezní poloze dostatečná vůle",
+        "b)  opěrka, na níž spočívá list při svěšení listu v klidu, za činnosti rotoru musí být mezi opěrkou a listem v mezní poloze dostatečná vůle",
+        "c)  opěrka, na níž spočívá list při svěšení listu v klidu, za činnosti rotoru se doporučuje, aby byla mezi opěrkou a listem v mezní poloze dostatečná vůle"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "169.  Osa listu rotoru vrtulníku je osa, kolem které",
+      "answers": [
+        "a)  list křidélkuje",
+        "b)  list mává",
+        "c)  list kývá"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "170.  Hlava rotoru vrtulníku je následující konstrukční celek",
+      "answers": [
+        "a)  opěrka, na níž spočívá list ve svěšené poloze v klidu",
+        "b)  část rotoru sloužící k připojení listů na hřídel rotoru",
+        "c)  otáčivá nosná plocha tvořící část rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "171.  Odporový čep listu rotoru vrtulníku je",
+      "answers": [
+        "a)  závěsný čep listu kloubového rotoru s osou přibližně rovnoběžnou s osou hlavy rotoru",
+        "b)  závěsný čep listu kloubového rotoru s osou přibližně vodorovnou vzhledem k ose hlavy rotoru",
+        "c)  závěsný čep listu kloubového rotoru s osou přibližně kolmou na osu hlavy rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "172.  Vztlakový čep listu rotoru vrtulníku je",
+      "answers": [
+        "a)  závěsný čep listu kloubového rotoru s osou přibližně rovnoběžnou s osou hlavy rotoru",
+        "b)  závěsný čep listu kloubového rotoru s osou přibližně kolmou na osu hlavy rotoru",
+        "c)  závěsný čep listu kloubového rotoru s osou přibližně vodorovnou vzhledem k ose hlavy rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "173.  Tlumič listu rotoru vrtulníku je",
+      "answers": [
+        "a)  zařízení tlumící kmity listu v rovině otáčení, používá se u listů se vztlakovým čepem",
+        "b)  zařízení tlumící kmity listu v rovině otáčení, používá se u listů s osovým čepem",
+        "c)  zařízení tlumící kmity listu v rovině otáčení, používá se u listů s odporovým čepem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "174.  Řídící deska je pojem z konstrukce draku vrtulníku. Je to",
+      "answers": [
+        "a)  část soustavy řízení vrtulníku spojené táhly s ovládacími pákami listů rotoru",
+        "b)  část soustavy řízení vrtulníku spojené táhly s ovládacími pákami listů ocasního rotoru",
+        "c)  část pilotní kabiny vrtulníku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "175.  Šikmá řídící deska vrtulníku je",
+      "answers": [
+        "a)  řídící deska, jejímž vyosením je vyvolávána cyklika listů a posuvem v ose rotoru je ovládán kolektiv listů",
+        "b)  řídící deska, jejímž nakloněním je vyvolávána cyklika listů a posuvem v ose rotoru je ovládán kolektiv listů",
+        "c)  zařízení sloužící k pevnostním, životnostním a aerodynamickým zkouškám rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "176.  Výstředníková řídící deska rotoru vrtulníku je",
+      "answers": [
+        "a)  zařízení sloužící k pevnostním, životnostním a aerodynamickým zkouškám rotoru",
+        "b)  řídící deska, jejímž nakloněním je vyvolávána cyklika listů a pootočením je ovládán kolektiv listů",
+        "c)  řídící deska, jejímž vyosením je vyvolávána cyklika listů a pootočením je ovládán kolektiv listů"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "177.  Pružný závěs listu rotoru vrtulníku je závěs",
+      "answers": [
+        "a)  umožňující v mezích své pružnosti pohyb listu",
+        "b)  umožňující v mezích své pevnosti pohyb listu",
+        "c)  spolehlivě pružící i v mezních režimech letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "178.  Úhel vzepětí listů rotoru vrtulníku je",
+      "answers": [
+        "a)  úhel sevřený mezi rotorovým listem a rovinou disku rotoru",
+        "b)  úhel sevřený osou listu a rovinou disku rotoru",
+        "c)  rozdíl úhlů nastavení profilu listu u kořene a na špičce"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "179.  Úhel zkroucení listu rotoru je",
+      "answers": [
+        "a)  úhel sevřený mezi rotorovým listem a rovinou disku rotoru",
+        "b)  podíl úhlů nastavení profilu listu u kořene a na špičce",
+        "c)  rozdíl úhlů nastavení profilu listu u kořene a na špičce"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "180.  Úhel odtažení listu rotoru vrtulníku je",
+      "answers": [
+        "a)  úhel sevřený osou listu a rovinou procházející osou hřídele rotoru a středem odporového čepu",
+        "b)  úhel sevřený osou listu rovinou procházející osou hřídele rotoru a středem vztlakového čepu",
+        "c)  úhel sevřený osou listu a rovinou procházející osou hřídele rotoru a středem osového čepu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "181.  Ekvivalentní hloubka listu rotoru vrtulníku je",
+      "answers": [
+        "a)  hloubka, kterou by měl obdélníkový list stejné délky a stejného tvaru",
+        "b)  hloubka, kterou by měl obdélníkový list stejné délky a stejného tahu. Zpravidla se za ni považuje hloubka na poloměru 0,75 R",
+        "c)  hloubka, kterou by měl obdélníkový list stejné délky a stejného tahu. Zpravidla se za ni považuje hloubka na poloměru 0,7 R"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "182.  Vyvažovací ploška listu rotoru vrtulníku je",
+      "answers": [
+        "a)  ploška sloužící k odlehčení sil v řízení vrtulníku",
+        "b)  ploška na odtokové hraně listu umožňující seřízení rotoru",
+        "c)  ploška měnící velikost síly přenášené z listu do soustavy řízení vrtulníku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "183.  Seřizování (seřízení) rotoru vrtulníku je",
+      "answers": [
+        "a)  činnost, jejímž účelem je uvedení listů rotoru do stejné roviny rotace při všech režimech",
+        "b)  činnost, jejímž účelem je uvedení listů rotoru do stejné roviny rotace při mezních režimech",
+        "c)  konstrukční a provozní postup ve stadiu vývoje vrtulníku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "184.  Nosník listu rotoru vrtulníku je",
+      "answers": [
+        "a)  podélná nosná část listu",
+        "b)  příčná nosná část listu",
+        "c)  část listu přenášející kroutící momenty"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "185.  Soustava řízení vrtulníku se skládá z těchto podsoustav",
+      "answers": [
+        "a)  směrové řízení, výškové řízení",
+        "b)  cyklické řízení, kolektivní řízení",
+        "c)  cyklické řízení, kolektivní řízení, směrové řízení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "186.  Směrové řízení umožňuje směrové ovládání vrtulníku. U jednorotorových vrtulníků se směrové řízení uskutečňuje pomocí",
+      "answers": [
+        "a)  změny úhlu nastavení listů rotoru",
+        "b)  směrového kormidla",
+        "c)  ocasního rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "187.  Reakční moment od kroutícího momentu nosného rotoru",
+      "answers": [
+        "a)  je vždy menší než kroutící moment nosného rotoru",
+        "b)  působí ve směru rotace nosného rotoru",
+        "c)  působí proti směru rotace nosného rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "188.  Pohyb vrtulníku za letu kolem jeho podélné osy se nazývá",
+      "answers": [
+        "a)  zatáčení",
+        "b)  klonění",
+        "c)  klopení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "189.  Pohyb vrtulníku za letu kolem jeho bočné osy se nazývá",
+      "answers": [
+        "a)  klopení",
+        "b)  klonění",
+        "c)  zatáčení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "190.  Pohyb vrtulníku za letu kolem jeho kolmé osy se nazývá",
+      "answers": [
+        "a)  klopení",
+        "b)  zatáčení",
+        "c)  klonění"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "191.  Kloubová hlava listů nosného rotoru má",
+      "answers": [
+        "a)  čep osový a vztlakový",
+        "b)  čep osový, odporový a vztlakový",
+        "c)  listy pružně připojeny s hlavou rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "192.  Jaké jsou síly působící na list rotoru vrtulníku během otáčení",
+      "answers": [
+        "a)  odstředivá síla, síla tíže a setrvačné síly",
+        "b)  aerodynamická síla, síla tíže listu, odstředivá síla a síly setrvačné",
+        "c)  aerodynamická síla a odstředivá síla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "193.  Při autorotaci vrtulníku pákou kolektivního řízení upravujeme",
+      "answers": [
+        "a)  rozpočet na přistání",
+        "b)  otáčky rotoru",
+        "c)  dopřednou rychlost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "194.  Pohybem kolektivního řízení vrtulníku za letu se mění",
+      "answers": [
+        "a)  úhel nastavení listů nosného rotoru jednotlivě o hodnotu závisející na azimutální poloze listu",
+        "b)  úhel mávání listů nosného rotoru v závislosti na azimutální poloze listu",
+        "c)  úhel nastavení všech listů nosného rotoru současně o stejnou hodnotu a nezávisle na azimutální poloze listu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "195.  Nosná soustava u vrtulníku je tvořena",
+      "answers": [
+        "a)  rotorovými listy a rotorovou hlavou",
+        "b)  rotorovými listy",
+        "c)  rotorovou hlavou"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "196.  Tuhý závěs nosného rotoru vrtulníku je charakterizován",
+      "answers": [
+        "a)  nepohyblivým spojením listů nosného rotoru s hlavou nosného rotoru",
+        "b)  využitím kompozitních materiálů při výrobě listů nosného rotoru",
+        "c)  nemožností kompenzace vlivu aerodynamické nesymetrie nosného rotoru vznikající za dopředného letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "197.  Polotuhý závěs nosného rotoru vrtulníku je charakterizován",
+      "answers": [
+        "a)  použitím tlumičů kývání listů nosného rotoru",
+        "b)  nahrazením některého závěsového spoje listu s hlavou spojením tuhým",
+        "c)  umístěním závěsného čepu pod rovinou rotace nosného rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "198.  Kloubové připojení listů nosného rotoru k hlavě nosného rotoru vrtulníku je charakteristické použitím",
+      "answers": [
+        "a)  výkyvných ložisek",
+        "b)  tří otočných závěsů",
+        "c)  výkyvné hlavy nosného rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "199.  Úhel nastavení  rotorového listu rotoru vrtulníku je definován jako úhel mezi",
+      "answers": [
+        "a)  tětivou profilu rotorového listu a vodorovnou rovinou",
+        "b)  tětivou profilu rotorového listu a rovinou kolmou k ose rotace nosného rotoru",
+        "c)  vodorovnou rovinou a rovinou disku rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "200.  Úhel náběhu rotoru vrtulníku je definován jako úhel mezi vektorem rychlosti proudění a",
+      "answers": [
+        "a)  rovinou vymezenou podélnou a boční osou vrtulníku",
+        "b)  vodorovnou rovinou",
+        "c)  rovinou disku nosného rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "201.  Bezpečnostní diagram určitého typu vrtulníku vymezuje tyto oblasti",
+      "answers": [
+        "a)  vertikálního vzletu s využitím vlivu země",
+        "b)  nebezpečných výšek a rychlostí z hlediska vysazení motoru",
+        "c)  nebezpečných otáček nosného rotoru při autorotaci"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "202.  Vibrace vrtulníku, které se mohou objevit při letu maximální rychlostí a jsou omezujícím faktorem jpro zvyšování maximální rychlosti, jsou způsobeny",
+      "answers": [
+        "a)  odtrháváním proudu vzduchu na listech nosného rotoru na ustupující straně",
+        "b)  narušením obtékáním ocasního rotoru vrtulníku",
+        "c)  průběhem reakčního mementu rotoru v závislosti na rychlosti letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "203.  Řídící rovina rotoru vrtulníku je",
+      "answers": [
+        "a)  rovina, vzhledem ke které se úhel nastavení listu rotoru během otáčky nemění",
+        "b)  součást soustavy řízení vrtulníku",
+        "c)  rovina, vzhledem k níž úhel nastavení listu rotoru během otáčky mění"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "204.  Úhel nastavení listu rotoru vrtulníku je",
+      "answers": [
+        "a)  úhel mezi profilem listu a vztažnou rovinou rotoru",
+        "b)  úhel sevřený směrem nulového vztlaku profilu listu na poloměru 0,7 R a vztažnou rovinou rotoru",
+        "c)  úhel sevřený směrem nulového vztlaku profilu listu na poloměru 0,75 R a vztažnou rovinou rotoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "205.  Momentové závaží (nesprávně bimbadlo) používané v konstrukcích vrtulníků je",
+      "answers": [
+        "a)  závaží upevněné na koření listu rotoru, měnící velikost síly přenášené z listu do soustavy řízení vrtulníku",
+        "b)  závaží upevněné na konci listu rotoru, měnící velikost síly přenášené z listu do soustavy řízení vrtulníku",
+        "c)  závaží upevněné na konci listu rotoru, upravující velikost síly přenášené z listu do soustavy řízení vrtulníku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "206.  Účelem ocasního rotoru vrtulníku je",
+      "answers": [
+        "a)  zamezit vzniku klonivého momentu v celém rozsahu rychlostí",
+        "b)  vytvářet potřebný moment k zajištění podélné stability",
+        "c)  vyrovnávat reakční moment nosného rotoru a zajistit směrové řízení vrtulníku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "207.  Použití ocasního rotoru v konstrukci vrtulníku lze nahradit",
+      "answers": [
+        "a)  vhodným tvarováním trupu vrtulníku",
+        "b)  vyfukováním regulovaného proudu vzduchu z ocasního nosníku",
+        "c)  řiditelnou svislou ocasní plochou"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "208.  Zařízení (konstrukční sestava) připevňující motor k draku letadla se nazývá",
+      "answers": [
+        "a)  příhradová konstrukce",
+        "b)  motorové lože",
+        "c)  závěs motoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "209.  Zařízení (konstrukční celek) zmenšující aerodynamický odpor pohonné jednotky zastavěné do trupu a usměrňující proud vzduchu pro motor se nazývá",
+      "answers": [
+        "a)  motorový kryt (kryt motoru)",
+        "b)  gondola",
+        "c)  aerodynamický přechod"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "210.  Kompletní výrobek složený z vlastní vrtule (nebo vrtulí), příslušenství a vybavení se nazývá",
+      "answers": [
+        "a)  vybavení vrtule",
+        "b)  vrtulová jednotka",
+        "c)  příslušenství vrtule"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "211.  Nástavba konstrukce draku letadla pro vestavění motorové jednotky mimo trup se nazývá",
+      "answers": [
+        "a)  motorové lože",
+        "b)  gondola motoru",
+        "c)  závěs motoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "212.  Nosná část draku, která vystupuje z konstrukce a slouží k uchycení části letadla nebo zavěšovaných nákladů nebo zařízení se nazývá",
+      "answers": [
+        "a)  pylon",
+        "b)  závěsné kování",
+        "c)  vzpěra"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "213.  Letadlový motor je vždy uložen do motorového lože či závěsu",
+      "answers": [
+        "a)  nehybně",
+        "b)  volně",
+        "c)  pružně"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "214.  Provádění motorové zkoušky má určitý vliv na zatížení motorového lože. Tento vliv je",
+      "answers": [
+        "a)  zanedbatelný ve srovnání s běžným provozem letounu",
+        "b)  srovnatelný s běžným provozem letounu",
+        "c)  značný, zejména u pístových a turbovrtulových motorů, je nutná krátká doba motorové zkoušky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "215.  Motorové lože musí být schopno převést všechny síly a momenty, které na motor za letu působí. Jsou to",
+      "answers": [
+        "a)  hmotnost motoru a agregátů a jejich násobky, tah motoru nebo vrtule, setrvačné síly, gyroskopický moment, vibrační namáhání, reakční moment od vrtule (pouze u turbovrtulového motoru)",
+        "b)  hmotnost motoru a agregátů a jejich násobky, s kterými je letadlo povoleno provozovat, tah motoru nebo vrtule včetně zpětného tahu, setrvačné síly, gyroskopický moment, vibrační namáhání, reakční moment od vrtule",
+        "c)  hmotnost motoru a agregátů a jejich násobky, tah motoru nebo vrtule včetně zpětného tahu, gyroskopický moment, vibrační namáhání, reakční moment od vrtule"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "216.  Motorové lože podle konstrukce rozdělujeme na",
+      "answers": [
+        "a)  prutová (příhradová) konstrukce, nosníková konstrukce, nosníko-příhradová (smíšená) konstrukce, podstavcová konstrukce",
+        "b)  prutová (příhradová) konstrukce, nosníková konstrukce, nosníko-příhradová (smíšená) konstrukce",
+        "c)  prutová (příhradová) konstrukce, nosníko-příhradová (smíšená konstrukce), podstavcová konstrukce"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "217.  Pružící elementy motorového lože, která mají za úkol utlumit vibrace a nepřenášet je do konstrukce draku se nazývají",
+      "answers": [
+        "a)  motorové závěsy",
+        "b)  silentbloky",
+        "c)  tlumiče motoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "218.  Letadlové systémy (Soustavy, příp. instalace) je možno rozdělit do následujících hlavních skupin",
+      "answers": [
+        "a)  silové systémy, smíšené systémy",
+        "b)  silové systémy, systémy vybavení letadla a pohonných jednotek",
+        "c)  silové systémy, systémy vybavení letadla, elektroimpulsní systémy"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "219.  Podle druhu energie přiváděné k pracovnímu orgánu rozeznáváme několik typů silových systémů (soustav). V přehledu jsou to následující silové systémy",
+      "answers": [
+        "a)  hydraulický systém, pneumatický systém, elektrický (energetický) systém, smíšený systém",
+        "b)  hydraulický systém, pneumatický systém",
+        "c)  hydraulický systém, pneumatický systém, elektroimpulsní systém"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "220.  Klimatizační a výškový systém letadla je typickým systémem",
+      "answers": [
+        "a)  silovým",
+        "b)  smíšeným",
+        "c)  vybavení letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "221.  Odmrazovací systém letadla je typickým systémem",
+      "answers": [
+        "a)  smíšeným",
+        "b)  vybavení letadla",
+        "c)  silovým"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "222.  Protipožární systém je typickým systémem",
+      "answers": [
+        "a)  smíšeným",
+        "b)  silovým",
+        "c)  vybavení letadla"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "223.  Letadlový elektrický (energetický) systém je součástí elektrické speciální výstroje letadla. Tvoří ji",
+      "answers": [
+        "a)  zdroje elektrické energie, rozvod elektrické energie, měniče a spotřebiče",
+        "b)  zdroje elektrické energie, rozvod elektrické energie",
+        "c)  zdroje elektrické energie, rozvod elektrické energie, spotřebiče"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "224.  Hydraulický systém letadla je typickým systémem",
+      "answers": [
+        "a)  silovým",
+        "b)  smíšeným",
+        "c)  vybavení letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "225.  Využití hydraulických systémů jako silových systémů v letadlech je velmi rozšířené. Tyto systémy pracují na principu (na základě)",
+      "answers": [
+        "a)  Archimédova zákona",
+        "b)  Newtonova zákona",
+        "c)  Pascalova zákona"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "226.  Na základě Bernoulliho rovnice pro kapaliny platí princip",
+      "answers": [
+        "a)  statický tlak se zvyšuje tehdy, když se zvyšuje rychlost proudění",
+        "b)  statický tlak v kapalině klesá, když roste její rychlost",
+        "c)  Bernoulliho rovnice platí jen pro plyny v ovzduší atmosféry"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "227.  Schéma hydraulického systému letadla je určeno k",
+      "answers": [
+        "a)  určení (lokalizaci) místa, kde jsou v letadle rozmístěny jednotlivé letadlové celky hydraulického systému",
+        "b)  specifikaci průtoku hydraulické kapaliny jednotlivými podsystémy a letadlovými celky (agregáty) hydraulického systému letadla",
+        "c)  určení druhu a množství a tlaku hydraulické kapaliny v systému"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "228.  Potrubí hydraulických systémů letadla umístěné v jednotlivých úsecích letadla včetně prostorů pro cestující, nákladových prostorech i jinde v letadle",
+      "answers": [
+        "a)  musí být spolehlivě uchyceno a vhodně ochráněno proti mechanickému poškození",
+        "b)  musí být vedeno ve zvláštních ochranných krytech",
+        "c)  nesmí být nikde vedena bez krytů proti mechanickému poškození"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "229.  Případná porucha hydraulického systému za letu je pro pilota nejčastěji zjistitelná pomocí",
+      "answers": [
+        "a)  centrálního varovného systému letadla",
+        "b)  podlimitního poklesu tlaku na příslušném ukazateli",
+        "c)  vizuálně - zjištěním kapek na motorové gondole letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "230.  Hydraulický systém v letadle j e",
+      "answers": [
+        "a)  systém vzájemně propojených hydraulických prvků a zařízení, využívajících oleje pro přenos energie a povelů",
+        "b)  systém vzájemně propojených hydraulických prvků a zařízení, využívajících některého ze schválených druhů hydraulické kapaliny pro přenos energie, povelů a informaci",
+        "c)  typický systém vybavení letadla a pohonných jednotek"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "231.  Hydraulický okruh v hydraulickém systému letadla je",
+      "answers": [
+        "a)  hydraulická část systému, která je trvale pod tlakem",
+        "b)  část hydraulického systému zajišťující průtok oleje od zdroje k některým prvkům systému",
+        "c)  část hydraulického systému zajišťující průtok hydraulické kapaliny od zdroje k některým prvkům systému"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "232.  Pojem „odvzdušnění“ v hydraulickém systému letadla znamená, že jde o",
+      "answers": [
+        "a)  vypouštění vzduchu a par z hydraulického systému",
+        "b)  vypouštění vzduchu z hydraulického systému",
+        "c)  vypouštění par z hydraulického systému"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "233.  Pojem „letadlová přípojka“ v hydraulickém systému letadla znamená, že jde o následující letadlový celek",
+      "answers": [
+        "a)  ventil, který samočinně zavádí vracející se kapalinu do dalšího vedení",
+        "b)  jednosměrný ventil spojující letadlový hydraulický systém s pozemním zařízením",
+        "c)  zpětný ventil umožňující průtok vždy jedním směrem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "234.  Pojem „hydraulický odlehčovací ventil“ v hydraulickém systému letadla znamená, že jde o následující letadlový celek",
+      "answers": [
+        "a)  ventil, který samočinně zavádí vracející se kapalinu do dalšího vedení",
+        "b)  dvojitý, zpětný ventil umožňující průtok vždy jedním směrem",
+        "c)  ventil hydraulického systému s akumulátorem propojující čerpadlo do nádrže při změnách tlaku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "235.  Výhodou použití hydraulického systému v letadle ve srovnání s pneumatickým systémem je",
+      "answers": [
+        "a)  zvyšování tlaku při vyšších teplotách",
+        "b)  menší hmotnost zdroje energie",
+        "c)  větší bezpečnost z požárního hlediska"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "236.  Výhodou použití hydraulického systému v letadle při porovnání s pneumatickým je mimo jiné",
+      "answers": [
+        "a)  zvyšování tlaku při vyšších teplotách",
+        "b)  přesná fixace ovládaných prvků v krajních polohách",
+        "c)  větší bezpečnost z požárního hlediska"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "237.  Podstatnou nevýhodou hydraulického systému v letadle při porovnání s pneumatickým systémem je",
+      "answers": [
+        "a)  nepřesná fixace ovládaných prvků v krajních polohách",
+        "b)  potíže s utěsněním",
+        "c)  větší hmotnost celého systému"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "238.  Pojem „servomechanismus“ v hydraulickém systému řízení letadla znamená, že se jedná o",
+      "answers": [
+        "a)  zařízení s řídícím prvkem, které úměrně zmenšuje řídící sílu na hodnotu potřebnou pro řízení letadla",
+        "b)  zařízení s řídícím a silovým prvkem, které úměrně zvětšuje řídící sílu na hodnotu potřebnou pro řízení letadla",
+        "c)  zařízení se silovým prvkem, které úměrně zmenšuje řídící sílu na hodnotu potřebnou pro řízení letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "239.  Hlavními částmi (letadlovými celky) hydraulického systému v letadle jsou zpravidla",
+      "answers": [
+        "a)  zdroje tlaku (čerpadla), provozní letadlové celky (ventily, kohouty, čističe, přípojky), pracovní válce (hydromotory)",
+        "b)  zdroje tlaku (čerpadla), provozní letadlové celky (Ventily, kohouty, čističe, přípojky), pracovní válce (hydromotory), spojovací části (potrubí, hadice, spoje)",
+        "c)  zdroje tlaku (čerpadla), spojovací části (potrubí, hadice, spoje), pracovní válce (hydromotory)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "240.  Pojem „jednoduchý zámek“ v hydraulickém systému letadla znamená, že jde o",
+      "answers": [
+        "a)  řízený zpětný ventil uvolňovaný tlakem kapaliny z dalšího vedení",
+        "b)  neřízený zpětný ventil",
+        "c)  ventil zajišťující průtok do spotřebiče v dávkách potřebných pro vykonávání jednoho úkonu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "241.  Z hlediska možného nebezpečí požáru (z hlediska možného výskytu požáru) má hydraulický systém ve srovnání s pneumatickým systémem",
+      "answers": [
+        "a)  srovnatelnou bezpečnost v provozu",
+        "b)  větší bezpečnost v provozu",
+        "c)  menší bezpečnost v provozu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "242.  Porovnáme-li hydraulický a pneumatický systém v letadle, má hydraulický systém",
+      "answers": [
+        "a)  menší potíže s utěsněním za provozu",
+        "b)  větší potíže s utěsněním za provozu",
+        "c)  srovnatelné potíže s utěsněním za provozu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "243.  Typickým pracovním tlakem v hlavním hydraulickém systému dopravního letadla je tlak (řádově)",
+      "answers": [
+        "a)  2 MPa",
+        "b)  20 MPa",
+        "c)  50 MPa"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "244.  Hydraulický akumulátor je důležitým letadlovým celkem hydraulického systému. Zajišťuje tyto funkce",
+      "answers": [
+        "a)  udržuje pracovní tlak kapaliny v předepsaných  mezích, zajišťuje chod nouzových funkcí, slouží jako tlumič slabých rázů a odchylek",
+        "b)  udržuje pracovní tlak kapaliny v předepsaných mezích, zajišťuje chod nouzových funkcí",
+        "c)  akumuluje a mění energii motoru na mechanickou energii pracovní kapaliny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "245.  Hydraulické čerpadlo hydraulického systému je zpravidla poháněno letadlovým motorem (pokud se nejedná o elektricky poháněnou čerpací stanici) a je umístěno na skříni náhonů. Jeho účelem je",
+      "answers": [
+        "a)  měnit elektrickou energii na mechanickou práci",
+        "b)  měnit část mechanické energie letadlového motoru na tlakovou energii pracovní kapaliny",
+        "c)  měnit tlakovou energii motoru na mechanickou energii pracovní kapaliny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "246.  Nejčastějšími poruchami a závadami hydraulických systémů v provozu letadel jsou tyto",
+      "answers": [
+        "a)  přehřívání hydraulické kapaliny",
+        "b)  únik kapaliny způsobený netěstnostmi systému, nevyhovující provozní tlak",
+        "c)  proklepaná potrubí v místech upevnění ke konstrukci draku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "247.  Brzdy typického letounu pro dopravu osob nebo nákladu jsou nejčastěji ovládány",
+      "answers": [
+        "a)  mechanicky na všech třech kolech letounu",
+        "b)  vzduchem na hlavním podvozku",
+        "c)  hydraulickým systémem na každém kole hlavního podvozku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "248.  Přistání se závadou na hydraulickém systému dopravního letadla. Liší se přistání se závadou na jednom hydraulickém systému od přistání se všemi hydraulickými systémy v činnosti?",
+      "answers": [
+        "a)  liší se zásadně",
+        "b)  neliší se",
+        "c)  ano"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "249.  Pneumatický systém v letadle je",
+      "answers": [
+        "a)  systém vzájemně propojených pneumatických prvků a zařízení využívající plyn (vzduch, dusík) pro přenos energie, povelů a informací",
+        "b)  systém vzájemně propojených pneumatických prvků a zařízení využívající helium pro přenos energie, povelů a informací",
+        "c)  systém vzájemně propojených pneumatických prvků a zařízení využívající vzduch pro přenos energie, povelů a informací"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "250.  Výhodou použití pneumatického systému v letadle ve srovnání s hydraulickým systémem je",
+      "answers": [
+        "a)  zvyšování tlaku při vysokých teplotách",
+        "b)  menší hmotnost systému",
+        "c)  nemožnost kondenzace vlhkostí v systému"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "251.  Podstatnou nevýhodou pneumatického systému v letadle při porovnání s hydraulickým systémem je",
+      "answers": [
+        "a)  systém je schopen krátkodobě vyvíjet velký výkon",
+        "b)  nepřesná fixace ovládaných prvků v krajních polohách",
+        "c)  hmotnost systému jako celku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "252.  Hlavními částmi (letadlové celky) pneumatického systému v letadle jsou zpravidla",
+      "answers": [
+        "a)  zdroj tlaku, pracovní válce",
+        "b)  zdroj tlaku, pracovní válce, spojovací části (potrubí, hadice, spoje)",
+        "c)  zdroje tlaku (láhve, kompresory), provozní letadlové celky (ventily, kohouty, čističe, přípojky), pracovní válce, spojovací části (potrubí, hadice spoje)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "253.  Pneumatický okruh v pneumatickém systému letadla je",
+      "answers": [
+        "a)  pneumatická část systému, která je stále pod tlakem",
+        "b)  pneumatická část systému, která není trvale pod tlakem",
+        "c)  část pneumatického systému zajišťující průtok vzduchu od zdroje k některým prvkům (letadlovým celkům) systému"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "254.  Z hlediska možného nebezpečí požáru (z hlediska možného výskytu požáru) má pneumatický systém ve srovnání s hydraulickým systémem v letadle",
+      "answers": [
+        "a)  větší bezpečnost v provozu",
+        "b)  menší bezpečnost v provozu",
+        "c)  srovnatelnou bezpečnost v provozu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "255.  Pneumatický válec v pneumatickém systému letadla je",
+      "answers": [
+        "a)  zásobník tlakové energie pro pneumatický systém",
+        "b)  pneumatický motor, jehož výstupní člen koná přímočarý pohyb",
+        "c)  pneumatický motor, jehož výstupní člen nekoná přímočarý pohyb"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "256.  Porovnáme-li pneumatický a hydraulický systém v letadle, má pneumatický systém s hlediska případných závad v provozu",
+      "answers": [
+        "a)  větší potíže s utěsněním za provozu",
+        "b)  menší potíže s utěsněním za provozu",
+        "c)  srovnatelné potíže s utěsněním za provozu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "257.  Porovnáme-li pneumatický a hydraulický systém v letadle, pak s hlediska využití jejich energie za provozu, u pneumatického systému",
+      "answers": [
+        "a)  zbytková energie nepřichází nazmar",
+        "b)  zbytkovou energii systém dále využije",
+        "c)  zbytková energie přichází nazmar"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "258.  Odlučovač je prvek (letadlový celek) v pneumatickém systému letadla",
+      "answers": [
+        "a)  sloužící k oddělení a zachycení nežádoucích kapalinových příměsí",
+        "b)  sloužící k oddělení a zachycení nežádoucích vzduchových příměsí",
+        "c)  sloužící k oddělení a zachycení nežádoucích kovových příměsí"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "259.  Pneumatický odlehčovací ventil v pneumatickém systému letadla je",
+      "answers": [
+        "a)  prvek systému sloužící k oddělení a zachycení nežádoucích příměsí",
+        "b)  prvek (letadlový celek) sloužící k odstranění nečistot z vedení a ostatních celků systému",
+        "c)  ventil pneumatického systému se vzduchovou láhví propojující kompresor do okolního prostředí (atmosféry) při změnách tlaku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "260.  Odledňovací systém letadla pracující na základě specifické funkce gumových povlaků náběžných hran křídel a ocasních ploch je systém na bází",
+      "answers": [
+        "a)  rozvodu horkého vzduchu",
+        "b)  pneumatického systému",
+        "c)  hydraulického systéme"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "261.  typickými závadami pneumatického systému letadla za provozu jsou nejčastěji",
+      "answers": [
+        "a)  vniknutí nečistoty do systému, závada ukazatele tlaku v systému",
+        "b)  vniknutí vody do systému v případě nedostatečného vypouštění kondenzátu, závada redukčního ventilu, nízký tlak v systému",
+        "c)  závada jednosměrného ventilu, prošlá lhůta tlakové zkoušky tlakové nádoby"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "262.  Lety ve velkých výškách u dopravních a obchodních letadel s proudovými a turbovrtulovými motory jsou bezpečné a výhodné z řady hledisek. Těmito hledisky jsou zejména",
+      "answers": [
+        "a)  preferování použití přetlakových kabin cestujícími",
+        "b)  nižší spotřeba pohonných hmot (zvětšení doletu u letadel s proudovými a turbovrtulovými motory), klidnější let bez atmosférických poruch, dosažení větší životnosti draku letadla",
+        "c)  dosažení větší cestovní rychlosti na trati"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "263.  Tak zvaná „výšková nemoc“ při letu ve velkých výškách bez přetlakové kabiny i s případnou plnou dodávkou kyslíku je způsobena zejména",
+      "answers": [
+        "a)  psychickým stavem pilota při letu ve velké výšce",
+        "b)  nízkou teplotou při letu ve velké výšce",
+        "c)  nízkým parciálním tlakem kyslíku v alveolách plic"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "264.  Létání ve velkých výškách vyžaduje zabezpečit normální životní podmínky pro pobyt a činnost člověka (pilota, cestujícího). Se vzrůstající výškou se mění některé stavové veličiny (veličiny určující stav ovzduší) následovně dle MSA (ISA)",
+      "answers": [
+        "a)  tlak klesá, teplota klesá",
+        "b)  tlak klesá, teplota stoupá, vlhkost stoupá",
+        "c)  tlak klesá, teplota klesá, vlhkost klesá"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "265.  Vážnější projevy tzv. výškové nemoci (zhoršení funkce zraku, snížená schopnost logického myšlení, zhoršená paměť, snížená vnímavost, zvětšená doba reakce apod.) je nutno očekávat ve výškách nad",
+      "answers": [
+        "a)  2 500 m",
+        "b)  4 500 m",
+        "c)  6 000 m"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "266.  Pod pojem „výšková kabina“ u letadel létajících ve velkých výškách rozumíme, že jde o",
+      "answers": [
+        "a)  utěsněný prostor letadla, v němž se vhodně upravuje teplota, vlhkost, složení vzduchu apod.",
+        "b)  utěsněný prostor letadla, v němž se vhodně upravuje tlak, teplota, složení vzduchu apod.",
+        "c)  utěsněný prostor letadla, v němž se vhodně upravuje tlak, teplota, vlhkost, případně složení vzduchu apod."
+      ],
+      "correct": 0
+    },
+    {
+      "question": "267.  Přetlaková kabina letadla je",
+      "answers": [
+        "a)  výšková kabina s přetlakem v rozmezí 0,02 - 0,07 Mpa",
+        "b)  výšková kabina s přetlakem v rozmezí 0,22 - 0,06 Mpa",
+        "c)  výšková kabina s přetlakem v rozmezí 0,20 - 0,60 Mpa"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "268.  Ventilační výšková přetlaková kabina je",
+      "answers": [
+        "a)  výšková přetlaková kabina s uzavřeným oběhem vzduchu",
+        "b)  výšková přetlaková kabina s otevřeným oběhem vzduchu",
+        "c)  výšková přetlaková kabina s polouzavřeným oběhem vzduchu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "269.  regenerační výšková přetlaková kabina je",
+      "answers": [
+        "a)  výšková přetlaková kabina s uzavřeným oběhem vzduchu a se zařízením čistícím vzduch od vydechovaných zplodin",
+        "b)  výšková přetlaková kabina se zařízením čistícím vzduch od vydechovaných zplodin",
+        "c)  výšková přetlaková kabina s otevřeným oběhem vzduchu a se zařízením čistícím vzduch od vydechovaných zplodin"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "270.  Smíšená výšková přetlaková kabina je",
+      "answers": [
+        "a)  výšková přetlaková kabina vybavená ventilačním systémem",
+        "b)  výšková přetlaková kabina vybavená regeneračním systémem",
+        "c)  výšková přetlaková kabina vybavená ventilačním a regeneračním systémem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "271.  Pod pojmem „klimatizace kabiny“ letadle rozumíme, že jde o",
+      "answers": [
+        "a)  úpravu ovzduší v kabině zejména z hlediska větrání, teploty vzduchu, případně vlhkosti",
+        "b)  úpravu ovzduší v kabině zejména z hlediska teploty vzduchu a tlaku vzduchu",
+        "c)  úpravu ovzduší v kabině zejména z hlediska vlhkosti vzduchu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "272.  Má standardní výšková přetlaková kabina letounu jištění proti případům přistání s přetlakem?",
+      "answers": [
+        "a)  ne",
+        "b)  ano",
+        "c)  jen u regeneračních přetlakových kabin"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "273.  Klimatizační a výškový systém letadla je",
+      "answers": [
+        "a)  soubor zařízení sloužící k zabezpečení požadovaného tlaku, teploty a vlhkosti vzduchu v kabině",
+        "b)  soubor zařízení sloužící k zabezpečení požadované teploty a vlhkosti vzduchu",
+        "c)   soubor zařízení sloužící k zabezpečení požadované klimatizace v kabině"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "274.  Pod pojmem „regenerace vzduchu“ v přetlakové kabině rozumíme",
+      "answers": [
+        "a)  vypouštění použitého vzduchu v kabině letadla do atmosféry",
+        "b)  úpravou použitého vzduchu v kabině letadla pro jeho další použití",
+        "c)  obohacování kyslíkem použitého vzduchu v kabině letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "275.  Primární chladič klimatizačního a výškového systému letadla je",
+      "answers": [
+        "a)  chladič vzduchu snižující teplotu vstupujícího vzduchu do prostoru pro cestující",
+        "b)  chladič vzduchu přetlakové kabiny snižující teplotu stlačeného vzduchu dodávaného kompresorem",
+        "c)  chladič vzduchu snižující teplotu vstupujícího vzduchu do prostoru pro posádku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "276.  Turbochladič (sekundární chladič) klimatizačního a výškového systému letadla je",
+      "answers": [
+        "a)  chladič vzduchu snižující teplotu vstupujícího vzduchu do prostoru pro posádku a cestující",
+        "b)  expansní turbina snižující teplotu protékajícího vzduchu systémem",
+        "c)  expanzní turbina snižující tlak a teplotu protékajícího vzduchu systémem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "277.  Regulátor teploty vzduchu v kabině letadla (v klimatizačním a výškovém systému letadla) je",
+      "answers": [
+        "a)  zařízení otevírající přívod vzduchu v systému",
+        "b)  zařízení udržující tlak v kabině na požadované hodnotě pro danou výšku letu",
+        "c)  přístroj zvyšující tlak v kabině na požadovanou hodnotu pro danou výšku letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "278.  Regulátor teploty vzduchu v kabině letadla je",
+      "answers": [
+        "a)  automatický regulátor otevírající a regulující přívod vzduchu do kabiny letadla",
+        "b)  přístroj automaticky zvyšující teplotu v kabině letadla v závislosti na okolní teplotě",
+        "c)  přístroj udržující automaticky předem nastavenou teplotu v kabině letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "279.  Regulátor průtoku vzduchu přetlakové kabiny letadla (klimatizačního a výškového systému letadla) je",
+      "answers": [
+        "a)  zařízení udržující stálé (hmotnostní)  množství vzduchu přitékajícího do kabiny letadla nezávisle na otáčkách kompresoru",
+        "b)  zařízení udržující proměnné (hmotnostní) množství vzduchu přitékajícího do kabiny letadla v závislosti na otáčkách kompresoru",
+        "c)  zařízení udržující proměnné (hmotnostní) množství vzduchu přitékajícího do kabiny letadla nezávisle na otáčkách kompresoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "280.  Kabinový výškoměr je součástí klimatizačního a výškového systému letadla. Jedná se o",
+      "answers": [
+        "a)  zařízení cejchované v jednotkách výšky upozorňující světelným nebo akustickým signálem na nebezpečí",
+        "b)  kombinovaný přístroj udávající rozdíl tlaku v kabině a vnější atmosféře",
+        "c)  kombinovaný přístroj udávající tlak v přetlakové kabině převedený na jednotky výšky a rozdíl tlaků a vnější atmosféře"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "281.  Signalizátor nebezpečného tlaku v kabině u klimatizačního a výškového systému letadla je",
+      "answers": [
+        "a)  zařízení upozorňující světelným nebo akustickým signálem na nebezpečný přetlak v přetlakové kabině",
+        "b)  zařízení upozorňující světelným nebo akustickým signálem na nebezpečný podtlak v přetlakové kabině",
+        "c)  zařízení upozorňující světelným nebo akustickým signálem na nebezpečný přetlak nebo podtlak v přetlakové kabině"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "282.  Náhlá dekomprese. Pro lety ve velkých výškách jsou letadla vybavena výškovými přetlakovými kabinami. Vzhledem k možnosti technické závady je nutno počítat i s náhlým porušením hermetizace kabiny a tím s prudkým snížením tlaku v kabinách posádky a cestujících. U člověka se důsledky náhlé dekomprese mohou projevit zhoršením účinnosti srdce, prudkými bolestmi v dutinách, porušením plicní tkáně, zmenšením krevního tlaku apod. Která z uvedených technických závad může být typickou příčinou náhlé dekomprese?",
+      "answers": [
+        "a)  porucha některého z regulačních ventilů přetlaku",
+        "b)  porucha (poškození) obvodového těsnění hlavních vstupních dveří",
+        "c)  větší porucha utěsněné konstrukce přetlakové kabiny případně primární konstrukce trupu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "283.  Optimální tepelný režim v kabině letadla vytváří pocit tzv. tepelné pohody na palubě jak pro posádku, tak i pro cestující a přispívá ke snížení únavy za letu. Za optimální teplotu v kabině se považuje hodnota",
+      "answers": [
+        "a)  18°C",
+        "b)  19-20°C",
+        "c)  20-22°C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "284.  Palivový systém (soustava) letadla je",
+      "answers": [
+        "a)  souhrn všech zařízení a celků pro uložení paliva v letadle a pro spouštění motoru",
+        "b)  souhrn všech zařízení a celků pro uložení a spolehlivou dodávku paliva do spalovacího prostoru motoru",
+        "c)  souhrn všech zařízení a celků pro spolehlivou dodávku paliva do spalovacího prostoru motoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "285.  Palivový systém (soustava) vnitřní je u letadla",
+      "answers": [
+        "a)  část palivového systému mimo motor",
+        "b)  část palivového systému umístěného v draku",
+        "c)  část palivového systému na motoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "286.  Palivový systém (soustava) vnější je u letadla",
+      "answers": [
+        "a)  část palivového systému umístěného mimo motor",
+        "b)  část palivového systému umístěného na motoru",
+        "c)  zařízení jímž se zajišťuje vstřikování paliva do sacího potrubí nebo do spalovacích komor"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "287.  Vstřikovací soustava u palivového systému je",
+      "answers": [
+        "a)  zařízení, jímž se zajišťuje vstřikování paliva do sacího potrubí, do válců nebo do spalovacích komor motoru",
+        "b)  zařízení palivového systému sloužící k usnadnění spouštění motoru",
+        "c)  souhrn zatížení sloužící pro dodávku paliva do spalovacího prostoru motoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "288.  Palivový kolektor u palivového systému letadla je",
+      "answers": [
+        "a)  potrubí, které odvádí odpadní palivo z motoru",
+        "b)  potrubí, odvádějící přebytečné palivo zpět do nádrže nebo do sací větve palivového systému",
+        "c)  palivové potrubí s odbočkami, kterými je palivo vedeno k jednotlivým palivovým tryskám"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "289.  Je provádění údržby na letadle při plnění paliva zakázáno?",
+      "answers": [
+        "a)  ano",
+        "b)  ne",
+        "c)  výjimečně je možno údržbu provést v souladu s pokyny provozovatele"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "290.  Je nutné mít v dosahu obsluhy plnění paliva do letadla odpovídající protipožární prostředky nebo protipožární asistenci?",
+      "answers": [
+        "a)  jen při plnění nad 250 l paliva",
+        "b)  zásadně ano",
+        "c)  jen při plnění s cestujícími na palubě letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "291.  Vratné palivové potrubí v palivovém systému letadla je",
+      "answers": [
+        "a)  potrubí k odvádění vzduchu a par z palivového systému",
+        "b)  potrubí, odvádějící přebytečné palivo zpět do nádrže nebo do sací větve palivového systému",
+        "c)  potrubí, které odvádí odpadní palivo z motoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "292.  Odpadní palivové potrubí v palivovém systému letadla je",
+      "answers": [
+        "a)  potrubí k odvádění vzduchu a par z palivového systému",
+        "b)  potrubí, odvádějící přebytečné palivo zpět do nádrže nebo do sací větve palivového systému",
+        "c)  potrubí, které odvádí palivo z motoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "293.  Odvzdušňovací soustava v palivovém systému letadla je",
+      "answers": [
+        "a)  zařízení k odvádění vzduchu z palivového systému",
+        "b)  zařízení k odvádění vzduchu a par z palivového systému",
+        "c)  zařízení k odvádění par z palivového systému"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "294.  Palivové trysky v palivovém sytému letadla rozdělujeme podle účelu na",
+      "answers": [
+        "a)  hlavní a vedlejší",
+        "b)  spouštěcí a smíšené",
+        "c)  hlavní a spouštěcí"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "295.  Podle způsobu rozprášení paliva se palivové trysky v palivovém systému rozdělují konstrukčně na",
+      "answers": [
+        "a)  přimoproudé, odstředivé, smíšené",
+        "b)  odstředivé a smíšené",
+        "c)  přímoproudé a dostředivé"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "296.  Palivový uzavírací kohout (nesprávně nazývaný stop-kohout) v palivovém systému letadla je",
+      "answers": [
+        "a)  kohout uzavírající při požáru přívod paliva k motoru",
+        "b)  kohout, kterým se ovládá chod pohonné jednotky",
+        "c)  kohout, kterým se uzavírá přívod paliva do nádrže"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "297.  Tzv. integrální palivová nádrž palivového systému je konstruována jako",
+      "answers": [
+        "a)  vložené těleso z pryže do křídla nebo draku (nejčastěji trupu)",
+        "b)  vložené těleso z pantalu do křídla nebo draku (nejčastěji trupu)",
+        "c)  přímo utěsněný prostor křídla nebo draku (nejčastěji trupu)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "298.  Přečerpávání paliva z úložných nádrží do spotřební nádrže je u větších a velkých letadel prováděno především z důvodu",
+      "answers": [
+        "a)  větší bezpečnosti letu",
+        "b)  dodržení výpočtového vyvážení za letu",
+        "c)  možnosti uplatnění automatizace přečerpávání"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "299.  Plnění letadla palivem s cestujícími na palubě je",
+      "answers": [
+        "a)  zakázáno",
+        "b)  povoleno s požární asistencí",
+        "c)  povoleno, je-li to v souladu s provozní příručkou a s požárním řádem letiště"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "300.  Plnění letadla palivem za bouřky je",
+      "answers": [
+        "a)  zakázáno",
+        "b)  povoleno",
+        "c)  povoleno při dodržení zvláštních bezpečnostních opatření"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "301.  Aby bylo za provozu dosaženo optimálního složení palivové směsi, přivádí se do pístového motoru",
+      "answers": [
+        "a)  více paliva ovládáním pákou přípusti",
+        "b)  méně vzduchu ovládáním pákou korekce",
+        "c)  méně paliva ovládáním pákou korekce"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "302.  Čističe paliva jsou zvlášť důležitými letadlovými celky palivového systému letadla, protože zachycují nečistoty unášené palivem a tím zabraňují případným nepříznivým důsledkům na spolehlivost funkce celého systému. Zpravidla se používají tyto konstrukce čističů (filtrů)",
+      "answers": [
+        "a)  plstěné, papírové, sítové, odstředivé",
+        "b)  štěrbinové, plstěné, papírové, sítové, tkaninové, odstředivé, sedimentační",
+        "c)  plstěné, sítové, tkaninové, sedimentační"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "303.  V provozu letounů s proudovými motory je nutno dodržet teplotu paliva v těchto rozmezích",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. vstupní teplota paliva má být udržována vyšší než 10° C, aby se zabránilo zamrzání filtrů",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. vstupní teplota paliva do motorem poháněných čerpadel má být nepřetržitě udržována nižší než      90°C, aby se zabránilo kavitaci čerpadel a poškození jejich těsnění",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "3. pokud teplota paliva za letu v nádržích poklesne mezi -40°C až -60° C v závislosti na druhu paliva        (nejsou-li přidána příslušná aditiva), vznikne riziko vytváření tuhých částic",
+      "answers": [
+        "a)  jen 1.",
+        "b)  jen 1.a 3.",
+        "c)  1., 2. a 3."
+      ],
+      "correct": 0
+    },
+    {
+      "question": "304.  Protipožární bezpečnost letadla je zabezpečována",
+      "answers": [
+        "a)  protipožárními systémy",
+        "b)  protipožárními předpisy, protipožárními prostředky, protipožárními systémy",
+        "c)  protipožárními prostředky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "305.  Jako hlavní protipožární zabezpečení soudobých letadel se nejvíce rozšířily",
+      "answers": [
+        "a)  přenosné protipožární prostředky",
+        "b)  stacionární protipožární systémy doplňované přenosnými protipožárními prostředky",
+        "c)  signalisátory požáru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "306.  Protipožární ochrana na palubě letadla je velmi důležitá - prostředky ochrany proti požáru musí být vybaveno v souladu s technickými přepisy každé letadlo. Tyto prostředky rozdělujeme na",
+      "answers": [
+        "a)  pasivní prostředky, aktivní prostředky",
+        "b)  aktivní prostředky, smíšené prostředky",
+        "c)  pasivní prostředky, smíšené prostředky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "307.  Do oblasti pasivní ochrany letadla proti požáru můžeme zahrnout i palivové uzavírací kohouty, které jsou v palivovém systému motoru, instalovaného v letadle. Tyto kohouty se umísťují mezi palivový čistič a vstup paliva do palivového čerpadla, aby bylo možné v případě požáru zastavit další přívod paliva do možného ohniska požáru",
+      "answers": [
+        "a)  ano",
+        "b)  ne technicky nesprávné"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "308.  V případě přeplnění nádrže palivového systému přebytečným palivem, nesmí mít toto palivo možnost zatékat do konstrukce trupu nebo křídla",
+      "answers": [
+        "a)  ne",
+        "b)  ano",
+        "c)  nadbytečný požadavek u většiny paliv"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "309.  Eventuální únik paliva z potrubí palivového systému nesmí přijít do styku s horkými částmi motoru",
+      "answers": [
+        "a)  ne",
+        "b)  ano",
+        "c)  nadbytečný požadavek u většiny paliv"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "310.  Do oblasti protipožární pasivní ochrany patří i chování lidí (posádek, techniků, provozních pracovníků, cestujících) při provozu letadla",
+      "answers": [
+        "a)  ano",
+        "b)  ne",
+        "c)  jedná se o aktivní protipožární ochranu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "311.  S hlediska protipožární bezpečnosti letadla při plnění a při manipulaci s palivem, musí být naprostou samozřejmostí, že",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. bude důsledně dodržován zákaz kouření",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. bude vypnuta palubní síť mimo signalizace plnění nádrží",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "3. letadlo a cisterna budou ukostřeny",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "4. nebude prováděna žádná údržba letadla",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "5.  nebude se plnit palivo za chodu motoru",
+      "answers": [
+        "a)  bod 4) není nutný",
+        "b)  bod 2) a 4) nejsou správná odpověď",
+        "c)  všechny body 1) až 5) jsou správné odpovědi"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "312.  Protipožární kohout tj. palivový uzavírací kohout (nesprávně stop-kohout) je",
+      "answers": [
+        "a)  kohout, kterým se odpojuje část regulační soustavy motoru při požáru motoru",
+        "b)  kohout uzavírající při požáru přívod paliva k motoru",
+        "c)  kohout, kterým se ovládá protipožární systém pohonné jednotky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "313.  Protipožární systém letadla je systém určený pro",
+      "answers": [
+        "a)  hašení požáru v ohrožených místek",
+        "b)  signalizaci a hašení požáru v ohrožených místech",
+        "c)  signalizaci požáru v ohrožených místech"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "314.  Mezi aktivní protipožární prostředky letadla patří palubní stacionární protipožární systém, který je ještě doplněn přenosnými hasicími přístroji",
+      "answers": [
+        "a)  ano",
+        "b)  ne",
+        "c)  přenosné hasící přístroje zařazujeme mezi pasivní protipožární prostředky letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "315.  Signalizátor požáru je zařízení signalizující optiky nebo akusticky zvýšení teploty v kontrolovaném prostoru nad stanovenou hodnotu",
+      "answers": [
+        "a)  ne",
+        "b)  ano",
+        "c)  technicky nesprávná charakteristika"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "316.  Schéma každého klasického protipožárního systému letadla musí minimálně obsahovat tyto části",
+      "answers": [
+        "a)  láhev s hasícím mediem, dálkově ovládaný uzávěr, požární hlásič, signalizační světlo (tablo)",
+        "b)  láhev s hasícím mediem, dálkově ovládaný uzávěr, potrubí rozvodu hasícího media, požární hlásič, signalizační světlo (tablo)",
+        "c)  láhev s hasicím mediem, dálkově ovládaný uzávěr, potrubí rozvodu hasícího media, signalizační světlo (tablo)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "317.  Protipožární systém letadla je v případě potřeby zpravidla uváděn do činnosti",
+      "answers": [
+        "a)  automaticky",
+        "b)  ručně",
+        "c)  automaticky nebo ručně - záleží na konstrukci systému (věc typového školení)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "318.  Informace o vzniku požáru na letadle nebo pohonné jednotce resp. o vzrůstu teploty na extrémní hodnoty dostává pilot pomocí",
+      "answers": [
+        "a)  zvláštních teploměrů, k tomu účelu zastavěných v systémech letadla a pohonných jednotek",
+        "b)  hlášení člena posádky",
+        "c)  hlásičů požáru napojených na signalizační tabla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "319.  U dvoumotorových letadel jsou protipožární systémy každého motoru navzájem propojeny, takže je možné použít oba dva pro hašení požáru jednoho motoru v případě potřeby",
+      "answers": [
+        "a)  ne",
+        "b)  ano",
+        "c)  záleží na konstrukci systému (věc typového školení)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "320.  Velmi důležitou součástí protipožárního systému jsou hlásiče požáru. Jsou rozmístěny v místech nejpravděpodobnějšího výskytu vzniku požáru. V praxi současných konstrukcí letadel se ustálilo používání těchto typů",
+      "answers": [
+        "a)  hlásiče membránové, hlásiče s termočlánkem, hlásiče s tavnou pojistkou",
+        "b)  hlásiče membránové, hlásiče s termočlánkem",
+        "c)  hlásiče s termočlánkem, hlásiče světelné"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "321.  Hasidla stacionárních protipožárních systémů letadel jsou uložena v tlakových lahvích označených červenou barvou. Jako hasidel se nejčastěji používá",
+      "answers": [
+        "a)  tetrachlor, freon",
+        "b)  kysličník uhličitý (vytváří pěnu ve formě sněhu) nebo výběhově freon",
+        "c)  vodní náplň"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "322.  Hasidla přenosných protipožárních prostředků letadel jsou uložena v tlakových lahvích označených červenou barvou. Pro hašení v interiéru (mimo elektrických instalací) se používá tato náplň",
+      "answers": [
+        "a)  vodní nebo kysličník uhličitý",
+        "b)  tetrachlor",
+        "c)  freon"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "323.  Tlakové láhve protipožárních systémů letadel (stacionárních i přenosných) je nutné v určitých časových intervalech v souladu s předpisem výrobce kontrolovat a přezkušovat. V rámci předletové prohlídky je dostačující kontrola tlaku pomocí manometru, který je na každé láhvi připojen",
+      "answers": [
+        "a)  ne",
+        "b)  ano",
+        "c)  výjimečně"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "324.  Typický protipožární stacionární systém letadla je možno charakterizovat takto: zásoba hasícího media je uložen v tlakové láhvi s uzávěrem, který je možno dálkově ovládat a hasící medium je potom potrubím vedeno do trysek umístěných na místech nejpravděpodobnějšího výskytu požáru",
+      "answers": [
+        "a)  ano",
+        "b)  nelze tento systém považovat za stacionární",
+        "c)  nutno doplnit protipožární hlásiče a signalizaci"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "325.  Aby se u velkých dopravních letadel zamezilo výbuchu v palivových nádržích při vzniku požáru v jejich okolí (např. v úseku hlavních noh podvozku nebo při nouzovém přistání se zataženým podvozkem) používá se protipožárního systému",
+      "answers": [
+        "a)  s freonem",
+        "b)  s neutrálním plynem",
+        "c)  s kysličníkem uhličitým"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "326.  V některých případech (např. u velkých dopravních letadel) se používají protipožární systémy s neutrálním plynem. Nejčastěji se používají pro zabránění vzniku požáru v palivových nádržích při nouzovém přistání bez podvozku",
+      "answers": [
+        "a)  ano",
+        "b)  ne",
+        "c)  technicky nesprávné"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "327.  Námraza zhoršuje aerodynamické vlastnosti letadla. Součinitelé vztlaku a odporu se mění přibližně následujícím způsobem",
+      "answers": [
+        "a)  vzrůstá součinitel odporu až o 45%, zmenšuje se součinitel vztlaku až o 30%",
+        "b)  vzrůstá součinitel odporu až o 100%, zmenšuje se součinitel vztlaku až o 60%",
+        "c)  vzrůstá součinitel odporu až o 20%, zmenšuje se součinitel vztlaku až o 30%"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "328.  Současně s narůstáním námrazy na letadle se mění tyto veličiny následovně",
+      "answers": [
+        "a)  zvyšuje se hmotnost letadla, nemění se poloha těžiště, zhoršuje se stabilita a řiditelnost",
+        "b)  zvyšuje se hmotnost letadla, mění se poloha těžiště, zlepšuje se stabilita a řiditelnost",
+        "c)  zvyšuje se hmotnost letadla, mění se poloha těžiště, zhoršuje se stabilita a řiditelnost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "329.  Při špatně provedeném odmrazování na zemi nebo při neprovedeném pozemním odmrazování v podmínkách silné námrazy mohou",
+      "answers": [
+        "a)  zamrznout závěsy kormidel, křidélek a klapek",
+        "b)  být potrestáni dispečeři, kteří odpovídají za odbavení letadla na ploše",
+        "c)  námrazu odstranit svými prostředky členové posádky letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "330.  Námraza na vrtuli letounu může mít následující následky",
+      "answers": [
+        "a)  jen velmi obtížně rozeznatelné při provozu",
+        "b)  nevyváženost vrtule, nebezpečí vibrací, odlétávající kusy ledu ohrožující další části letadla a motoru, snížení účinnosti vrtule",
+        "c)  odlétávající kusy ledu ohrožující další části letadla a motoru"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "331.  Nejnebezpečnějším druhem námrazy na letadle je",
+      "answers": [
+        "a)  průhledný led",
+        "b)  matný led",
+        "c)   bílá hrubozrnná jinovatka"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "332.  Účelem odmrazování letadla na zemi je, aby před vzletem byly všechny části letadla zcela očištěny od námrazy. To se provádí nejčastěji těmito způsoby",
+      "answers": [
+        "a)  teplým vzduchem nebo použitím odmrazovací kapaliny",
+        "b)  setřením nebo seškrabáním a teplým vzduchem",
+        "c)  použitím odmrazovací kapaliny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "333.  Nejběžnější používané systémy a způsoby odstraňování námrazy za letu jsou",
+      "answers": [
+        "a)  tepelné, mechanické a chemické",
+        "b)  mechanické, pneumatické a elektrické",
+        "c)  mechanické, tepelné, elektrické a chemické"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "334.  Mechanické odmrazování pomocí pneumatického systému odledňování letadla v námraze pracuje",
+      "answers": [
+        "a)  trvale",
+        "b)  periodicky dle nastaveného cyklu odmrazování",
+        "c)  jen při nadměrné námraze na letadle"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "335.  Elektrický systém odmrazování některé části letadla pracuje obvykle",
+      "answers": [
+        "a)  trvale nebo periodicky",
+        "b)  jen periodicky",
+        "c)  trvale"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "336.  Ze skupiny tepelných systémů odmrazování některé části letadla je nejúčinnější systém",
+      "answers": [
+        "a)  pneumatický",
+        "b)  elektrického ohřevu",
+        "c)  rozvodu horkého vzduchu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "337.  Chemické (kapalinové) způsoby odstraňování námrazy za letu bývají nejvíce uplatněny u následujících části letadla",
+      "answers": [
+        "a)  odmrazování náběžných hran křídel a ocasních ploch",
+        "b)  odmrazování vrtulí a skel pilotní kabiny",
+        "c)  jen odmrazování skel pilotní kabiny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "338.  Zjišťování výskytu námrazy na letadle za letu pilotem se provádí nejčastěji těmito metodami",
+      "answers": [
+        "a)  automatickými signalizátory námrazy",
+        "b)  vizuálními nebo automatickými signalizátory námrazy",
+        "c)  vizuálně na sklech pilotní kabiny nebo vizuálně na jiných částech letadla nebo vizuálními nebo automatickými signalizátory námrazy"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "339.  Jaké meteorologické podmínky jsou nejvíce nebezpečné pro vznik námrazy na letadle",
+      "answers": [
+        "a)  nízká teplota vzduchu se sněžením",
+        "b)  mrznoucí déšť",
+        "c)  mrznoucí mrholení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "340.  Při kterém rozsahu okolní (venkovní) teploty vzduchu je možno při vysoké vlhkosti očekávat zamrzání karburátoru?",
+      "answers": [
+        "a)  pod 0°C",
+        "b)  při -5° C až +20°C",
+        "c)  při -15°C až -6°C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "341.  Zamrzání karburátoru je možno očekávat nejčastěji při těchto vlivech",
+      "answers": [
+        "a)  v zimě, je-li počasí ovlivňováno tlakovou výši",
+        "b)  při chybné regulaci složení palivové směsi pákou korekce",
+        "c)  vysoké vlhkosti vzduchu a teplotě v rozsahu -5°C až +20°C"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "342.  Následkem zamrznutí karburátoru za letu",
+      "answers": [
+        "a)  se zvýší teplota zamrznutí nasávaného vzduchu",
+        "b)  klesá výkon motoru",
+        "c)  stoupá spotřeba paliva"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "343.  Domníváte-li se, že za letu zamrzá karburátor",
+      "answers": [
+        "a)  přesunete plynovou páku vícekrát dopředu a dozadu",
+        "b)  dáte ohřev karburátoru na teplý a seřídíte otáčky motoru",
+        "c)  dáte ohřev karburátoru na teplý a změníte výšku letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "344.  Začínající zamrzávání karburátoru se projeví nejdříve na letounu s",
+      "answers": [
+        "a)  pevnou a stavitelnou vrtulí na poklesu otáček motoru",
+        "b)  pevnou vrtulí na poklesu plnícího tlaku, při stavitelné vrtuli na poklesu otáček",
+        "c)  stavitelnou vrtulí na poklesu plnícího tlaku, při pevné vrtuli na poklesu otáček"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "345.  V čem spočívá hlavní přednost použití vstřikovacího čerpadla (motor bez karburátoru)?",
+      "answers": [
+        "a)  neprojevuje se tendence k zamrzání sacího systému",
+        "b)  nemá žádnou regulaci pro tvorbu palivové směsi",
+        "c)  přináší lepší použití nasávaného vzduchu při letu ve velkých výškách"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "346.  Kyslíkový dýchač je součásti kyslíkové výstroje letadla. Jedná se o",
+      "answers": [
+        "a)  přístroj zabezpečující potřebný parciální tlak kyslíku v plicích při výškovém letu",
+        "b)  přístroj zabezpečující potřebný tlak vdechované směsi při výškovém letu",
+        "c)  přístroj zabezpečující potřebný tlak pro dýchání za letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "347.  Signalizátor nebezpečné výšky je zpravidla součástí kyslíkové výstroje letadla. Je to",
+      "answers": [
+        "a)  přístroj indikující správnou funkci kyslíkového dýchače v letadle",
+        "b)  tlakoměr udávající tlak kyslíku vysokotlaké části kyslíkové soustavy, podle něho se posuzuje zásoba kyslíku v letadle",
+        "c)  zařízení upozorňující světelně nebo akustiky na výšku, od které je nutno používat kyslíkový dýchač"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "348.  Kyslíkové systémy letadel se v provozu využívají v tomto provedení",
+      "answers": [
+        "a)  kyslíkové systémy spouštění pohonných jednotek",
+        "b)  zdravotní kyslíkové systémy a kyslíkové systémy spouštění pohonných jednotek",
+        "c)  zdravotní kyslíkové systémy"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "349.  Dodávka kyslíku při použití kyslíkového systému (stacionárního nebo přenosného) může být",
+      "answers": [
+        "a)  nepřetržitá",
+        "b)  nepřetržitá nebo přerušovaná (s přívodem kyslíku jen ve fázi vdech)",
+        "c)  přerušovaná (s přívodem kyslíku jen ve fázi vdech)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "350.  Hlavními částmi typického stacionárního kyslíkového systému v letadle jsou",
+      "answers": [
+        "a)  plnící přípojka, plnící kohout, tlaková láhev, tlakoměr, redukční ventil, kohout dýchacího přístroje, dýchací přístroj, indikátor",
+        "b)  plnící přípojka, plnící kohout, tlaková láhev, tlakoměr, kohout dýchacího přístroje, dýchací přístroj, indikátor",
+        "c)  plnící přípojka, plnící kohout, tlaková láhev, tlakoměr, redukční ventil, kohout dýchacího přístroje, dýchací přístroj"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "351.  Kyslíkový systém letadla (stacionární nebo přenosný) musí být vždy naplněn",
+      "answers": [
+        "a)  směsí kyslík - vzduch",
+        "b)  lékařským (medicinálním) kyslíkem",
+        "c)  kyslíkem z tlakových transportních láhví"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "352.  Dýchací přístroj v kyslíkové systému letadla je automatické dávkovací zařízení, kterým je řízeno dýchání pilota. Kyslík se ve směšovacím zařízení musí ve správném poměru smísit se vzduchem a proudí do masky. Poměr je řízen aneroidem, který zhruba ve výšce 7600m (25 000ft) a vyšší zabezpečí pouze dodávku kyslíku (nikoliv směsi). Kyslíkový systém je vždy naplněn lékařským (medicinálním) kyslíkem",
+      "answers": [
+        "a)  ano - text je správný",
+        "b)  dodávka výhradně kyslíku je zabezpečeno až od výšky 10 000m",
+        "c)  dodávka výhradně kyslíku je zabezpečena až od výšky 12 000m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "353.  Provozní funkce kyslíkového systému letadla (stacionárního nebo přenosného): po otevření kohoutu se tlak kyslíku z tlakové láhve redukuje v redukčním ventilu a přes dýchací přístroj (kyslíkový dýchač s přerušovanou nebo nepřetržitou dodávkou) se dostává do masky",
+      "answers": [
+        "a)  ano - text je správný",
+        "b)  ne - k redukci tlaku nedochází, kyslík je dýchán přímo",
+        "c)  technicky nesprávné"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "354.  Při práci (manipulaci) a použití kyslíkového systému se musí dodržovat přísné bezpečnostní předpisy, které stanovují (mimo jiné) že",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. s kyslíkovým systémem mohou pracovat jedině osoby odborně k tomu vyškolené s předepsanými praktickými zkušenostmi",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. před plněním systému kyslíkem je nutno se přesvědčit o tom, že na přístrojích a spojích potrubí není olej nebo mastnota. Mastnoty a oleje (mastné ruce nebo nástroje) způsobují nebezpečí výbuchu kyslíku",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "3. při plnění kyslíkového systému (stacionárního) nesmí být blízko plnící stanice žádné vyhřívací zdroje",
+      "answers": [
+        "a)  jen body 1)a 2) jsou správné odpovědi",
+        "b)  body 1), 2) a 3) jsou správná odpověď",
+        "c)  žádné zvláštní bezpečnostní předpisy nejsou stanoveny"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "355.  Kyslíkový dýchač s nepřetržitou dodávkou je",
+      "answers": [
+        "a)  zařízení s plicním automatem",
+        "b)  letecký dýchač, který není možno přenášet jako celek",
+        "c)  zařízení dodávající kyslík nepřetržitým proudem"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "356.  Kyslíkový dýchač s přerušovanou dodávkou je",
+      "answers": [
+        "a)  zařízení s plicním automatem",
+        "b)  letecký dýchač, který je možné přenášet jako celek",
+        "c)  dýchač se zásobou kyslíku v tekutém stavu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "357.  Je-li součástí kyslíkového systému signalizátor nebezpečné výšky, jedná se o",
+      "answers": [
+        "a)  zařízení k regulaci nepřetržité dodávky kyslíku do kyslíkové výstroje",
+        "b)  zařízení upozorňující pilota světelně nebo akusticky na výšku, od které je nutno používat kyslíkový dýchač",
+        "c)  přístroj indikující funkci dýchače s přerušovanou dodávkou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "358.  Tlakoměr kyslíku v kyslíkovém systému letadla je",
+      "answers": [
+        "a)  přístroj udávající tlak kyslíku vysokotlaké části kyslíkového systému, podle něho se posuzuje zásoba kyslíku v letadle",
+        "b)  přístroj indikující funkci dýchače s přerušovanou dodávkou",
+        "c)  regulátor dodávající kyslík s přetlakem vzhledem k tlaku vzduchu v kabině"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "359.  Plicní automat v systému kyslíkového dýchače je",
+      "answers": [
+        "a)  zařízení se zásobou kyslíku v tekutém stavu",
+        "b)  automatický regulátor regulující přívod kyslíku pouze ve fázi vdechu",
+        "c)  zařízení dodávající kyslík nepřetržitým proudem"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "360.  Rezervní doba je doba uchování aktivního vědomí a práceschopnosti člověka ve velkých výškách při dýchání atmosférického vzduchu nebo čistého kyslíku nezvýšeného tlaku. Během této doby je člověk schopen vyvíjet činnost pro svou záchranu. Pojem rezervní doba se nepoužívá při výškách pod 6000m.",
+      "answers": [
+        "a)  rezervní doba se používá od výškou 6000m",
+        "b)  ano",
+        "c)  má být správně omezeno výškou 6000"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "361.  Použijeme-li nepřetlakový kyslíkový dýchač ve výšce 12 000m, bude alveolární tlak kyslíku stejný jako při dýchání atmosférického vzduchu ve výšce 3500m. V této výšce ještě nevznikají vážnější projevy výškové nemoci. Vzhledem k těmto faktorům je využití nepřetlakových dýchačů omezeno výškou 12 000m.",
+      "answers": [
+        "a)  musí být správně omezeno výškou 11 000m",
+        "b)  ano - text je správný",
+        "c)  má být správně omezeno výškou 6000m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "362.  některé kyslíkové systémy dopravních letadel využívají pro stacionární systémy místo centrálního rozvodu kyslíku z tlakových zdrojů tzv. generátory (vyvíječe), což jsou zařízení pracující v případě nouzové aktivace systému na principu chemických reakcí.",
+      "answers": [
+        "a)  ne - text je technicky nesprávný",
+        "b)  nejedná se o kyslíkové systémy",
+        "c)  ano - text je správný"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "363.  Nouzové a záchranné prostředky slouží k zabránění lidských a materiálních ztrát při nehodách letadel. Nouzové a záchranné prostředky letadel rozdělujeme na",
+      "answers": [
+        "a)  základní a vedlejší",
+        "b)  základní a povinné (speciální) ve smyslu leteckých předpisů (pro určité oblasti provozu)",
+        "c)  pozemní a vodní"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "364.  Provozovatel musí kdykoliv to je žádáno poskytnout záchranným koordinačním střediskům (např. útvaru Pátrání a záchrana)",
+      "answers": [
+        "a)  formulář přípravy letu",
+        "b)  záznamy traťové a letištní způsobilosti pilotů",
+        "c)  seznamy nouzové a záchranné výstroje na palubě letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "365.  Provozovatel musí zajistit v největším možném rozsahu zachování všech záznamů zapisovače letových údajů letadla, podílejícího se na nehodě nebo na incidentu a je-li to nutné i příslušných zapisovačů. Provozovatel musí zajistit bezpečnou úschovu záznamů a zapisovači až do jejich předání stanovenému v souladu s předpisem",
+      "answers": [
+        "a) L2",
+        "b)  L 8/A",
+        "c)  L13"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "366.  Zodpovědnost za zabezpečení, aby všechny osoby na palubě letadla byly seznámeny s umístěním a všeobecným způsobem použití hlavních nouzových prostředků a zařízení, určených pro společné použití má",
+      "answers": [
+        "a)  velitel letadla",
+        "b)  provozovatel letadla",
+        "c)  vedoucí kabiny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "367.  Velitel ultralehkého letounu nemusí mít na palubě k dispozici informace o pátracích a záchranných službách v oblastech, nad kterými zamýšlí letět",
+      "answers": [
+        "a)  ano",
+        "b)  musí",
+        "c)  jen v oblastech určených AIP"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "368.  Padák (osobní padák) používaný posádkou pro nouzové opuštění letadla za letu se nazývá",
+      "answers": [
+        "a)  výsadkový padák",
+        "b)  záchranný padák",
+        "c)  samočinný padák"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "369.  Při přeletech vodních ploch a nehostinných oblasti musí být nouzová a záchranná výstroj doplněná dalšími speciálními prostředky (jako např. plovací vesty, záchranné čluny apod.) dle",
+      "answers": [
+        "a)  předpisů provozovatele",
+        "b)  příslušného provozního leteckého předpisu",
+        "c)  rozhodnutí velitele letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "370.  Každé letadlo musí být vybaveno podle leteckých předpisů základními nouzovými a záchrannými prostředky. Nouzové instrukce pro cestující (umístěné v každé jednotlivé sedačce) do souboru těchto prostředků patří",
+      "answers": [
+        "a)  ne",
+        "b)  ano",
+        "c)  jen u letadel nad 19 cestujících"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "371.  Pro poskytnutí první pomoci na palubě letounu musí být zajištěny 2 druhy zdravotních potřeb",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. soupravy pro poskytnutí první pomoci, které musí být na palubě každého letounu",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. souprava zdravotních potřeb pro použití lékařem nebo kvalifikovanou osobou k ošetření náhlých příhod, která musí být na palubě letounů schválených pro dopravu více než 250 cestujících nebo určených k provozu na dálkových tratích",
+      "answers": [
+        "a)  platí jen bod 1)",
+        "b)  ne",
+        "c)  ano"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "372.  Všechny vrtulníky při všech letech musí být vybaveny",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. snadno přístupnou skříňkou první pomoci",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. přenosnými hasícími přístroji takového typu, které při použití neznečistí nebezpečně vzduch uvnitř vrtulníku",
+      "answers": [
+        "a)  jen bod 1) je povinný dle provozních předpisů",
+        "b)  ano",
+        "c)  vybavení stanovuje velitel vrtulníku před konkrétním letem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "373.  Všechny letouny při všech letech musí být vybaveny",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. snadno přístupnou skříňkou první pomoci",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. přenosnými hasícími přístroji takového typu, které při použití neznečistí nebezpečně vzduch uvnitř letounu",
+      "answers": [
+        "a)  jen bod 1) je povinný dle provozních předpisů",
+        "b)  ano",
+        "c)  vybavení stanovuje předpis provozovatele"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "374.  Letouny provozované nad zemskými oblastmi, označenými příslušným leteckým úřadem jako oblasti, které pátrání a záchrana by byl zvlášť obtížné, musí být vybaveny",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. zařízením pro signalizaci",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. záchranou výstrojí (včetně prostředků pro zachování života) vhodnou pro přelétávanou oblast",
+      "answers": [
+        "a)  jen bod 2) je správná odpověď",
+        "b)  jen bod 1) je správná odpověď",
+        "c)  ano"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "375.  Polohový maják nehody (emergency locator transmitter - ELT) je zařízení ze souboru nouzových a záchranných prostředků, které přesně vyhovuje následující definici",
+      "answers": [
+        "a)  zařízení vysílající charakteristické signály na přidělených kmitočtech, uváděné do činnosti ručně",
+        "b)  zařízení vysílající charakteristické signály na přidělených kmitočtech a podle použití uváděné do činnosti buď snímačem reagujícím na havárii automaticky nebo ručně",
+        "c)  zařízení vysílající charakteristické signály na přidělených kmitočtech, uváděné do činnosti snímačem reagujícím na havárii automaticky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "376.  Záchranný polohový maják nehody (Survival ELT - ELT(S)) je zařízení ze souboru nouzových a záchranných prostředků, které přesně vyhovuje následující definici",
+      "answers": [
+        "a)  polohový maják nehody, který lze vyjmout z letadla, uložený tak, aby usnadňoval uvedení do činnosti a použití osobami, které přežily nehodu. Může být uváděn do činnosti i automaticky",
+        "b)  polohový maják nehody pevně zabudovaný do letadla",
+        "c)  polohový maják nehody, který nelze vyjmout z letadla. Může být uváděn do činnosti ručně nebo automaticky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "377.  Velitel letadla musí mít na palubě letadla k dispozici všechny důležité informace o pátracích a záchranných službách v jednotlivých oblastech, nad nimiž letadlo poletí. Za splnění tohoto požadavku nese plnou odpovědnost",
+      "answers": [
+        "a)  provozovatel letadla",
+        "b)  letecká informační služba",
+        "c)  dispečer povolující let"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "378.  Procesem vyvažování letadla stanovíme, že letadlo je správně vyváženo tehdy, když",
+      "answers": [
+        "a)  průměrné momenty rozhodujících hmotnostních položek naloženého letadla jsou takové, kdy výsledná poloha těžiště je uvnitř povoleného rozsahu centráží",
+        "b)  všechny momenty hmotnostních položek se nacházejí uvnitř povoleného rozsahu centráží",
+        "c)  neuvažujeme pohyby cestujících v letadle za letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "379.  Definice „těžiště“ hmotného  tělesa - tj. v našem případě letadla - je následující",
+      "answers": [
+        "a)  těžiště je střed otáčení hmotného tělesa - letadla",
+        "b)  těžiště je bod, ve kterém si můžeme představit soustředěnou veškerou hmotnost letadla",
+        "c)  těžiště je průsečíkem os souřadných soustav"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "380.  „Centráž“ letadla je definována takto",
+      "answers": [
+        "a)  poloha těžiště letadla vyjádřená v % délky SAT (střední aerodynamické tětivy)",
+        "b)  poloha těžiště měřená od přídě letadla",
+        "c)  poloha těžiště zjištěná vážením letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "381.  Pojem „přední centráž“ vrtulníku znamená, že",
+      "answers": [
+        "a)  těžiště vrtulníku je v nesprávné poloze pro vzlet",
+        "b)  těžiště vrtulníku je umístěno před osou, ve které působí vztlak",
+        "c)  těžiště vrtulníku je umístěno za osou, ve které působí vztlak"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "382.  Hmotnost letadla při vzletu nesmí být větší než maximální vzletová hmotnost stanovená v letové příručce pro nadmořskou výšku, v níž má být vzlet vykonán",
+      "answers": [
+        "a)  ano",
+        "b)  větší smí být pouze pojížděcí hmotnost",
+        "c)  s výjimkou stanovenými příslušným provozním předpisem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "383.  Střední aerodynamická tětiva (SAT) je",
+      "answers": [
+        "a)  tětiva obdélníkového křídla, která má stejnou plochu a stejné rozpětí jako dané křídlo",
+        "b)  tětiva náhradního obdélníkového křídla, které má stejnou plochu a stejné klopivé momenty jako dané křídlo",
+        "c)  tětiva náhradního obdélníkového křídla, které má stejné klopivé momenty jako dané křídlo"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "384.  Záznam o naložení letadla (loadsheet) je",
+      "answers": [
+        "a)  vyvažovací diagram, kterým stanovujeme polohu těžiště naloženého letadla",
+        "b)  nákladový list letadla",
+        "c)  formulář (zpravidla jednotný dle IATA), který obsahuje veškeré údaje o hmotnostech naloženého letadla a o jejich rozložení včetně výsledných hodnot příslušných centráží (příp. Indexů)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "385.  Poloha těžiště letadla vyjádřená v % délky SAT (angl. Zkratka MAC) se nazývá",
+      "answers": [
+        "a)  provozní poloha těžiště letadla",
+        "b)  neutrální bod letadla",
+        "c)  centráž letadla"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "386.  Pod pojmem vyvážení letadla na zemi rozumíme",
+      "answers": [
+        "a)  rozložení užitečného zatížení tak, aby těžiště naloženého letadla bylo v přípustných mezích povolených centráží",
+        "b)  provedení výpočtu na vyvažovacím komputeru",
+        "c)  využití tzv. balastu (vody nebo jiné hmoty)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "387.  Hmotnost prázdného letadla je",
+      "answers": [
+        "a)  hmotnost celého letadla s nákladem v okamžiku dotyku při přistání",
+        "b)  hmotnost úplně vystrojeného letadla i s přepravovaným nákladem, ale bez hmotnosti paliva (pohonných hmot)",
+        "c)  hmotnost vystrojeného letadla bez posádky, bez přepravovaného nákladu a bez provozních látek"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "388.  Hmotnost letadla bez paliva (pohonných látek)",
+      "answers": [
+        "a)  hmotnost celého letadla s nákladem v okamžiku dotyku při přistání",
+        "b)  hmotnost úplně vystrojeného letadla i s připravovaným nákladem, ale bez hmotnosti paliva (pohonných hmot)",
+        "c)  hmotnost vystrojeného letadla bez posádky, bez přepravovaného nákladu a bez provozních látek"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "389.  Maximální hmotnost letadla je",
+      "answers": [
+        "a)  největší hmotnost uvažovaná při návrhu letadla s ohledem na předpisy způsobilosti pro vzlet",
+        "b)  největší hmotnost, při které letadlo vyhovuje předpisům způsobilosti pro vzlet",
+        "c)  největší hmotnost, při které letadlo vyhovuje předpisům způsobilosti"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "390.  Maximální vzletová hmotnost letadla je",
+      "answers": [
+        "a)  největší hmotnost uvažovaná pro pojíždění letadla před vzletem",
+        "b)  největší hmotnost, při které letadlo vyhovuje předpisům způsobilosti pro vzlet",
+        "c)  největší hmotnost letadla při vzletu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "391.  Maximální přistávací hmotnost letadla je",
+      "answers": [
+        "a)  největší hmotnost letadla při přistání",
+        "b)  největší přistávací hmotnost, při které letadlo vyhovuje předpisům způsobilosti pro přistání",
+        "c)  největší hmotnost, při které letadlo vyhovuje předpisům způsobilosti pro pojíždění"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "392.  Maximální hmotnost letadla při pojíždění je",
+      "answers": [
+        "a)  největší hmotnost, při které letadlo vyhovuje předpisů způsobilosti pro vzlet",
+        "b)  největší přistávací hmotnost, při které letadlo vyhovuje předpisům způsobilosti pro přistání",
+        "c)  největší hmotnost, při které letadlo vyhovuje předpisům způsobilosti pro pojíždění"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "393.  Vyvažování letadla je",
+      "answers": [
+        "a)  rozmístění přepravovaného substrátu a jiných hmot v příslušných prostorech letadla takovým způsobem, aby těžiště letadla leželo v povoleném rozmezí střední aerodynamické tětivy",
+        "b)  nakládání přepravovaného substrátu do příslušných prostor letadla v souladu se schválenou příručkou (manuálem) pro nakládání a vyvažování",
+        "c)  souhrn provozních činností, jejichž účelem je připravit letadlo k letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "394. Nakládání letadla v průběhu odbavovacího procesu je:",
+      "answers": [
+        "a)  rozmístění přepravovaného substrátu a jiných hmot v příslušných prostorech letadla takovým způsobem, aby těžiště letadla leželo v povoleném rozmezí střední aerodynamické tětivy",
+        "b) nakládání přepravovaného substrátu do příslušných prostor letadla v souladu se schválenou příručkou (manuálem) pro nakládání a vyvažování",
+        "c) souhrn provozních činností, jejichž účelem je připravit letadlo k letu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "395.  Správné vyvážení letadla před vzletem tj. stanovení, dodržení a kontrola polohy jeho těžiště",
+      "answers": [
+        "a)  jedním ze základních předpokladů bezpečnosti letu",
+        "b)  součástí procesu ošetření letadla před vzletem",
+        "c)  v plné zodpovědnosti pozemního personálu zajišťujícího nakládání"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "396.  Pro vyvažování letounů na zemi se používají různé typy pomůcek. Která z uvedených odpovědí je nejvíce komplexní tj. zahrnuje úplný rozsah metod a pomůcek?",
+      "answers": [
+        "a)  vyvažovací grafy, integrované palubní systémy vážení a vyvažování letounu, ložné plány, tabulky",
+        "b)  ložné plány vyvažovací grafy a komputer, nakládací pomůcky, tabulky",
+        "c)  ložné plány, vyvažovací grafy, vyvažovací komputery, pozemní výpočetní systémy vážení a vyvažování, integrované palubní systémy vážení a vyvažování, integrované palubní systémy vážení a vyvažování letounu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "397.  Jaká je nejvíce nebezpečná poloha těžiště letounů za letu (jedná se o letoun obvyklé konstrukce)?",
+      "answers": [
+        "a)  příliš vzadu",
+        "b)  příliš vpředu",
+        "c)  těžiště posunuté do strany"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "398.  Poloha těžiště letadla za letu má významný vliv na letové vlastnosti. Jedná se zejména o tyto letové vlastnosti",
+      "answers": [
+        "a)  stabilitu a ovladatelnost",
+        "b)  tíživost",
+        "c)  vyvažitelnost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "399.  Nedodržením správné polohy těžiště (centráže) naloženého letadla se jeho letové vlastnosti",
+      "answers": [
+        "a)  nezmění",
+        "b)  zhoršují",
+        "c)  zlepší až po provedeném zásahu vyvažovací ploškou"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "400.  Výpočet hmotnosti - stanovení těžiště pro vzlet a přistání se u malých letadel a u většiny letadel všeobecného letectví závazně provádí dle metodiky uvedené v",
+      "answers": [
+        "a)  instrukci provozovatele pro výpočet hmotnosti a stanovení těžiště",
+        "b)  technickém popisu letadla - část:Hmotnosti",
+        "c)  letové příručce - kapitola:Hmotnosti a centráže"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "401.  Výpočet hmotnosti a stanovení těžiště pro vzlet a přistání se u opravních letadel závazně provádí dle metodiky uvedené v",
+      "answers": [
+        "a)  instrukci provozovatele pro nakládání a vyvažování příslušného typu letadla",
+        "b)  loadsheetu (IATA formulář)",
+        "c)  manuálu nakládání a vyvažování (WBM - Weight and balance manual), který je nedílnou částí schválené letové příručky každého dopravního letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "402.  Vlivy nesprávného vyvážení nebo naložení na letové vlastnosti a výkony letadla. Příklad: je-li těžiště letadla před přední povolenou polohou (před přední mezní centráží), tak se",
+      "answers": [
+        "a)  neúměrně zvětšují síly v řízení při vzletu i přistání, délka vzletu se prodlužuje",
+        "b)  délka vzletu prodlužuje",
+        "c)  zhoršuje stabilita letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "403.  Vlivy nesprávného vyvážení nebo naložení na letové vlastnosti a výkony letadla. Příklad: v případě, že těžiště letadla leží za zadní povolenou (za zadní mezní centráží), tak se",
+      "answers": [
+        "a)  výrazně zhoršuje stabilita letadla",
+        "b)  neúměrně zvětšují síly v řízení při vzletu i přistání",
+        "c)  neúměrně prodlužuje délka vzletu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "404.Výrobcem letadel jsou udávány výkony, obsluha a vyvažovací diagramy příslušného typu letadla, Tyto údaje je možné najít v",
+      "answers": [
+        "a)  provozním bulletinu",
+        "b)  letové příručce",
+        "c)  palubním deníku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "405.  Při určení vyvážení letadla s nákladem se zjistí, že je přetíženo. Jaká opatření je nutno provést před vzletem?",
+      "answers": [
+        "a)  vyvážit „těžký na hlavu“ před vzletem",
+        "b)  vyvážit „těžký na ocas“ před vzletem",
+        "c)  zmenšit náklad"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "406.  Na čem závisí správné naložení letadla?",
+      "answers": [
+        "a)  na správném rozložení nákladu a dodržení maximální povolené hmotnosti",
+        "b)  na maximální povolené hmotnosti dle schválené letové příručky nebo WBM",
+        "c)  na dodržení  maximální hmotnosti nákladu v jednotlivých nákladových prostorech"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "407.  Jak se určí poloha těžiště prázdného letounu?",
+      "answers": [
+        "a)  zkušebním letem",
+        "b)  měřením v horizontální poloze (na zvedáku)",
+        "c)  vážením"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "408.  Za nebezpečné zboží (angl. Dangerous goods) jsou považovány výrobky nebo hmoty, které mohou způsobit význačné ohrožení zdraví, bezpečnosti nebo majetku, jsou-li přepravovány letecky. Je tato definice v souladu s národním leteckým předpisem L 6/1 - Provoz letadle?",
+      "answers": [
+        "a)  ne - není v souladu s L6/1",
+        "b)  vypustit údaj o majetku",
+        "c)  ano - platná definice"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "409.  Informace a instrukce pro přepravu nebezpečného zboží, včetně jeho označování (kódy, nálepky) a postupu v případě nouze musí být obsaženy v souladu s národními leteckými předpisy v",
+      "answers": [
+        "a)  údržbové příručce letadla (MM)",
+        "b)  provozní příručce a v manuálu pro nakládání a vyvažování (WBM) provozovatele",
+        "c)  zvláštní instrukci oddělení kontroly nakládání letadel"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "410.  Nebezpečné zboží - výbušniny a jiné nebezpečné předměty se nesmí v letadle dopravovat",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. pokud dopravu takových předmětů neschválí letecký úřad s podmínkou, že budou zabaleny a označeny příslušnými kódy a nálepkami podle platných předpisů",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. výjimku tvoří ty předměty, které jsou nutné pro provoz nebo navigaci nebo pro bezpečnost osob na palubě",
+      "answers": [
+        "a)  obě odpovědi 1. a 2. jsou správné",
+        "b)  jen odpověď 1. je správná",
+        "c)  jen odpověď 2. je správná"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "411.  Ustanovení o přepravě nebezpečného zboží v letadlech (Viz dokument IATA: Dangerous goods regulations a Dokument ICAO: The safe transport of dangerous goods by air) jsou obecně definovány v Annexu ICAO označeném číslem",
+      "answers": [
+        "a)  Annex 2",
+        "b)  Annex 16",
+        "c)  Annex 18"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "412.  O převozu nebezpečného zboží nebo nákladu v konkrétním letadle určitého",
+      "answers": [
+        "a)  oddělení kontroly a řízení nakládání letadel příslušného letiště",
+        "b)  provozovatel letadla",
+        "c)  velitel letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "413.  Letová způsobilost letadla je",
+      "answers": [
+        "a)  takový stav letadla, který zajišťuje, že úroveň bezpečnosti při jeho provozu v předpokládaných provozních podmínkách nebude nižší než ta, která je dána požadavky předpisů o letové způsobilosti letadel",
+        "b)  takový stav letadla, který zajišťuje, že úroveň bezpečnosti i spolehlivosti jeho provozu i v nepředpokládaných provozních podmínkách nebude nižší než ta, která je dána požadavky předpisů o letové způsobilosti letadel.",
+        "c)  takový stav letadla, který zajišťuje, že úroveň provozuschopnosti v předpokládaných provozních podmínkách nebude nižší než ta, která je dána požadavky předpisů o letové způsobilosti letadel."
+      ],
+      "correct": 0
+    },
+    {
+      "question": "414.  Typové osvědčení způsobilosti k leteckému provozu je",
+      "answers": [
+        "a)  doklad vydávaný výrobcem letadla pro konkrétní typ letadla, motoru nebo vrtule",
+        "b)  doklad vydávaný leteckým úřadem, kterým se potvrzuje typové schválení výrobku pro provoz v civilním letectví",
+        "c)  doklad, kterým se potvrzuje u konkrétního výrobního čísla výrobku (letadla, motoru, vrtule) jeho letová způsobilost"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "415.  Osvědčení letové způsobilosti (OLZ) je doklad vydaný národním leteckým úřadem (v ČR je to Úřad pro civilní letectví), kterým se potvrzuje, že letadlo konkrétního výrobního čísla a poznávací značky je způsobilé k leteckému provozu. Originál tohoto dokladu musí být",
+      "answers": [
+        "a)  na palubě letadla",
+        "b)  v oddělení technické dokumentace provozovatele",
+        "c)  u výrobce letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "416.  Je neprovedení předepsané údržby na letadle (tj. není dodržen schválený systém údržby) důvodem k dočasné ztrátě platnosti Osvědčení letové způsobilosti OLZ?",
+      "answers": [
+        "a)  není to důvod k dočasné ztrátě platnosti OLZ",
+        "b)  ano",
+        "c)  jen při neprovedení roční prohlídky nebo vyšší prohlídky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "417.  Osvědčení letové způsobilosti (OLZ), které je vydáváno letadlu konkrétního typu a výrobního čísla Úřadem pro civilní letectví (ÚCL) České republiky pro průkazném splnění požadavků příslušných předpisů o letové způsobilosti, obsahuje mimo jiných údajů (jako např. typ letadla, výrobce atd.) i název a adresu provozovatele letadla",
+      "answers": [
+        "a)  ano",
+        "b)  ne",
+        "c)  výjimečně ano"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "418.  Osvědčení letové způsobilosti (OLZ) je dokument, ve kterém pověřený letecký úřad členského státu potvrzuje",
+      "answers": [
+        "a)  do jaké míry letadlo splňuje stanovené podmínky pro uznání letové způsobilosti - platí pro konkrétní výr. číslo letadla",
+        "b)  do jaké míry letadlo splňuje stanovené podmínky pro uznání letové způsobilosti - platí pro typ letadla jako celek",
+        "c)  uznání platnosti osvědčení letové způsobilosti vydané jiným leteckým úřadem členského státu ICAO nebo JAA"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "419.  Je neprovedení mimořádné prohlídky, případně úpravy, nařízené závazným (povinným) bulletinem výrobce nebo příkazem k zachování letové způsobilosti (PZZ) vydaným leteckým úřad, důvodem dočasné ztráty platnosti Osvědčení letové způsobilosti (OLZ)?",
+      "answers": [
+        "a)  ano, je to důvod k dočasné ztrátě platnosti OLZ",
+        "b)  není to důvod k dočasné ztrátě platnosti OLZ",
+        "c)  výjimečně na základě rozhodnutí leteckého úřad"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "420.  Je důvodem dočasné ztráty platnosti Osvědčení letové způsobilosti (OLZ) skutečnost, že na letadle byla provedena úprava nebo změna ovlivňující letovou způsobilost bez schválení leteckého úřadu?",
+      "answers": [
+        "a)  ano, je to důvod k dočasné ztrátě platnosti OLZ",
+        "b)  není to důvod k dočasné ztrátě platnosti OLZ",
+        "c)  Výjimečně na základě rozhodnutí leteckého úřadu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "421.  Je důvodem dočasné ztráty platnosti Osvědčení letové způsobilosti (OLZ) skutečnost, že letadlo bylo poškozeno takovým způsobem, že již nejsou splněny podmínky, za nichž bylo OLZ vydáno?",
+      "answers": [
+        "a)  ano, je to důvod k dočasné ztrátě platnosti OLZ",
+        "b)  není to důvod k dočasné ztrátě platnosti OLZ",
+        "c)  ve výjimečných případech"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "422.  Je předání letadla do generální opravy důvodem k dočasné ztrátě platnosti Osvědčení letové způsobilosti (OLZ)?",
+      "answers": [
+        "a)  není to důvod k dočasné ztrát platnosti OLZ",
+        "b)  ano, je to důvod k dočasné ztrátě platnosti OLZ",
+        "c)  jen u letadel s hmotností nad 5700 kg"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "423.  Osvědčení letové způsobilosti (OLZ) - platnost OLZ vydaných Úřadem pro civilní letectví ČR. Časová lhůta platnosti OLZ, pokud je použita, nemá být delší než",
+      "answers": [
+        "a)  6 měsíců",
+        "b)  12  měsíců",
+        "c)  18 měsíců"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "424.  Jestliže dojde na letadle k poškození, závadě nebo jiným změnám, která mají za následek neplnění podmínek, za nichž bylo vydáno osvědčení letové způsobilosti (OLZ), může letecký úřad (v ČR Úřad pro civilní letectví) ve výjimečných případech povolit na základě žádosti provozovatele přelet takového letadla na místo, kde může být opraveno",
+      "answers": [
+        "a)  zásadně ne",
+        "b)  ne",
+        "c)  ano"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "425.  Povolení k technickému přeletu lze vydat letadlu, jestliže dojde na letadle k poškození, závadě nebo se vyskytnou jiné okolnosti (např. prošlé lhůty předepsané plánované údržby), které mají za následek neplnění podmínek, za nichž bylo vydáno osvědčení letové způsobilosti (OLZ). Povolení k technickému přeletu vydává ve své kompetenci",
+      "answers": [
+        "a)  Ministerstvo dopravy a spojů (Odbor civilního letectví)",
+        "b)  Úřad pro civilní letectví (ÚCL)",
+        "c)  výkonný ředitel provozovatele letadla (provozovatel)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "426.  Kdo smí osvědčit letovou způsobilost (uvolnit letadlo do provozu) po provedené údržbě u letadla s hmotností převyšující 5700 kg, které je provozováno v obchodní letecké dopravě?",
+      "answers": [
+        "a)  osvědčující technik údržby provozovatele letadla s platným průkazem způsobilosti podle předpisu JAR - OPS",
+        "b)  určený osvědčující personál v rámci organizace (opravny) schválené podle předpisu JAR-145",
+        "c)  letecký mechanik s průkazem ICAO typu 1 nebo 2 (podle předpisu L1) určený k osvědčování letové způsobilosti v kterékoliv opravně (servisu)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "427.  Osvědčení hlukové způsobilosti vydává konkrétnímu letadlu (dle pozn. značky)",
+      "answers": [
+        "a)  provozovatel letadla",
+        "b)  letecký úřad (národní letecký úřad)",
+        "c)  výrobce letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "428.  Osvědčování hlukové způsobilosti letadel a vydávání příslušných „Osvědčení hlukové způsobilosti“ se v ČR řídí předpisem",
+      "answers": [
+        "a)  L6/1",
+        "b)  L16/1",
+        "c)  L13"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "429.  Na základě leteckého předpisu L16/1 (hluk letadel)  se příslušná hodnocení úrovně hluk letadla zaznamenávané v Osvědčení hlukové způsobilosti uvádí v následujících jednotkách",
+      "answers": [
+        "a)  EPNdB",
+        "b)  KW",
+        "c)  DB"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "430.  Dokumenty osvědčující hlukovou způsobilost mohou mít formu samostatného Osvědčení hlukové způsobilosti nebo vhodného prohlášení v jiném dokumentu letadla, vydaném (schváleném leteckým úřadem. Tyto dokumenty (dokument)",
+      "answers": [
+        "a)  musí být uloženy u provozovatele",
+        "b)  musí být na palubě letadla",
+        "c)  nemusí být na palubě letadla"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "431.  Osvědčení hlukové způsobilosti letadla obsahuje záznamy všech dodatečných úprav (modifikací) provedených za účelem splnění požadavků leteckého předpisu L16/1 -. Hluk letadel",
+      "answers": [
+        "a)  ne",
+        "b)  jen nejdůležitějších modifikací letadla",
+        "c)  ano"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "432.  Osvědčení hlukové způsobilosti letadla (vydané leteckým úřadem) obsahuje údaje o maximální hmotnosti letadla, pro kterou bylo prokázáno plnění požadavků leteckého předpisu L16/1 (Hluk letadel)",
+      "answers": [
+        "a)  ne",
+        "b)  ano",
+        "c)  jen u letadel s max. vzletovou hmotností 272 000 kg a větší"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "433.  Hladiny hluku letadla v EPNdB v referenčních bodech měření, u nichž bylo prokázáno vyhovění předpisu L16/1 (Hluk letadel) se uvádějí v Osvědčení hlukové způsobilosti letadla. Předepsaný počet referenčních bodů (měřících míst) je",
+      "answers": [
+        "a)  2",
+        "b)  3",
+        "c)  4"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "434.  Maximální hladiny hluk letadla se v Osvědčení hlukové způsobilosti vydaném v souladu s předpisem L16/1 uvádějí v následujících měřících místech (referenčních bodech)",
+      "answers": [
+        "a)  v měřícím místě při vzletu a v měřícím místě při přiblížení",
+        "b)  v měřícím místě při přeletu a v bočním měřícím místě",
+        "c)  v měřícím místě při přeletu, v měřícím místě při přiblížení a v bočním měřícím místě"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "435.  Měřící místo při přeletu letounu, ve kterém je hodnocena efektivní hodnota vnímaného hluk v EPNdB, je dle národního předpisu L16/1(Hluk letadel) Hlava 2 (Podzvukové proudové letouny) umístěno na prodloužené ose vzletové a přistávací dráhy ve vzdálenosti",
+      "answers": [
+        "a)  4,5 km od počátku rozjezdu",
+        "b)  5,5 km od počátku rozjezdu",
+        "c)  6,5 km od počátku rozjezdu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "436.  Měřící místo při přiblížení letounu, ve kterém je hodnocena efektivní hodnota vnímaného hluku v EPNdB, je dle národního předpisu L16/1 (Hluk letadel) Hlava 2 (Podzvukové proudové letouny) umístěno na prodloužené ose vzletové a přistávací dráhy při vodorovném povrchu před prahem dráhy ve vzdálenosti",
+      "answers": [
+        "a)  1000m",
+        "b)  2000m",
+        "c)  3000m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "437.  Všechny letouny odpovídající normám hlukové způsobilosti podle předpisu L16/1 (Hluk letadel)",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "438.  musí mít na palubě dokument osvědčující jejich hlukovou způsobilost",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "439.  osvědčení dle bodu 1. může být uvedeno v kterémkoliv palubním dokladu schváleném leteckým úřadem",
+      "answers": [
+        "a)  konstatování dle bodů 1. a 2. odpovídá požadavkům národních leteckých předpisů ČR (L6/1 bod 6.13)",
+        "b)  konstatování dle bodů 1. a 2. neodpovídá požadavkům národních letecký předpisů ČR (L6/1 bod 6.13)",
+        "c)  jen konstatování dle bodu 1. odpovídá požadavkům národních leteckých předpisů ČR (L6/1 bod 6.13)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "438.  Úkolem technické údržby letadla je",
+      "answers": [
+        "a)  odstranit závady letadla",
+        "b)  zajistit udržení požadované rovně letové způsobilosti v souladu se schválenými postupy",
+        "c)  zajistit provedení technického nálezu na letadle"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "439.  Neprovedení předepsané údržby má vliv na dočasnou ztrátu platnosti Osvědčení letové způsobilosti (OLZ)",
+      "answers": [
+        "a)  jednoznačně a nekompromisně",
+        "b)  obvykle",
+        "c)  v opakovaných případech"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "440.  Která z následujících metod nedestruktivní defektoskopie součástí letadla v provozu je nejlépe použitelná pro většinu kontrol (inspekcí) kovových, kompozitních a keramických dílů pro zjištění povrchových nebo podpovrchových vad poškození a defektů?",
+      "answers": [
+        "a)  vířivé proudy",
+        "b)  magnetická metoda",
+        "c)  ultrazvuková kontrola"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "441.  Nebezpečný prostor před běžícím proudovým motorem je do vzdálenosti přibližně",
+      "answers": [
+        "a)  12 m",
+        "b)  5 m",
+        "c)  8 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "442.  Během vzduchového spouštění turbovrtulového motoru (pomocí pneumatického startéru) se objevily vysoké teploty. Proveďte úsudek, co bylo pravděpodobnou příčinou",
+      "answers": [
+        "a)  přehřátá pneumatická pozemní jednotka",
+        "b)  motor byl před spouštěním přehřátý",
+        "c)  příliš bohatá směs: palivo-vzduch"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "443.  Spolehlivost letadla v provozu je definována takto",
+      "answers": [
+        "a)  spolehlivě a bez poruch plnit všechny projektované funkce, je-li řádně prováděna údržba letadla",
+        "b)  schopnost letadla (nebo jeho části či soustavy) zachovat v přípustných mezích své vlastnosti během stanovené doby a za stanovených provozních podmínek",
+        "c)  spolehlivost je stejný termín jako bezporuchovost tj. spolehlivost=bezpečnost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "444.  Provozní lhůta letadla, motoru, vrtule nebo jakéhokoliv letadlového celku je",
+      "answers": [
+        "a)  lhůta vyjádřená provozní dobou nebo počtem funkčních cyklů nebo kalendářním limite, po jejímž uplynutí je třeba výrobek podrobit předepsané údržbě",
+        "b)  lhůta vyjádřená provozní dobou nebo počtem funkčních cyklů (např. přistání), po jejímž uplynutí je třeba výrobek podrobit předepsané údržbě"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "445.  Údržba letadla je",
+      "answers": [
+        "a)  souhrn činností zajišťujících zachování spolehlivosti v leteckém provozu systémem prohlídek, ošetření a oprav",
+        "b)  souhrn činnosti zajišťujících zachování způsobilosti k leteckému provozu systémem prohlídek, ošetření a oprav",
+        "c)  souhrn činností zajišťující provozuschopnost letadla systémem prohlídek, ošetření a oprav"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "446.  Provozovatel musí vést záznamy o zjištěných závadách (poruchách) a poškozeních a o jejich odstranění o provedených opravách i splnění požadavků závazných bulletinů a příkazů k zachování letové způsobilosti (PZZ. pozn. v angličtině A.D. -  Airworthiness Directive)",
+      "answers": [
+        "a)  jen u závažných závad, poruch, poškození a PZZ (A.D.)",
+        "b)  ano - jednoznačně, prokazatelně a závazně",
+        "c)  jen o opravách, bulletinech a PZZ (A.D.)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "447.  Veškeré opravy a odstranění závad (poruch) na letadle, motorech, vrtulích a výstroji musí být provedeny tak",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. aby byla zachována, případně obnovena způsobilost výrobku a to v souladu se schválenými postupy",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. musí být kromě návodů na opravy stanoveno, které opravy může provádět provozovatel nebo které výhradně autorizována opravna (např. dle JAR-145)",
+      "answers": [
+        "a)  jen 1. je správná odpověď",
+        "b)  část 1. i 2. jsou správné odpovědi",
+        "c)  část 2. platí jen pro dopravní letadla, část 1. Je správná odpověď"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "448.  Každá závada (porucha) mající vliv na letovou způsobilost, která byla zjištěna na letadle, systémech, pohonné jednotce a jeho výstroji musí být odstraněna před zahájením dalšího letu",
+      "answers": [
+        "a)  ano - musí být odstraněna před zahájením dalšího letu",
+        "b)  nemusí být odstraněna před zahájením dalšího letu",
+        "c)  s výjimkou závady, kdy bylo leteckým úřadem uděleno povolení k technickému přeletu s jednoznačně stanovenými omezeními"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "449.  Každá závada (porucha), která byla zjištěna na letadle, systémech, motoru (vrtuli) a výstroji musí být odstraněna před zahájením dalšího letu",
+      "answers": [
+        "a)  ano",
+        "b)  ne",
+        "c)  s výjimkou závad uvedených v předpise schváleném leteckým úřadem (např. Seznam závad, s kterými je povolen vzlet nebo Seznam minimálního vybavení tzv. Minimum equipment list - MEL)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "450.  Veškerou technickou údržbu na letadle, systémech, motorech (vrtulích), výstroji a letadlových celcích rozdělujeme do následujících souborů činností",
+      "answers": [
+        "a)  plánovaná údržba a neplánovaná údržba (odstraňování závad)",
+        "b)  plánovaná údržba, neplánovaná údržba, údržba a opravy letadlových celků, provádění příkazů k zachování letové způsobilosti (PZZ/A.D.), bulletinů a modifikací",
+        "c)  plánovaná údržba a údržba podle stavu (O.C. - On. Condition)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "451.  Hlavními (závaznými) kriterii pro plánování a provádění údržby letadel jsou",
+      "answers": [
+        "a)  nalétané hodiny (FH), počty přistání/Cykly (CYC), kalendářní doba (CT)",
+        "b)  nalétané hodiny (FH), počty přistání/Cykly (CYC)",
+        "c)  kalendářní doba (CT), nalétané hodiny (FH)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "452.  Všechna letadla používaná v ČR a členských zemích JAA k odpravě za úplatu s hmotností převyšující 5700 kg musí být splatností od 1.7.1998udržovaná v rámci údržby na základě pouze v opravnách majících oprávnění vydané podle předpisu",
+      "answers": [
+        "a)  FAR - 21",
+        "b)  JAR - 145",
+        "c)  L 6/1"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "453.  Každé letadlo provozované v ČR a udržované podle schváleného programu údržby, které není udržováno podle individuálního programu údržby schváleného Úřadem pro civilní letectví (ÚCL), musí pro další uvolnění do provozu projít závazně následující prohlídkou",
+      "answers": [
+        "a)  roční prohlídkou podle lhůt a kritérií stanovených ÚCL",
+        "b)  prohlídkou typu „A“",
+        "c)  prohlídkou typu „C“"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "454.  Technická dokumentace výrobků letadlové techniky obsahuje tyto dokumenty",
+      "answers": [
+        "a)  doklady způsobilosti, průvodní technická dokumentace, provozní technické doklady, výrobní dokumentace, doklady změnové služby",
+        "b)  doklady způsobilosti, průvodní technická dokumentace, provozní technické doklady",
+        "c)  doklady způsobilosti, průvodní technická dokumentace, provozní technické doklady, doklady změnové služby"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "455.  Je letová příručka nedílným a doplňujícím dokladem k Osvědčení letové způsobilosti (OLZ)? Musí být schválena leteckým úřadem?",
+      "answers": [
+        "a)  není doplňujícím dokladem k OLZ, ale musí být schválena leteckým úřadem",
+        "b)  ano",
+        "c)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "456.  Provozní příručka je u provozovatele vydávána v návaznosti na letovou příručku. Může být vydána v oddělených částech odpovídajících zvláštním požadavkům provozu. Musí však obsahovat nejméně údaje požadované národním předpisem",
+      "answers": [
+        "a)  L2",
+        "b)  L6",
+        "c)  L8/A"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "457.  Příručka pro údržbu musí obsahovat tyto údaje o provozovaných letadlech",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "1. postupy pro obsluhu a údržbu",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. program údržby letadla schválený leteckým úřadem, obsahující přikázané práce údržby a intervaly, v nichž musí být tyto práce prováděny",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "3. odpovědnost jednotlivých tříd odborných pracovníků pro údržbu",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "4. metody obsluhy a údržby, které mohou být předepsány leteckým úřadem nebo které vyžadují jeho předchozí schválení",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "5. postupy pro přípravu potvrzení o údržbě a podmínky, za nichž bude tyto potvrzení vydáno i osoby, které je mohou podepsat",
+      "answers": [
+        "a)  odpovědi 1. až 5. jsou správné",
+        "b)  odpovědi 1., 2., 4. jsou správné",
+        "c)  odpovědi 1., 2., 3., 4. jsou správné"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "458.  Potvrzení o údržbě letadla se vystavuje",
+      "answers": [
+        "a)  vždy před každým letem",
+        "b)  tam, kde to vyžadují předpisy pro provoz letadel jej vystavuje provozovatel jako samostatný doklad dle kritérií stanovených leteckým úřadem",
+        "c)  pro provedení jakéhokoliv stupně údržby na letadle"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "459.  Záznamy v palubním deníku se musí provádět",
+      "answers": [
+        "a)  min. 1xtýdně a hůlkovým písmem",
+        "b)  min. 2x týdně a čitelně bez škrtání nebo vymazávání",
+        "c)  průběžně, inkoustem nebo propisovací tužkou dle pokynů v záhlaví palubního deníku"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "460.  Popsaný palubní deník se musí uschovat tak, aby byly k dispozici úplné záznamy o vykonaných letech v posledních",
+      "answers": [
+        "a)  6 měsících",
+        "b)  12 měsících",
+        "c)  24 měsících"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "461.  Osvědčení letové způsobilosti (OLZ) je doklad, kterým Úřad pro civilní letectví ČR (ÚCL) potvrzuje, že dané letadlo (konkrétní výrobní číslo) je způsobilé k leteckému provozu. Obsahuje (OLZ) mimo jiných povinných údajů též lhůtu jeho platnosti?",
+      "answers": [
+        "a)  ne",
+        "b)  ano",
+        "c)  obsahuje jen datum vystavení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "462.  Osvědčení hlukové způsobilosti pro konkrétní letadlo (výr. číslo, poznávací značka) je doklad vydávaný zásadně národním leteckým úřadem tj. v ČR Úřadem pro civilní letectví  (ÚCL). Obsahuje toto osvědčení lhůtu platnosti?",
+      "answers": [
+        "a)  ano",
+        "b)  obvykle ano",
+        "c)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "463.  Průvodní technická dokumentace obsahuje informace a pokyny nutné pro zajištění bezpečného a plynulého provozu letadla. Vydává ji výrobce a schvaluj letecký úřad. Zahrnuje tyto základní dokumenty",
+      "answers": [
+        "a)  technický popis, dokumentaci pro obsluhu, údržbu a opravy",
+        "b)  letovou příručku, technický popis, doklady změnové služby",
+        "c)  letovou příručku, technický popis, dokumentaci pro obsluhu, údržbu a opravy"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "464.  Provozní technické doklady letadla zahrnují soubor dokumentů pro evidenci  a dokladování údajů z provozu letadla. Patří sem letadlová kniha, motorové knihy, vrtulové záznamníky, kniha hlášení závad a podobně",
+      "answers": [
+        "a)  ano",
+        "b)  ne",
+        "c)  patří sem i palubní deník"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "465.  Letová příručka je: \t1. Příručka závazných pokynů a informací pro posádku",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. doplňujícím dokladem Osvědčení letové způsobilosti (OLZ)",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "3. dokument obsahující postup nouzové evakuace letadla",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "4. dokument schválený leteckým úřadem státu provozovatele",
+      "answers": [
+        "a)  jen 1., 2. je správná odpověď",
+        "b)  jen 1.,2.,4. je správná odpověď",
+        "c)  všechny části 1.,2.,3.,4. jsou správné odpovědi"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "466.  Letová kniha: \t1. Je součástí provozních technických dokladů letadla",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "2. slouží k vedení záznamů o provozu, údržbě a opravách",
+      "answers": [],
+      "correct": 0
+    },
+    {
+      "question": "3.  musí být vystavena pro každé letadlo s platným Osvědčením letové způsobilosti (OLZ)",
+      "answers": [
+        "a)  odpovědi 1., 2, 3. jsou správné",
+        "b)  odpovědi 1., 2. jsou správné",
+        "c)  odpovědi 2., 3. jsou správné"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "467.  Mezi doklady letadla patří mimo jiné ve smyslu příslušné závazné vyhlášky Osvědčení o zápisu do leteckého rejstříku ČR a Osvědčení letové způsobilosti. Tyto doklady musí být v originále uloženy",
+      "answers": [
+        "a)  na Ministerstvu dopravy a spojů (Odbor civilního letectví)",
+        "b)  na palubě letadla a v Leteckém rejstříku ÚCL ČR",
+        "c)  u provozovatele letadla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "468.  Provozní příručka - změnová služba. Provozovatel musí jako pomůcku pro členy posádek a ostatní provozní personál vydat provozní příručku ve smyslu příslušných ustanovení leteckých předpisů. Provozní příručka musí podle potřeby podléhat změnové službě, aby bylo zajištěno, že informace v ní obsažené jsou platné. Všechny tyto změny nebo opravy musí být předávány všem osobám, které jsou povinny tuto příručku používat",
+      "answers": [
+        "a)  obsah Provozní příručky podléhá změnové službě 1x ročně",
+        "b)  obsah Provozní příručky podléhá změnové službě podle pokynů leteckého úřadu",
+        "c)  obsah Provozní příručky musí podle potřeby podléhat změnové službě provozovatele"
+      ],
+      "correct": 0
+    }
+  ],
+  "Letecká navigace": [
+    {
+      "question": "1.  Osa zemská je myšlená přímka středem země kolmá na rovník. Místa, kde protíná povrch země, se nazývají póly (točny). Jsou to póly",
+      "answers": [
+        "a)  magnetické",
+        "b)  zeměpisné",
+        "c)  totožné"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "2.  Poloha zeměpisného a magnetické pólu je",
+      "answers": [
+        "a)  totožná",
+        "b)  není shodná",
+        "c)  magnetický pól je vždy na východ od zeměpisného"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "3.  Malá kružnice je",
+      "answers": [
+        "a)  kružnice, jejíž rovina neprochází středem zeměkoule",
+        "b)  poledník, který prochází rovníkem na opačné straně",
+        "c)  jakákoliv kružnice na povrchu země neprocházející průsečíkem nultého poledníku a rovníku"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "4.  Velká kružnice je",
+      "answers": [
+        "a)  největší kružnice na zeměkouli",
+        "b)  průsečík roviny, která prochází středem zeměkoule s povrchem zeměkoule",
+        "c)  pouze rovník a nultý poledník"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "5.  Zeměpisný poledník je",
+      "answers": [
+        "a)  část kružnice, jejíž rovina je kolmá na zemskou osu",
+        "b)  polovinou poledníkové kružnice",
+        "c)  kružnice kolem zeměkoule"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "6.  Nultý poledník je",
+      "answers": [
+        "a)  poledník, na kterém se zeměpisná šířka i délka rovnají 0",
+        "b)  poledník procházející hvězdárnou v Greenwich, ovšem pouze na malé kružnici",
+        "c)  poledník, zvaný též základní, procházející hvězdárnou v Greenwich"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "7.  Zeměpisné souřadnice nám udávají",
+      "answers": [
+        "a)  název určitého místa",
+        "b)  zeměpisnou polohu určitého místa",
+        "c)  polohu časového pásma"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "8.  Dříve než v Praze vychází slunce",
+      "answers": [
+        "a)  v Londýně",
+        "b)  v Paříži",
+        "c)  v Moskvě"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "9.  225 stupňů je vedlejší světová strana",
+      "answers": [
+        "a)  jihovýchod",
+        "b)  severozápad",
+        "c)  jihozápad"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "10.  045 stupňů je vedlejší světová strana",
+      "answers": [
+        "a)  severovýchod",
+        "b)  severozápad",
+        "c)  jihozápad"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "11.  Pro přesnější označení směru užíváme",
+      "answers": [
+        "a)  radiány",
+        "b)  směrníky",
+        "c)  stupně"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "12.  Směr měříme ve stupních",
+      "answers": [
+        "a)  ve směru otáčení hodinových ručiček",
+        "b)  proti směru otáčení hodinových ručiček"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "13.  Směr měříme",
+      "answers": [
+        "a)  od nultého poledníku",
+        "b)  od severu zeměpisného místního poledníku",
+        "c)  od směrníku"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "14.  Pro označení směru používáme zásadně skupinu čísel",
+      "answers": [
+        "a)  třímístnou",
+        "b)  dvoumístnou",
+        "c)  podle potřeby"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "15.  Zeměpisný sever a jih",
+      "answers": [
+        "a)  mění se v závislosti na roční době",
+        "b)  působí na něj magnetismus země",
+        "c)  nemění polohu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "16.  Zeměkoule je",
+      "answers": [
+        "a)  ideální koule",
+        "b)  rotační elipsoid na pólech zploštělý"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "17.  Sbíhavost (konvergence) poledníků je dána",
+      "answers": [
+        "a)  úhlem poledníku s rovníkem",
+        "b)  průběhem ortodromy na dvou uvažovaných poledníkách",
+        "c)  úhlem mezi Nz a Nm"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "18.  Konvergenci poledníků vypočítáme",
+      "answers": [
+        "a)  RZD - ZZŠ",
+        "b)  RZD * sin ?",
+        "c)  ZZD * ZZŠ"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "19.  Konverzní úhel je",
+      "answers": [
+        "a)  sbíhavost poledníků",
+        "b)  směr letadla k úhlu větru",
+        "c)  úhel, který svírá ortodroma a loxodroma v bodech, které jsou na zeměkouli spojeny oběma čarami"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "20. Konverzní úhel vypočteme vzorcem",
+      "answers": [
+        "a)  RZD - SZŠ",
+        "b)  (RZD * sin SZŠ)/2",
+        "c)  RZD * sin SZŠ"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "21.  Při řešení navigačních úloh se Země uvažuje jako koule o poloměru",
+      "answers": [
+        "a)  6371 km",
+        "b)  6378,2 km",
+        "c)  6356,8 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "22.  Rovníkový poloměr Země je",
+      "answers": [
+        "a)  6371 km",
+        "b)  6378,2 km",
+        "c)  6356,8 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "23.  Pólový poloměr Země je",
+      "answers": [
+        "a)  6371 km",
+        "b)  6378,2 km",
+        "c)  6356,8 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "24.  Jeden oběh Země kolem Slunce (tzv. siderický rok) trvá",
+      "answers": [
+        "a)  356 dnů",
+        "b)  365,2 dne",
+        "c)  369 dnů"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "25.  Obvod rovníku měří",
+      "answers": [
+        "a)  40 000 NM",
+        "b)  30 000 NM",
+        "c)  21 600 NM"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "26.  Jeden stupeň východní nebo západní délky, měřený na rovníku představuje vzdálenost",
+      "answers": [
+        "a)  1 NM",
+        "b)  60 NM",
+        "c)  111 NM"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "27.  Magnetický pól obíhá kolem zeměpisného pólu jednou za 27 000 roků ve vzdálenosti",
+      "answers": [
+        "a)  90",
+        "b)  210",
+        "c)  170"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "28.  Průměrná vzdálenost měsíce od Země je",
+      "answers": [
+        "a)  384 400 km",
+        "b)  80 500 km",
+        "c)  985 200 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "29.  Ortodroma je část velké kružnice a nejkratší spojnice dvou bodů na povrchu zemském",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "30.  Loxodroma je část malé kružnice svírající s poledníky stále stejný úhel",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "31.  Ortodroma je část velké kružnice a na každé mapě představuje přímku",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "32.  Loxodroma je část malé kružnice a na každé mapě představuje vždy křivku",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "33.  Sever magnetický je směr, který",
+      "answers": [
+        "a)  určuje magnetka kompasu na který nepůsobí žádné vedlejší rušivé vlivy",
+        "b)  je určený myšlenou přímkou, která vede středem země a protíná její povrch v bodech, které nazýváme sever magnetický a jih magnetický",
+        "c)  změříme na mapě"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "34.  Deklinace je úhel mezi severem",
+      "answers": [
+        "a)  zeměpisným a kompasovým",
+        "b)  magnetickým a kompasovým",
+        "c)  zeměpisným a magnetickým"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "35.  Deklinace je největší",
+      "answers": [
+        "a)  v blízkosti pólů",
+        "b)  na rovníku",
+        "c)  na jižní polokouli"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "36.  Deklinace je způsobena",
+      "answers": [
+        "a)  vlivem střídání ročních období",
+        "b)  rozdílnou polohou severu kompasového a zeměpisného",
+        "c)  rozdílnou polohou severu zeměpisného a magnetického"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "37.  Zápis D = +2 znamená",
+      "answers": [
+        "a)  západní, tj. kladnou deklinaci",
+        "b)  východní, tj. zápornou deklinaci",
+        "c)  východní, tj. kladnou deklinaci"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "38.  Zápis D = -4 znamená",
+      "answers": [
+        "a)  západní, tj. kladnou deklinaci",
+        "b)  západní, tj. zápornou deklinaci",
+        "c)  východní, tj. zápornou deklinaci"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "39.  Izogona je",
+      "answers": [
+        "a)  čára spojující magnetický a zeměpisný pól",
+        "b)  přímka, na které leží stejné agony",
+        "c)  čára spojující místa se stejnou deklinací"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "40.  Agona je",
+      "answers": [
+        "a)  čára spojující místa s kladnou deklinací",
+        "b)  čára spojující místa se zápornou deklinací",
+        "c)  izogona, kde deklinace je nulová"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "41.  Deviace je způsobena",
+      "answers": [
+        "a)  magnetickými předměty v blízkosti magnetky kompasu",
+        "b)  magnetismem Země",
+        "c)  průběhem denní doby"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "42. Zápis d = +2 znamená, že kompasový sever je",
+      "answers": [
+        "a)  západně od severu magnetického",
+        "b)  východně od severu magnetického",
+        "c)  západně od severu zeměpisného"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "43.  Zápis d = -3 znamená, že kompasový sever je",
+      "answers": [
+        "a)  západně od severu magnetického",
+        "b)  východně od severu magnetického",
+        "c)  západně od severu zeměpisného"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "44.  Je-li sever magnetický východně od severu zeměpisného, deklinace je",
+      "answers": [
+        "a)  východní a označuje se +",
+        "b)  západní a označuje se -",
+        "c)  východní a označuje se -"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "45.  Je-li sever magnetický západně od severu zeměpisného, deklinace je",
+      "answers": [
+        "a)  východní a označuje se +",
+        "b)  východní a označuje se -",
+        "c)  západní a označuje se -"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "46.  Magnetické poledníky jsou",
+      "answers": [
+        "a)  čáry na mapě spojující místa o stejné deviaci",
+        "b)  směry poledníků k severu zeměpisnému",
+        "c)  směry magnetických siločar do kterých se staví magnetka kompasu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "47.  Průměrná deklinace je nyní v ČR",
+      "answers": [
+        "a)  0,5 - 2 stupně",
+        "b)  1 - 5 stupňů",
+        "c)  3 - 7 stupňů"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "48.  Deviační tabulka slouží",
+      "answers": [
+        "a)  k určení magnetického severu",
+        "b)  k určení rozdílu mezi deklinací a severem zeměpisným",
+        "c)  k určení hodnoty deviace letadla v základních směrech"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "49.  Pokud je Kz = 050°, D = 2°E, d = +5°, pak je",
+      "answers": [
+        "a)  Km = 052°, Kk = 057°",
+        "b)  Km = 048°, Kk = 053°",
+        "c)  Km = 048°, Kk = 043°"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "50.  Pokud je Kz = 225°, D = +3°, d = +3°, pak je",
+      "answers": [
+        "a)  Km = 228°, Kk = 231°",
+        "b)  Km = 222°, Kk = 219°",
+        "c)  Km = 222°, Kk = 225°"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "51.  Pokud je Kz = 285°, D = 4°W, d = -8°, pak je",
+      "answers": [
+        "a)  Km= 281°, Kk = 273°",
+        "b)  Km = 289°, Kk = 297°",
+        "c)  Km = 281°, Kk = 290°"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "52.  Pokud je Kz = 015°, D = -5°, d = +2°, pak je",
+      "answers": [
+        "a)  Kmag = 010°, Kk = 012°",
+        "b)  Kmag = 010°, Kk = 008°",
+        "c)  Kmag = 020°, Kk = 018°"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "53.  Pokud na mapě, kde souřadnicová síť je orientována k severu magnetickému zjistíte, že Kmag = 070°, D = 7°W, d = +6°, pak je",
+      "answers": [
+        "a)  Kz = 063°, Kk = 057°",
+        "b)  Kz = 063°, Kk = 069°",
+        "c)  Kz = 077°, Kk = 083°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "54.  Pokud na mapě, kde souřadnicová síť je orientována k severu magnetickému zjistíte, že Kmag = 142°, D = 4°E, d = +4°, pak je",
+      "answers": [
+        "a)  Kz = 138°, Kk = 134°",
+        "b)  Kz = 146°, Kk = 138°",
+        "c)  Kz = 146°, Kk = 150°"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "55.  Pokud na mapě, kde souřadnicová síť je orientována k severu magnetickému zjistíte, že Kmag = 357°, D = 1°W, d = -5°, pak je",
+      "answers": [
+        "a)  Kz = 356°, Kk = 002°",
+        "b)  Kz = 358°, Kk = 002°",
+        "c)  Kz = 356°, Kk = 351°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "57.  Body zemského povrchu, kde se magnetická inklinace rovná 90° se nazývají",
+      "answers": [
+        "a)  magnetické póly země",
+        "b)  magnetická deviace",
+        "c)  magnetický rovník"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "58.  Čáru na povrchu země označující nulovou magnetickou inklinaci nazýváme",
+      "answers": [
+        "a)  magnetický rovník",
+        "b)  magnetický pól země",
+        "c)  agona"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "59.  Magnetická epocha je",
+      "answers": [
+        "a)  izogona, kde deklinace je nulová",
+        "b)  platnost izogon pro určitý počet let",
+        "c)  nulová magnetická inklinace"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "60.  Změny magnetické deklinace jsou",
+      "answers": [
+        "a)  stoleté, roční a denní",
+        "b)  krátkodobé a stálé",
+        "c)  nejsou žádné"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "61.  Magnetické bouře vznikají",
+      "answers": [
+        "a)  na rovníku",
+        "b)  v zimě",
+        "c)  v polárních krajích"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "62.  Srovnávací orientace spočívá v",
+      "answers": [
+        "a)  srovnávání terénu s mapou a opačně",
+        "b)  srovnávání vypočtených časů se skutečností"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "63.  Která z dále uvedených podmínek je nejdůležitější pro srovnávací navigaci?",
+      "answers": [
+        "a)  navigační příprava",
+        "b)  dobrá mapa",
+        "c)  viditelnost země"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "64.  Navigace výpočtem je",
+      "answers": [
+        "a)  srovnávání vypočtených časů se skutečností",
+        "b)  podkladem celé práce pro navigační vedení letadla"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "65.  V civilním letectví pracujeme s následujícími rychlostmi",
+      "answers": [
+        "a)  IVR, OVR, PVR, TR",
+        "b)  plánovaná, ověřená, PVR, TR",
+        "c)  indikovaná, zeměpisná, PVR, TR"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "66.  Pravá vzdušná rychlost (PVR) je",
+      "answers": [
+        "a)  IVR opravená o výšku (tedy hustotu vzduchu)",
+        "b)  OVR opravená o teplotu a výšku (tedy hustotu vzduchu)"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "67.  Traťová rychlost (TR) je",
+      "answers": [
+        "a)  rychlost, kterou nám udává rychloměr",
+        "b)  rychlost vůči vzduchové hmotě",
+        "c)  rychlost, kterou letadlo letí vůči zemi"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "68.  Opravená vzdušná rychlost (OVR) je",
+      "answers": [
+        "a)  rychlost opravená o teplotu",
+        "b)  rychlost opravená o hustotu prostředí",
+        "c)  IVR opravená o kalibrační chybu polohy rychloměru"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "69.  Trať plánovaná (Tp) je trať po které",
+      "answers": [
+        "a)  se chceme pohybovat",
+        "b)  letadlo skutečně letí",
+        "c)  se chceme pohybovat, opravená o úhel snosu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "70.  Trať letěná (Tl) je trať",
+      "answers": [
+        "a)  po které letadlo skutečně letí",
+        "b)  plánovaná trať mezi dvěma body",
+        "c)  po které chceme letět"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "71.  Úhel mezi severem zeměpisným a plánovanou tratí, měřený od severu zeměpisného je",
+      "answers": [
+        "a)  úhel větru na trať",
+        "b)  úhel letadla",
+        "c)  plánovaný traťový úhel zeměpisný"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "72.  Úhloměrem měříme trať",
+      "answers": [
+        "a)  ze směru vzletu",
+        "b)  od severu zeměpisného",
+        "c)  od severu magnetického"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "73.  Pro směr a sílu větru používáme zkratku V/v",
+      "answers": [
+        "a)  první písmeno značí sílu větru a druhé směr větru",
+        "b)  první písmeno značí směr větru a druhé sílu větru"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "74.  Úhel snosu je",
+      "answers": [
+        "a)  úhlový rozdíl mezi prodlouženou osou letadla a tratí letěnou",
+        "b)  rozdíl ve stupních mezi Kz a směrem větru",
+        "c)  úhlový rozdíl mezi severem zeměpisným a magnetickým"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "75.  Úhel snosu se měří",
+      "answers": [
+        "a)  od severu zeměpisného k trati",
+        "b)  od Kz k trati letěné",
+        "c)  mezi kursem magnetickým a kursem kompasovým"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "76.  Pro správné stanovení smyslu úhlu snosu platí, že",
+      "answers": [
+        "a)  vítr snáší letadlo z Kk na trať letěnou",
+        "b)  vítr snáší letadlo z Kz na trať",
+        "c)  vítr snáší letadlo z trati plánované na Kz"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "77.  Velikost úhlu větru na trať může být",
+      "answers": [
+        "a)  0 - 360°",
+        "b)  0 - 180°",
+        "c)  0 - 045°"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "78.  Úhel snosu se značí",
+      "answers": [
+        "a)  L + / P -",
+        "b)  L - / P +"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "79.  Z hlediska srovnávací orientace je barevně nejkontrastnější",
+      "answers": [
+        "a)  jaro",
+        "b)  léto",
+        "c)  podzim"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "80.  Při provádění srovnávací orientace během letu orientujete mapu",
+      "answers": [
+        "a)  tak, aby se daly dobře číst nápisy na mapě",
+        "b)  podle význačných orientačních bodů",
+        "c)  tak, aby směr letu přenesený do mapy byl rovnoběžný s podélnou osou letadla"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "81.  Během letu orientujete mapu",
+      "answers": [
+        "a)  podle význačných orientačních bodů",
+        "b)  podle terénu",
+        "c)  podle údajů kompasu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "82.  Ke ztrátě orientace za letu může dojít především",
+      "answers": [
+        "a)  není-li mapa správně orientovaná podle světových stran",
+        "b)  je-li kouřmo",
+        "c)  nejsou-li stranou od letadla vidět dobře orientační body"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "83.  Při provádění srovnávací orientace je vždy spolehlivější",
+      "answers": [
+        "a)  pozorně prohlížet terén pod letadlem",
+        "b)  soustředit pozornost na význačný orientační bod",
+        "c)  vyhledat a určit několik orientačních bodů"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "84.  Při srovnávání mapy s terénem je nejdůležitější",
+      "answers": [
+        "a)  přesné hodinky",
+        "b)  pozorně prohlížet terén pod letounem",
+        "c)  zběhlost ve čtení map"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "85.  Hlavními navigačními přístroji jsou",
+      "answers": [
+        "a)  variometr, rychloměr, sklonoměr",
+        "b)  rychloměr, kompas, hodiny",
+        "c)  výškoměr, kompas, variometr"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "86. Kritický bod je",
+      "answers": [
+        "a)  místo na trati plánované, ze kterého je stejná časová vzdálenost do místa startu i do místa přistání",
+        "b)  místo na trati kam až letadlo může doletět, aby se za současného stavu paliva mohlo vrátit na výchozí letiště"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "87.  Provádíte-li zatáčku na sever podle magnetického kompasu, zatáčku",
+      "answers": [
+        "a)  přetočíte",
+        "b)  nedotočíte",
+        "c)  zastavíte přesně na zamýšleném kursu"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "88.  Provádíte-li zatáčku na jih podle magnetického kompasu, zatáčku",
+      "answers": [
+        "a)  přetočíte",
+        "b)  nedotočíte",
+        "c)  zastavíte přesně na zamýšleném kursu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "89.  Provádíte-li zatáčku na západ podle magnetického kompasu, zatáčku",
+      "answers": [
+        "a)  přetočíte",
+        "b)  nedotočíte",
+        "c)  zastavíte přesně na zamýšleném kursu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "90.  Provádíte-li zatáčku na východ podle magnetického kompasu, zatáčku",
+      "answers": [
+        "a)  přetočíte",
+        "b)  nedotočíte",
+        "c)  zastavíte přesně na zamýšleném kursu"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "91.  Letíte-li směrem na východ a přidáte plyn, magnetický kompas",
+      "answers": [
+        "a)  bude ukazovat zatáčku na jih",
+        "b)  bude ukazovat zatáčku na sever",
+        "c)  bude ukazovat stále stejný kurs"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "92.  Letíte-li směrem na západ a přidáte plyn, magnetický kompas",
+      "answers": [
+        "a)  bude ukazovat zatáčku na jih",
+        "b)  bude ukazovat zatáčku na sever",
+        "c)  bude ukazovat stále stejný kurs"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "93.  Letíte-li směrem na východ a stáhnete plyn, magnetický kompas",
+      "answers": [
+        "a)  bude ukazovat zatáčku na jih",
+        "b)  bude ukazovat zatáčku na sever",
+        "c)  bude ukazovat stále stejný směr"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "94.  Letíte-li směrem na západ a stáhnete plyn, magnetický kompas",
+      "answers": [
+        "a)  bude ukazovat zatáčku na jih",
+        "b)  bude ukazovat zatáčku na sever",
+        "c)  bude ukazovat stále stejný směr"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "95.  Magnetický kompas ukazuje přesně kurs, pokud letíte",
+      "answers": [
+        "a)  na sever nebo na jih",
+        "b)  na východ nebo na západ",
+        "c)  bez změny výšky a změny rychlosti"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "96.  Letíte po trati kursem magnetickým 075°, US = L 10°. Pokud se musíte vrátit, otočíte na",
+      "answers": [
+        "a)  Km = 255°",
+        "b)  Km = 235°",
+        "c)  Km = 245°"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "97.  Letíte po trati kursem magnetickým 310°, US = P 5°. Pokud se musíte vrátit, otočíte na",
+      "answers": [
+        "a)  Km = 140°",
+        "b)  Km = 130°",
+        "c)  Km = 120°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "98.  Plná čára označená šipkou ve směru letu při grafickém řešení vektorového trojúhelníku znamená",
+      "answers": [
+        "a)  vektor síly větru a směr větru",
+        "b)  vektor PVR a Kz",
+        "c)  vektor TR a trať"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "99.  Plná čára značená dvěma šipkami ve směru letu při grafickém řešení vektorového trojúhelníku znamená",
+      "answers": [
+        "a)  vektor síly větru a směr větru",
+        "b)  vektor PVR a Kz",
+        "c)  vektor TR a trať"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "100.  Plná čára se třemi šipkami při grafickém řešení vektorového trojúhelníku znamená",
+      "answers": [
+        "a)  vektor síly větru a směr větru",
+        "b)  vektor PVR a Kz",
+        "c)  vektor TR a trať"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "101.  Při grafickém řešení vektorového trojúhelníku značíme vektor směru a síly větru",
+      "answers": [
+        "a)  jednou šipkou",
+        "b)  dvěma šipkami",
+        "c)  třemi šipkami"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "102.  Při grafickém řešení vektorového trojúhelníku značíme vektor PVR a Kz",
+      "answers": [
+        "a)  jednou šipkou",
+        "b)  dvěma šipkami",
+        "c)  třemi šipkami"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "103.  Při grafickém řešení vektorového trojúhelníku značíme vektor TR a trať",
+      "answers": [
+        "a)  jednou šipkou",
+        "b)  dvěma šipkami",
+        "c)  třemi šipkami"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "104.  Mění se čas na nultém poledníku i při přechodu na letní čas v ČR?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "105.  Doba východu a západu slunce se mění",
+      "answers": [
+        "a)  s roční dobou",
+        "b)  působením magnetického pole zeměkoule",
+        "c)  intensitou slunečního záření"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "106.  Občanské svítání a občanský soumrak začíná, když je slunce pod horizontem",
+      "answers": [
+        "a)  6°",
+        "b)  3°",
+        "c)  8°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "107.  Zeměkoule je rozdělena na",
+      "answers": [
+        "a)  24 časových pásem",
+        "b)  12 časových pásem na východ a 12 na západ",
+        "c)  každý stupeň má své časové pásmo"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "108.  Středovým poledníkem nultého pásma je",
+      "answers": [
+        "a)  UTC",
+        "b)  poledník, procházející hvězdárnou v Greenwich v Anglii",
+        "c)  poledník, procházející městem Oxford v Anglii"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "109.  Okrajovými poledníky časových pásem jsou",
+      "answers": [
+        "a)  22° 30´ na každou stranu od středového poledníku pásma",
+        "b)  15° na každou stranu od středového poledníku pásma",
+        "c)  7° 30´ na každou stranu od středového poledníku pásma"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "110.  Středovými poledníky časových pásem na východ a na západ od nultého poledníku jsou",
+      "answers": [
+        "a)  15°, 30°, 45°, 60° atd.",
+        "b)  7° 30´, 15°, 22° 30´,  30° atd.",
+        "c)  5°, 10°, 15°, 20° atd."
+      ],
+      "correct": 0
+    },
+    {
+      "question": "111.  Časová změna jednoho časového pásma je",
+      "answers": [
+        "a)  30 minut",
+        "b)  1 hodina",
+        "c)  2 hodiny"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "112.  Změn polohy slunce na obloze za jednu hodinu je",
+      "answers": [
+        "a)  5 stupňů zeměpisné délky",
+        "b)  15 stupňů zeměpisné délky",
+        "c)  20 stupňů zeměpisné délky"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "113.  Změna polohy slunce na obloze o 15 stupňů časově představuje",
+      "answers": [
+        "a)  30 min",
+        "b)  90 min",
+        "c)  60 min"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "114.  1 stupeň zeměpisné délky představuje časově",
+      "answers": [
+        "a)  1 min",
+        "b)  4 min",
+        "c)  6 min"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "115.  Zkratka UTC používaná v civilním letectví pro čas je",
+      "answers": [
+        "a)  čas odvozený od LMT",
+        "b)  čas jarní rovnodennosti",
+        "c)  atomový čas koordinovaný k času astronomickému"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "116.  Časový rozdíl mezi středovými poledníky časových pásem a okrajovými poledníky časových pásem je",
+      "answers": [
+        "a)  60 min",
+        "b)  90 min",
+        "c)  30 min"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "117.  Je čas měřený na poledníku v Greenwich současně místním  i pásmovým časem?",
+      "answers": [
+        "a)  ne",
+        "b)  ano"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "118.  Překonáme-li datumovou čáru směrem na západ",
+      "answers": [
+        "a)  připočteme kalendářní den",
+        "b)  odečteme kalendářní den"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "119.  Rozdíl mezi UTC a letním časem v ČR je",
+      "answers": [
+        "a)  1 hodina",
+        "b)  není žádný",
+        "c)  2 hodiny"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "120.  Rozdíl mezi UTC a zimním časem v ČR je",
+      "answers": [
+        "a)  2 hodiny",
+        "b)  1 hodina",
+        "c)  není žádný"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "121.  Podle tabulky jste zjistil, že východ slunce na 15°E bude v 06° 24´. Chcete-li zahájit let s východem slunce z letiště ležícím na 17° 30´E, můžete tento let zahájit nejdříve v",
+      "answers": [
+        "a)  06° 24´",
+        "b)  06° 14´",
+        "c)  06° 34´"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "122.  Podle tabulky jste zjistil, že východ slunce na 15°E bude v 05° 24´. Chcete-li zahájit let s východem slunce z letiště ležícím na 19° 30´E, můžete tento let zahájit nejdříve v ZT",
+      "answers": [
+        "a)  05° 06´",
+        "b)  05° 14´",
+        "c)  05° 34´"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "123.  Podle tabulky jste zjistil, že západ slunce na 15°E bude v 19° 35´. Letíte na letiště ležící na 07° 30´E. Musíte přistát v ZT do",
+      "answers": [
+        "a)  19° 35´",
+        "b)  19° 05´",
+        "c)  20° 05´"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "124.  Podle tabulky jste zjistil, že západ slunce na 15°E bude ve 20° 05´. Letíte na letiště ležící na 05°E. Musíte přistát v ZT do",
+      "answers": [
+        "a)  20° 45´",
+        "b)  19° 25´",
+        "c)  20° 05´"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "125.  Zeměpisnou délku 45° 30´můžete vyjádřit v časových jednotkách jako",
+      "answers": [
+        "a)  4 hodiny 10 minut",
+        "b)  3 hodiny 2 minuty",
+        "c)  2 hodiny 1 minuta"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "126.  Čas 2 hodiny 2 minuty můžete vyjádřit zeměpisnou délkou",
+      "answers": [
+        "a)  30° 30´",
+        "b)  15° 10´",
+        "c)  45° 10´"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "127.  Zobrazit zemský povrch v rovině je",
+      "answers": [
+        "a)  možné bez zkreslení",
+        "b)  není možné bez zkreslení"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "128.  V civilním letectví se používají mapy se zobrazením",
+      "answers": [
+        "a)  geodetickým",
+        "b)  obecným",
+        "c)  jednoduchým"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "129.  Měřítko mapy se obvykle uvádí v číselné i grafické formě, někdy i slovně",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "130.  Vrstevnice (izohypsy) jsou uzavřené prostorové křivky spojující místa o stejné",
+      "answers": [
+        "a)  nadmořské výšce",
+        "b)  záporné výšce, tzv. hloubnice",
+        "c)  deklinaci"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "131.  Letecká mapa ICAO 1 : 500 000 je věrohodná",
+      "answers": [
+        "a)  v tratích a plochách",
+        "b)  v úhlech, tratích a plochách",
+        "c)  v úhlech"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "132.  Letecká mapa ICAO 1 : 500 000 se používá pro navigační lety, protože je věrohodná",
+      "answers": [
+        "a)  v plochách",
+        "b)  v tratích a úhlech",
+        "c)  v plochách, tratích a úhlech"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "133.  Skutečný, zcela holý, povrch země se soušemi, nerovnostmi a hladinami moří se nazývá",
+      "answers": [
+        "a)  projekce mapy",
+        "b)  topografická plocha",
+        "c)  topografická situace"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "134.  Pravé projekce map",
+      "answers": [
+        "a)  používají úhlů 90°",
+        "b)  jsou matematické",
+        "c)  jsou geometrické"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "135.  Letecké navigaci vyhovují nejlépe mapy, které",
+      "answers": [
+        "a)  jsou v měřítku 1 : 500 000",
+        "b)  mají přesné úhly",
+        "c)  věrně zobrazují topografickou situaci a úhly"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "136.  Které z uvedených měřítek je největší",
+      "answers": [
+        "a)  1 : 1 000 000",
+        "b)  1 : 100 000",
+        "c)  1 : 500 000"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "137.  Mapa 1 : 500 000 patří mezi měřítka",
+      "answers": [
+        "a)  malá",
+        "b)  velká",
+        "c)  střední"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "138.  Vrstevnice jsou křivky spojující místa o stejné",
+      "answers": [
+        "a)  deviaci",
+        "b)  deklinaci",
+        "c)  nadmořské výšce"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "139.  Terénní útvary jako jsou lesy, louky, jezera, hrady, silnice, železnice atd, nazýváme",
+      "answers": [
+        "a)  projekcí mapy",
+        "b)  topografickou plochou",
+        "c)  topografickou situací"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "140.  10 cm na mapě 1 : 200 000 odpovídá ve skutečnosti",
+      "answers": [
+        "a)  50 km",
+        "b)  20 km",
+        "c)  200 km"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "141.  12 cm na mapě 1 : 250 000 odpovídá ve skutečnosti",
+      "answers": [
+        "a)  25 km",
+        "b)  30 km",
+        "c)  50 km"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "142.  9cm na mapě 1 : 500 000 odpovídá ve skutečnosti",
+      "answers": [
+        "a)  45 km",
+        "b)  50 km",
+        "c)  60 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "143.  6 cm na mapě 1 : 100 000 odpovídá ve skutečnosti",
+      "answers": [
+        "a)  30 km",
+        "b)  60 km",
+        "c)  90 km"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "144.  Směr východ odpovídá kursu",
+      "answers": [
+        "a)  270°",
+        "b)  180°",
+        "c)  090°"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "145.  Směr západ odpovídá kursu",
+      "answers": [
+        "a)  270°",
+        "b)  180°",
+        "c)  090°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "146.  Směr sever odpovídá kursu",
+      "answers": [
+        "a)  180°",
+        "b)  360°",
+        "c)  090°"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "147.  Kurs 045° je směrem na",
+      "answers": [
+        "a)  severozápad",
+        "b)  jihovýchod",
+        "c)  severovýchod"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "148.  Kurs 175° je zhruba směrem na",
+      "answers": [
+        "a)  sever",
+        "b)  jihozápad",
+        "c)  jih"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "149.  Kurs 320° je zhruba směrem na",
+      "answers": [
+        "a)  sever",
+        "b)  severovýchod",
+        "c)  severozápad"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "150.  Zobrazit zemský povrch v rovině je",
+      "answers": [
+        "a)  možné bez zkreslení",
+        "b)  není možné bez zkreslení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "151.  Zmenšený rovinný obraz kolmého průmětu malého území ve kterém se neprojevuje zkreslení se nazývá",
+      "answers": [
+        "a)  mapa",
+        "b)  plán"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "152.  Zobrazení většího území do roviny řešené pomocí matematických vztahů se nazývá",
+      "answers": [
+        "a)  mapa",
+        "b)  plán"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "153.  Definice mapy: Mapa je zmenšené zevšeobecněné a vysvětlené znázornění objektů a jevů na zemi, sestrojené v rovině pomocí matematicky definovaných vztahů",
+      "answers": [
+        "a)  ne",
+        "b)  ano"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "154.  Mezi mapy řadíme globy, pohledové mapy, reliefní mapy, modely reliefu",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "155.  Mapám příbuzná znázornění jsou globy, pohledové mapy, reliefní mapy, modely reliefu",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "156. Zmenšení mapy udáváme vztahem",
+      "answers": [
+        "a)  d : D",
+        "b)  V : G",
+        "c)  1 : m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "157.  Měřítko ve tvaru 1: m nám udává",
+      "answers": [
+        "a)  poměr ploch",
+        "b)  poměr délek"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "158.  Měřítko ve tvaru 1 : m2 nám udává",
+      "answers": [
+        "a)  poměr ploch",
+        "b)  poměr délek"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "159.  Mapa 1 : 200 000 je měřítkového čísla",
+      "answers": [
+        "a)  velkého",
+        "b)  středního",
+        "c)  malého"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "160.  Mapa 1 : 500 000 je měřítkového čísla",
+      "answers": [
+        "a)  velkého",
+        "b)  středního",
+        "c)  malého"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "161.  Mapa 1 : 1 000 000 je měřítkového čísla",
+      "answers": [
+        "a)  velkého",
+        "b)  středního",
+        "c)  malého"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "162.  Plochojevné zobrazení mapy",
+      "answers": [
+        "a)  nezkresluje úhly a dobře zachovává tvar",
+        "b)  nezkresluje plochy, zkresluje úhly a délky",
+        "c)  zkreslení úhlů a ploch je pokud možno v rovnováze"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "163.  Úhlojevné zobrazení mapy",
+      "answers": [
+        "a)  nezkresluje úhly na úkor zkreslení ploch a délek",
+        "b)  nezkresluje plochy, zkresluje úhly a délky",
+        "c)  zkreslení úhlů a ploch je pokud možno v rovnováze"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "164.  Jednotlivá kartografická zobrazení mají vlastní názvy",
+      "answers": [
+        "a)  podle způsobu zobrazení",
+        "b)  podle vlastností z hlediska zkreslení",
+        "c)  podle osob, jimž je přisuzováno autorství"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "165.  Jednoduchá zobrazení map vznikají",
+      "answers": [
+        "a)  výpočtem vyrovnávacího zobrazení",
+        "b)  jako geometrický průměr plochojevného zobrazení",
+        "c)  převodem globu do roviny prostřednictvím geometricky definované jednoduché plochy"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "166.  Zobrazení map rozdělujeme na",
+      "answers": [
+        "a)  jednoduché, obecné a geodetické",
+        "b)  konformní, mnohoválcové a pravé",
+        "c)  azimutální, úhlojevné a plochojevné"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "167.  V civilním letectví se používají mapy se zobrazením",
+      "answers": [
+        "a)  geodetickým",
+        "b)  obecným",
+        "c)  jednoduchým"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "168.  Jednoduchá (pravá) zobrazení mapy jsou azimutální, válcová a kuželová zobrazení",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "169.  Kartografická generalizace je zevšeobecnění objektů znázorněných na mapě úměrně k jejich významu, charakteru území, měřítku a účelu mapy",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "170.  Kartografické znaky (jazyk mapy) vyjadřují",
+      "answers": [
+        "a)  měřítko mapy",
+        "b)  mapové značky",
+        "c)  souřadnicovou síť"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "171.  Izolinie jsou čáry spojující sousední body",
+      "answers": [
+        "a)  např. zeměpisné šířky a délky",
+        "b)  např. čáry souřadnicových sítí",
+        "c)  o stejném tlaku vzduchu, magnetické deklinace atd."
+      ],
+      "correct": 0
+    },
+    {
+      "question": "172.  Měřítko mapy se obvykle uvádí v číselné i grafické formě, někdy i slovně",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "173.  Vrstevnice (izohypsy) jsou uzavřené prostorové křivky spojující místa a stejné",
+      "answers": [
+        "a)  nadmořské výšce",
+        "b)  záporné výšce, tzv. hloubnice",
+        "c)  deklinaci"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "174.  Vrstevnice (izobaty) jsou uzavřené prostorové křivky spojující místa o stejné",
+      "answers": [
+        "a)  nadmořské výšce",
+        "b)  záporné výšce, tzv. hloubnice",
+        "c)  deklinaci"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "175.  Termín hypsometrie se používá pro",
+      "answers": [
+        "a)  výškopis zemského povrchu zakrytého vodou",
+        "b)  výškopis souše",
+        "c)  meridiánovou konvergenci"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "176.  Termín batymetrie se používá pro",
+      "answers": [
+        "a)  výškopis zemského povrchu zakrytého vodou",
+        "b)  výškopis souše",
+        "c)  meridiánovou konvergenci"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "177.  Letecká mapa ICAO 1 : 500 000 je věrohodná",
+      "answers": [
+        "a)  v tratích a plochách",
+        "b)  v úhlech, tratích a plochách",
+        "c)  v úhlech"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "178.  Základem pro leteckou mapu ICAO 1 : 500 000 je projekce",
+      "answers": [
+        "a)  válcová",
+        "b)  Mercatorova",
+        "c)  Lambertova"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "179.  5 cm na mapě 1 : 200 000 odpovídá ve skutečnosti",
+      "answers": [
+        "a)  5 km",
+        "b)  10 km",
+        "c)  12 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "180.  15 cm na mapě 1 : 500 000 odpovídá ve skutečnosti",
+      "answers": [
+        "a)  45 km",
+        "b)  15 km",
+        "c)  75 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "181.  20 cm na mapě 1 : 1 500 000 odpovídá ve skutečnosti",
+      "answers": [
+        "a)  50 km",
+        "b)  100 km",
+        "c)  300 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "182.  Kurs jih znamená, že letadlo letí kursem",
+      "answers": [
+        "a)  180°",
+        "b)  270°",
+        "c)  090°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "183.  Kurs sever znamená, že letadlo letí kursem",
+      "answers": [
+        "a)  180°",
+        "b)  090°",
+        "c)  360°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "184.  Kurs západ znamená, že letadlo letí kursem",
+      "answers": [
+        "a)  180°",
+        "b)  270°",
+        "c)  360°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "185.  Kurs východ znamená, že letadlo letí kursem",
+      "answers": [
+        "a)  180°",
+        "b)  270°",
+        "c)  090°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "186.  Minimální sektorové výšky jsou uvedeny na",
+      "answers": [
+        "a)  traťové mapě",
+        "b)  letištní mapě",
+        "c)  přístrojové přibližovací mapě"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "187.  Minimální pásmové výšky jsou uvedeny na",
+      "answers": [
+        "a)  traťové mapě",
+        "b)  přístrojové přibližovací mapě",
+        "c)  mapě příletových a odletových tratí"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "188.  Minimální sektorové výšky jsou určeny jen pro stav nouze",
+      "answers": [
+        "a)  ne",
+        "b)  ano"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "189.  Konvergence je úhel mezi",
+      "answers": [
+        "a)  rovníkem a nultým poledníkem",
+        "b)  dvěma poledníky",
+        "c)  poledníkem a pólem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "190.  Konverzní úhel je úhel",
+      "answers": [
+        "a)  mezi dvěma poledníky",
+        "b)  mezi rovníkem a místním poledníkem",
+        "c)  který svírá ortodroma a loxodroma v bodech, které jsou na zeměkouli spojeny oběma čarami"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "191.  Konverzní úhel vypočteme pomocí vzorce",
+      "answers": [
+        "a)  (?1 - ?2) * sin ?",
+        "b)  (sin ?1 - sin ?2) * ?",
+        "c)  (?1 - ?2)/2 * sin ?"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "192.  V ČR podle AIP GEN 1-2-1 se používají jednotky pro vzdálenosti",
+      "answers": [
+        "a)  metry",
+        "b)  námořní míle/kilometry",
+        "c)  pouze kilometry"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "193.  V ČR podle AIP GEN 1-2-1 se používají jednotky pro výšky",
+      "answers": [
+        "a)  metry",
+        "b)  centimetry a metry",
+        "c)  stopy a metry"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "194.  V ČR podle AIP GEN 1-2-1 se používají jednotky udávající směr a sílu větru pro vzlet a přistání",
+      "answers": [
+        "a)  magnetické stupně, m/sec a uzly",
+        "b)  zeměpisné stupně a m/sec",
+        "c)  zeměpisné stupně a km/hod"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "195.  V ČR podle AIP GEN 1-2-1 se používají jednotky udávající viditelnost",
+      "answers": [
+        "a)  km a metry",
+        "b)  námořní míle a metry",
+        "c)  námořní míle a km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "196.  Údaje pro nastavení výškoměru se udávají",
+      "answers": [
+        "a)  v milimetrech",
+        "b)  v hektopascalech",
+        "c)  ve stopách"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "197.  Horizontální rychlost se udává",
+      "answers": [
+        "a)  ve stopách",
+        "b)  v uzlech",
+        "c)  v km/hod, v m/sec a v uzlech"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "198.  Čas se udává",
+      "answers": [
+        "a)  ve stupních",
+        "b)  v hodinách, minutách a sekundách s tím, že minuta začíná 1.sec a končí 60.sec",
+        "c)  v hodinách, minutách a sekundách s tím, že minuta začíná ve 30.sec předchozí minuty a končí ve 30.sec následující minuty"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "199.  Význam zkratky TP je",
+      "answers": [
+        "a)  telefon",
+        "b)  pravá vzdušná rychlost",
+        "c)  bod zahájení točení v postupu přiblížení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "200.  Význam zkratky MAPt je",
+      "answers": [
+        "a)  bod v zahájení postupu nezdařeného přiblížení",
+        "b)  mikrovlnný přistávací systém",
+        "c)  střední polohové návěstidlo"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "201.  Význam zkratky FAF je",
+      "answers": [
+        "a)  letová informační oblast",
+        "b)  podaný letový plán",
+        "c)  navigační fix posledního přiblížení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "202.  Význam zkratky ELEV je",
+      "answers": [
+        "a)  měřič vzdálenosti",
+        "b)  letová hladina",
+        "c)  výška na povrch země, měřená od hladiny moře"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "203.  Význam zkratky OCA je",
+      "answers": [
+        "a)  bezpečná výška nad překážkami",
+        "b)  bezpečná nadmořská výška nad překážkami",
+        "c)  bezpečná výška pro nezdařené přiblížení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "204.  Význam zkratky OCH je",
+      "answers": [
+        "a)  bezpečná výška pro nezdařené přiblížení",
+        "b)  bezpečná výška nad překážkami",
+        "c)  střední polohové návěstidlo"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "205.  Význam zkratky IAF je",
+      "answers": [
+        "a)  navigační fix pro zahájení počátečního přiblížení",
+        "b)  navigační fix konečného přiblížení",
+        "c)  indikovaná vzdušná rychlost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "206.  Význam zkratky THR je",
+      "answers": [
+        "a)  práh dráhy",
+        "b)  koncová  řízená oblast",
+        "c)  letištní předpověď"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "207.  Význam zkratky RHD je",
+      "answers": [
+        "a)  referenční výška ILS",
+        "b)  prostorová navigace",
+        "c)  stálý letový plán"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "208.  Význam zkratky AMD je",
+      "answers": [
+        "a)  minimální pásmová výška",
+        "b)  opravte",
+        "c)  minimální výška klesání"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "209.  Význam zkratky IAC je",
+      "answers": [
+        "a)  světla vysoké svítivosti",
+        "b)  navigační fix",
+        "c)  přístrojová přibližovací mapa"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "210.  Význam zkratky MDA je",
+      "answers": [
+        "a)  minimální výška pro klesání na QNH",
+        "b)  minimální výška pro klesání na QFE",
+        "c)  střední polohové návěstidlo"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "211.  Význam zkratky MDH je",
+      "answers": [
+        "a)  střední polohové návěstidlo",
+        "b)  minimální výška pro klesání na QNH",
+        "c)  minimální výška pro klesání na QFE"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "212.  Význam zkratky MIALS je",
+      "answers": [
+        "a)  minimální výška nad překážkami",
+        "b)  systém přibližovacích světel střední intenzity",
+        "c)  minimální výška pro klesání"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "213.  Význam zkratky MIRL je",
+      "answers": [
+        "a)  prahová světla střední intenzity",
+        "b)  střední poloha moře",
+        "c)  střední polohové návěstidlo"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "214.  Význam zkratky PAPI je",
+      "answers": [
+        "a)  přesný přibližovací radar",
+        "b)  radarový indikátor",
+        "c)  přesný ukazatel přibližovací cesty"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "215.  V7znam zkratky RVR je",
+      "answers": [
+        "a)  celková dohlednost",
+        "b)  dráhová dohlednost",
+        "c)  šikmá dohlednost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "216.  Význam zkratky VIS je",
+      "answers": [
+        "a)  vysoká svítivost",
+        "b)  vnitřní polohové návěstidlo",
+        "c)  dohlednost"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "217.  Význam zkratky MAP je",
+      "answers": [
+        "a)  bod nezdařeného přiblížení",
+        "b)  minimální výška nad překážkami",
+        "c)  střední hladina moře"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "218.  Význam zkratky MAA je",
+      "answers": [
+        "a)  maximální povolená nadmořská výška",
+        "b)  maximální povolená letová hladina",
+        "c)  minimální bezpečná nadmořská výška"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "219.  Význam zkratky CL je",
+      "answers": [
+        "a)  dráhová středová světla",
+        "b)  předpolí",
+        "c)  stupně Celsia"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "220.  Význam zkratky CWY je",
+      "answers": [
+        "a)  povoleno",
+        "b)  předpolí",
+        "c)  celní služba"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "221.  Význam zkratky MSL je",
+      "answers": [
+        "a)  střední hladina moře",
+        "b)  minimální výška pro klesání",
+        "c)  střední polohové návěstidlo"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "222.  Význam zkratky VIP je",
+      "answers": [
+        "a)  dohlednost",
+        "b)  vertikální rychlost",
+        "c)  velmi důležitá osoba"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "223.  Význam zkratky RNAV je",
+      "answers": [
+        "a)  traťový přehledový radiolokátor",
+        "b)  prostorová navigace",
+        "c)  otočný bod na trati"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "224.  Význam zkratky SLP je",
+      "answers": [
+        "a)  bod počátku omezování rychlosti",
+        "b)  standardní přístrojový odlet",
+        "c)  pátrání a záchrana"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "225.  CAT",
+      "answers": [
+        "a)  kategorie",
+        "b)  středová čára",
+        "c)  volání"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "226.  MAP",
+      "answers": [
+        "a)  udržovat",
+        "b)  střední hladina moře",
+        "c)  letecké mapy"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "227.  ARP",
+      "answers": [
+        "a)  přiblížení",
+        "b)  vztažný bod letiště",
+        "c)  skutečný čas odletu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "228.  ELEV",
+      "answers": [
+        "a)  výška bodu na povrchu země měřená od střední hladiny moře",
+        "b)  kromě",
+        "c)  vysílání"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "229.  D",
+      "answers": [
+        "a)  dvoupólový duplex",
+        "b)  odchylka",
+        "c)  nebezpečný prostor"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "230.  ASC",
+      "answers": [
+        "a)  klesejte, klesání",
+        "b)  přiblížení",
+        "c)  stoupejte do, stoupám do"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "231.  HPA",
+      "answers": [
+        "a)  hektopascal",
+        "b)  těžký",
+        "c)  výstražný maják"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "232.  TODA",
+      "answers": [
+        "a)  použitelná délka pro vzlet",
+        "b)  použitelná délka pro rozjezd",
+        "c)  dojezdová světelná soustava"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "233.  TORA",
+      "answers": [
+        "a)  použitelná délka pro vzlet",
+        "b)  použitelná délka pro rozjezd",
+        "c)  dojezdová světelná soustava"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "234.  PAPI",
+      "answers": [
+        "a)  radarový indikátor pro přehledové zobrazení",
+        "b)  klasifikační číslo povrchu",
+        "c)  systém indikace sestupové přibližovací roviny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "235.  VASIS",
+      "answers": [
+        "a)  dohlednost",
+        "b)  světelná sestupová soustava",
+        "c)  v údolí"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "236.  WX",
+      "answers": [
+        "a)  počasí",
+        "b)  nabývá účinnosti od...",
+        "c)  provádí se práce"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "237.  IAF",
+      "answers": [
+        "a)  vnitřní polohové návěstidlo",
+        "b)  inerční navigační systém",
+        "c)  navigační fix pro zahájení počátečního přiblížení"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "238.  SLP",
+      "answers": [
+        "a)  bod počátku omezování rychlosti",
+        "b)  jasno",
+        "c)  povrch nebo plocha"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "239.  RCA",
+      "answers": [
+        "a)  pravidla létání a letové provozní služby",
+        "b)  dosáhněte cestovní výšky",
+        "c)  neupravený, hrbolatý"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "240.  RCL",
+      "answers": [
+        "a)  osová značka vzletové a přistávací dráhy",
+        "b)  dosáhněte cestovní výšky",
+        "c)  déšť"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "241.  RDH",
+      "answers": [
+        "a)  dosáhněte cestovní výšky",
+        "b)  referenční výška ILS",
+        "c)  povrch nebo plocha"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "242.  REDL",
+      "answers": [
+        "a)  postranní dráhové řady",
+        "b)  po dešti",
+        "c)  povrch nebo plocha"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "243.  SFC",
+      "answers": [
+        "a)  význačné značky",
+        "b)  povrch nebo plocha",
+        "c)  jasno"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "244.  SIWL",
+      "answers": [
+        "a)  význačné počasí",
+        "b)  doplněk letového plánu",
+        "c)  zatížení jednoduchým osamělým kolem"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "245.  SPL",
+      "answers": [
+        "a)  bod počátku omezování rychlosti",
+        "b)  doplněk letového plánu",
+        "c)  význačné značky"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "246.  SSB",
+      "answers": [
+        "a)  vysílání s jedním postranním pásmem",
+        "b)  pomalý, pomalu",
+        "c)  pátrání a záchrana"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "247.  STWL",
+      "answers": [
+        "a)  bod počátku omezování rychlosti",
+        "b)  dojezdová světelná soustava",
+        "c)  doplněk letového plánu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "248.  ASDA",
+      "answers": [
+        "a)  použitelná délka pro přerušený vzlet",
+        "b)  použitelná délka pro vzlet",
+        "c)  dojezdová světelná soustava"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "249.  PCN",
+      "answers": [
+        "a)  současná hladina",
+        "b)  výkon",
+        "c)  klasifikační číslo povrchu"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "250.  PAX",
+      "answers": [
+        "a)  výkon",
+        "b)  cestující",
+        "c)  plus, kladný"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "251.  CWY",
+      "answers": [
+        "a)  předpolí",
+        "b)  zápolí",
+        "c)  červený"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "252.  RNAV",
+      "answers": [
+        "a)  normální",
+        "b)  navigace",
+        "c)  prostorová navigace"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "253.  Řešíte úlohu: Vp = 100 km/h, výška letu 1600 m, t = +15° C",
+      "answers": [
+        "a)  PVR = 110 km/h",
+        "b)  PVR = 100 km/h",
+        "c)  PVR = 90 km/h"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "254.  Řešíte úlohu: Vp = 120 km/h, výška letu 2000m, t = -10°C",
+      "answers": [
+        "a)  PVR = 120 km/h",
+        "b)  PVR = 130 km/h",
+        "c)  PVR = 140 km/h"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "255.  Řešíte úlohu: Vp = 180 km/h, výška letu 1800m,  t = 0°C",
+      "answers": [
+        "a)  PVR = 170 km/h",
+        "b)  PVR = 180 km/h",
+        "c)  PVR = 195 km/h"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "256.  Řešíte úlohu: Km = 015°, PVR = 110 km/h, V/v = 050°/25 km/h",
+      "answers": [
+        "a)  TR = 92 km/h, US = 10°L",
+        "b)  TR = 110 km/h, US = 5°L",
+        "c)  TR = 85 km/h, US = 10°P"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "257.  Řešíte úlohu: Km = 225°, PVR = 120 km/h, V/v = 090°/20 km/h",
+      "answers": [
+        "a)  TR = 125 km/h, US = 2°P",
+        "b)  TR = 135 km/h, US = 7°P",
+        "c)  TR = 110 km/h, US = 7°L"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "258.  Řešíte úlohu: Km = 312°, PVR = 100 km/h, V/v = 135°/5 m/sec",
+      "answers": [
+        "a)  TR = 100 km/h, US = 2°L",
+        "b)  TR = 118 km/h, US = 1°P",
+        "c)  TR = 130 km/h, US = 3°L"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "259.  Řešíte úlohu: TR = 120 km/h, T = 220 km",
+      "answers": [
+        "a)  doba letu 1°30´",
+        "b)  doba letu 1°50´",
+        "c)  doba letu 2°00´"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "260.  Řešíte úlohu: TR = 180 km/h, T= 120 km",
+      "answers": [
+        "a)  doba letu 30´",
+        "b)  doba letu 40´",
+        "c)  doba letu 50´"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "261.  Řešíte úlohu: TR = 90 km/h, T= 210 km",
+      "answers": [
+        "a)  doba letu 1°30´",
+        "b)  doba letu 2°10´",
+        "c)  doba letu 2°20´"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "262.  Průměrná spotřeba = 21 l/h, doba letu 2°10´",
+      "answers": [
+        "a)  spotřebujete 21 l",
+        "b)  spotřebujete 35 l",
+        "c)  spotřebujete 46 l"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "263.  Průměrná spotřeba = 45 l/h, doba letu 3°06´",
+      "answers": [
+        "a)  spotřebujete 130 l",
+        "b)  spotřebujete 135 l",
+        "c)  spotřebujete 140 l"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "264.  Průměrná spotřeba = 11 l/h, doba letu 1°30´",
+      "answers": [
+        "a)  spotřebujete 16,5 l",
+        "b)  spotřebujete 17,5 l",
+        "c)  spotřebujete 18,5 l"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "265.  Během letu zjistíte, že cílové letiště dosáhnete za 45 minut, zbytek LPH 20 l, průměrná spotřeba 30 l/h. Doletíte bez doplnění LPH na nejbližší letiště?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "266.  Během letu zjistíte, že Vám zbývá 15 l LPH při průměrné spotřebě 11 l/h. Toto množství LPH Vám vystačí na",
+      "answers": [
+        "a)  1°22´",
+        "b)  1°25´",
+        "c)  1°28"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "267.  Po startu zjistíte silnější vítr. Máte zásobu 35 l LPH při průměrné spotřebě 21 l/h. Cílového letiště dosáhnete za 1°30´. Doletíte bez doplnění LPH na nejbližší letiště?",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "268.  Matematický vzorec pro výpočet bodu posledního návratu je",
+      "answers": [
+        "a)  (TRzpět * LPH)/(TRz + TRv)",
+        "b)  (TRzpět * vzdálenost)/(TRz + TRv)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "269.  Matematický vzorec pro výpočet kritického bodu je",
+      "answers": [
+        "a)  (TRzpět * LHP)/(TRz + TRv)",
+        "b)  (TRzpět *  vzdálenost)/(TRz + TRv)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "270.  Správný výsledek výpočtu bodu posledního návratu při zadání TRv = 300 km/h, TRz = 220 km/h, LPH = 5 hod. letu je",
+      "answers": [
+        "a)  174 min",
+        "b)  127 min",
+        "c)  150 min"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "271.  Správný výsledek výpočtu bodu posledního návratu při zadání TRv = 180 km/h, TRz = 220 km/h, LPH = 5 hod. letu je",
+      "answers": [
+        "a)  150 min",
+        "b)  127 min",
+        "c)  165 min"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "272.  Správný výsledek výpočtu bodu posledního návratu při zadání TRv = 400 km/h, TRz = 200 km/h, LPH = 450 min letu je",
+      "answers": [
+        "a)  150 min",
+        "b)  220 min",
+        "c)  300 min"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "273.  Správný výsledek výpočtu bodu posledního návratu při zadání TRv = 240 KT, TRz = 210 KT, LPH = 6 hod. 30 min. letu je",
+      "answers": [
+        "a)  212 min",
+        "b)  182 min",
+        "c)  150 min"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "274.  Řešíte výpočet vzdálenosti kritického bodu při zadání TRv = 180 km/h, TRz = 220 km/h, vzdálenost plánované trati je 600 km. Vzdálenost kritického bodu odpovídá vzdálenosti",
+      "answers": [
+        "a)  330 km",
+        "b)  300 km",
+        "c)  270 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "275.  Řešíte výpočet vzdálenosti kritického bodu při zadání TRv = 880 km/h, TRz = 720 km/h, vzdálenost plánované trati je 1600 km. Vzdálenost kritického bodu odpovídá vzdálenosti",
+      "answers": [
+        "a)  880 km",
+        "b)  720 km",
+        "c)  800 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "276.  Poloměr zatáčky letadla závisí na rychlosti, náklonu a přitažlivosti zemské",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "277.  Poloměr zatáčky letadla závisí na náklonu, váze letadla a nadběhu zatáčky",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "278.  Poloměr zatáčky při TR = 300 km/h a náklonu 15° je",
+      "answers": [
+        "a)  2600 m",
+        "b)  1500 m",
+        "c)  3200 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "279.  Poloměr zatáčky při TR = 300 km/h a náklonu 22°30´ je",
+      "answers": [
+        "a)  1700 m",
+        "b)  1200 m",
+        "c)  2500 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "280.  Poloměr zatáčky při TR = 300 km/h a náklonu 25° je",
+      "answers": [
+        "a)  900 m",
+        "b)  1800 m",
+        "c)  1500 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "281.  Poloměr zatáčky při TR = 400 km/h a náklonu 15° je",
+      "answers": [
+        "a)  4700 m",
+        "b)  2500 m",
+        "c)  5600 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "282.  Poloměr zatáčky při TR = 400 km/h a náklonu 22°30´ je",
+      "answers": [
+        "a)  1800 m",
+        "b)  3000 m",
+        "c)  4200 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "283.  Poloměr zatáčky při TR = 400 km/h a náklonu 25° je",
+      "answers": [
+        "a)  1800 m",
+        "b)  3500 m",
+        "c)  2700 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "284.  Poloměr zatáčky při TR = 700 km/h a náklonu 15° je",
+      "answers": [
+        "a)  5 km",
+        "b)  11,6 km",
+        "c)  14,4 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "285.  Poloměr zatáčky při TR = 700 km/h a náklonu 22°30´ je",
+      "answers": [
+        "a)  9,3 km",
+        "b)  12,1 km",
+        "c)  15,4 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "286.  Poloměr zatáčky při TR = 800 km/h a náklonu 15° je",
+      "answers": [
+        "a)  9 km",
+        "b)  12 km",
+        "c)  18,8 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "287.  Poloměr zatáčky při TR = 800 km/h a náklonu 25° je",
+      "answers": [
+        "a)  9 km",
+        "b)  10,8 km",
+        "c)  14,2 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "288.  Předstih zatáčky závisí na poloměru zatáčky a na úhlu zatáčky",
+      "answers": [
+        "a)  ano",
+        "b)  ne"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "289.  Předstih zatáčky při TR = 900 km/h, náklonu 15° a úhlu zatáčky 90° je",
+      "answers": [
+        "a)  14,7 km",
+        "b)  23,8 km",
+        "c)  25,2 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "290.  Předstih zatáčky při TR = 800 km/h, náklonu 25° a úhlu zatáčky 90° je",
+      "answers": [
+        "a)  10,8 km",
+        "b)  7,2 km",
+        "c)  12,8 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "291.  Na RWY 24 vane vítr 170°/10 m/sec, podélná a boční složka větru je",
+      "answers": [
+        "a)  3,5 m a 9,3 m",
+        "b)  2,4 m a 8,6 m",
+        "c)  1,8 m a 10m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "292.  Na RWY 24 vane vítr 120°/8 m/sec, zadní a boční složka větru je",
+      "answers": [
+        "a)  2 m a 6 m",
+        "b)  1 m a 8 m",
+        "c)  4 m a 7 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "293.  Na RWY 31 vane vítr 130°/10 m/sec, zadní a boční složka větru je",
+      "answers": [
+        "a)  8 m a 2 m",
+        "b)  6 m a 4 m",
+        "c)  10 m a 0 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "294.  Na RWY 31 vane vítr 320°/18 m/sec, čelní a boční složka větru je",
+      "answers": [
+        "a)  6 m a 17 m",
+        "b)  4 m a 14 m",
+        "c)  2 m a 13,5 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "295.  Provádíte přiblížení ILS bez sestupové roviny. Máte k dispozici palubní výškoměr s údaji v metrech a pracující DME. Nadmořská výška prahu RWY je 350 m, předepsaný úhel sestupové roviny 3°. Jakou výšku na QNH máte mít 2 NM od prahu RWY?",
+      "answers": [
+        "a)  400 m",
+        "b)  542 m",
+        "c)  824 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "296.  Provádíte přiblížení ILS bez sestupové roviny. Máte k dispozici palubní výškoměr s údaji v metrech a pracující DME. Nadmořská výška prahu RWY je 200 m, předepsaný úhel sestupové roviny 3°. Jakou výšku na QNH máte mít 4 NM od prahu RWY?",
+      "answers": [
+        "a)  200 m",
+        "b)  584 m",
+        "c)  830 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "297.  Provádíte přiblížení ILS bez sestupové roviny. Máte k dispozici palubní výškoměr s údaji v metrech a pracující DME. Nadmořská výška prahu RWY je 700 m, předepsaný úhel sestupové roviny 2,5°. Jakou výšku na QNH máte mít 6 NM od prahu RWY?",
+      "answers": [
+        "a)  1180 m",
+        "b)  1352 m",
+        "c)  1580 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "298.  Provádíte přiblížení ILS bez sestupové roviny. Máte k dispozici palubní výškoměr s údaji v metrech a pracující DME. Předepsaný úhel sestupové roviny 3°. Jakou výšku na QFE máte mít 4 NM od prahu RWY?",
+      "answers": [
+        "a)  180 m",
+        "b)  600 m",
+        "c)  400 m"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "299.  Provádíte přiblížení ILS bez sestupové roviny. Máte k dispozici palubní výškoměr s údaji v FT a pracující DME. Nadmořská výška prahu RWY je 300 FT. Předepsaný úhel sestupové roviny 3°. Jakou výšku na QNH máte mít 2 NM od prahu RWY?",
+      "answers": [
+        "a)  940 FT",
+        "b)  1200 FT",
+        "c)  1500 FT"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "300. Provádíte přiblížení ILS bez sestupové roviny. Máte k dispozici palubní výškoměr s údaji ve FT a pracující DME. Nadmořská výška prahu RWY je 1000 FT. Předepsaný úhel sestupové roviny  3°. Jakou výšku na QNH máte mít 4 NM od prahu RWY?",
+      "answers": [
+        "a)  940 FT",
+        "b)  1200 FT",
+        "c)  2300 FT"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "301.  Provádíte přiblížení ILS bez sestupové roviny. Máte k dispozici palubní výškoměr s údaji ve FT a pracující DME. Nadmořská výška prahu RWY je 1200 FT. Předepsaný úhel sestupové roviny 2,5°. Jakou výšku na QNH máte mít 6 NM od prahu RWY?",
+      "answers": [
+        "a)  2800 FT",
+        "b)  1800 FT",
+        "c)  1200 FT"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "302. Provádíte přiblížení ILS bez sestupové roviny. Máte k dispozici palubní výškoměr s údaji ve FT a pracující DME. Předepsaný úhel sestupové roviny 3°. Jakou výšku na QFE máte mít 4 NM od prahu RWY?",
+      "answers": [
+        "a)  600 FT",
+        "b)  1300 FT",
+        "c)  1800 FT"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "303.  Kontrola výšky v metrech při přiblížení ILS bez sestupové roviny se provádí následujícím výpočtem:",
+      "answers": [
+        "a)  výška prahu RWY na QNH + (sestupová rovina ve stupních * 32 * vzdálenost od prahu RWY v NM)",
+        "b)  výška prahu RWY na QNH + (sestupová rovina ve stupních * 106 * vzdálensot od prahu RWY v NM)",
+        "c)  (výška prahu RWY na QNH + vzdálenost od prahu RWY) * sestupvoá rovina ve stupních"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "304.  Kontrola výšky ve FT při přiblížení ILS bez sestupové roviny se provádí následujícím výpočtem:",
+      "answers": [
+        "a)  (výška prahu RWY na QNH + vzdálenost od prahu RWY) * sestupová rovina ve stupních",
+        "b)  výška prahu RWY na QNH + (sestupová rovina ve stupních * 106 * vzdálenost od prahu RWY v NM)",
+        "c)  výška prahu RWY na QNH + (sestupová rovina ve stupních * 32 * vzdálenost od prahu RWY v NM)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "305.  Vaše poloha je jihozápadně od zařízení VOR a letíte kursem 030°. Na kterém radiálu se nacházíte?",
+      "answers": [
+        "a)  180° - 270°",
+        "b)  360° - 090°",
+        "c)  090° - 180°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "306.  Vaše poloha je jihovýchodně od zařízení VOR a letíte kursem 150°. Na kterém radiálu se nacházíte?",
+      "answers": [
+        "a)  360° - 090°",
+        "b)  090° - 180°",
+        "c)  270° - 360°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "307.  Vaše poloha je jihozápadně od zařízení VOR a letíte kursem 210°. Na kterém radiálu se nacházíte?",
+      "answers": [
+        "a)  180° - 270°",
+        "b)  270° - 360°",
+        "c)  360° - 090°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "308.  Vaše poloha je severovýchodně od zařízení VOR a letíte kursem 210°. Na kterém radiálu se nacházíte?",
+      "answers": [
+        "a)  180° - 270°",
+        "b)  270° - 360°",
+        "c)  360° - 090°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "309.  Vaše poloha je severozápadně od zařízení VOR a letíte kursem 160°. Na kterém radiálu se nacházíte?",
+      "answers": [
+        "a)  270° - 360°",
+        "b)  360° - 090°",
+        "c)  090° - 180°"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "310.  Letíte od zařízení VOR kursem 030°. Jste na radiálu 050° a Vaše poloha má být na radiálu 060°. Nacházíte se od trati",
+      "answers": [
+        "a)  vlevo",
+        "b)  vpravo",
+        "c)  jste na trati"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "311.  Letíte od zařízení VOR kursem 245°. Jste na radiálu 230° a Vaše poloha má být na radiálu 229°. Nacházíte se přibližně",
+      "answers": [
+        "a)  vlevo od trati",
+        "b)  vpravo od trati",
+        "c)  na trati"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "312. Letíte od zařízení VOR kursem 165° po radiálu 160°. Snos větru je",
+      "answers": [
+        "a)  pravý",
+        "b)  levý"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "313.  Letíte od zařízení VOR kursem 315° po radiálu 305°. Vítr Vás snáší",
+      "answers": [
+        "a)  doleva",
+        "b)  doprava"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "314.  Letíte na zařízení VOR kursem 150°. Máte být na radiálu 345° a jste na radiálu 350°. Vaše poloha je",
+      "answers": [
+        "a)  vlevo od trati",
+        "b)  na trati",
+        "c)  vpravo od trati"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "315.  Letíte na zařízení VOR kursem 320°. Jste na radiálu 135°a máte být na radiálu 150°. Vaše poloha je",
+      "answers": [
+        "a)  na trati",
+        "b)  vlevo od trati",
+        "c)  vpravo od trati"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "316.  Letíte na zařízení VOR kursem 235°. Jste na radiálu 025° a máte být na radiálu 015°. Vaše poloha je",
+      "answers": [
+        "a)  vpravo od trati",
+        "b)  vlevo od trati",
+        "c)  na trati"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "317.  Letíte na zařízení VOR kursem 350°. Jste na radiálu 170° a máte být na radiálu 180°. Vaše poloha je",
+      "answers": [
+        "a)  vpravo od trati",
+        "b)  vlevo od trati",
+        "c)  na trati"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "318.  Radiál VOR je úhel",
+      "answers": [
+        "a)  měřený od Nz k poloze letadla",
+        "b)  Měřený mezi Nz a polohou letadla vždy ve smyslu k pozemní stanici VOR",
+        "c)  měřený mezi Nm ke spojnici pozemní stanice VOR a letadla vždy ve smyslu od pozemní stanice ven"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "319.  Polohu letadla zjistíme nejpřesněji pomocí",
+      "answers": [
+        "a)  2 radiálů od zařízení VOR",
+        "b)  hyperbolického systému OMEGA",
+        "c)  kruhového systému DME"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "320.  Dosah zařízení  VOR závisí na výšce letu a terénu. V malých výškách do 300 m je jeho dosah",
+      "answers": [
+        "a)  do 20 km",
+        "b)  do 80 km",
+        "c)  do 300 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "321.  Dosah zařízení VOR závisí na výšce letu a terénu. Ve velkých výškách nad 6000 m je jeho dosah",
+      "answers": [
+        "a)  do 80 km",
+        "b)  do 400 km",
+        "c)  do 600 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "322.  Dosah zařízení DME závisí na výšce letu a terénu. Je stejný jako u zařízení",
+      "answers": [
+        "a)  VOR",
+        "b)  ARK",
+        "c)  OMEGA"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "323.  Stoupáte rychlostí 5 m.s.-1. Za 1 min nastoupáte",
+      "answers": [
+        "a)  jednu letovou hladinu",
+        "b)  dvě letové hladiny",
+        "c)  tři letové hladiny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "324.  Stoupáte rychlostí 10 m.s.-1. Za 1 min nastoupáte",
+      "answers": [
+        "a)  jednu letovou hladinu",
+        "b)  dvě letové hladiny",
+        "c)  tři letové hladiny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "325.  Klesáte rychlostí 15 m.s.-1. Za 1 min změníte výšku o",
+      "answers": [
+        "a)  jednu letovou hladinu",
+        "b)  dvě letové hladiny",
+        "c)  tři letové hladiny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "326.  Klesáte rychlostí 20 m.s.-1. Za 1 min změníte výšku o",
+      "answers": [
+        "a)  dvě letové hladiny",
+        "b)  tři letové hladiny",
+        "c)  čtyři letové hladiny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "327.  Stoupáte rychlostí 1000 ft/min. Za dvě min nastoupáte",
+      "answers": [
+        "a)  jednu letovou hladinu",
+        "b)  dvě letové hladiny",
+        "c)  tři letové hladiny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "328.  Stoupáte rychlostí 1500 ft/min. Tato rychlost odpovídá",
+      "answers": [
+        "a)  5 m.s.-1",
+        "b)  7,5 m.s.-1",
+        "c)  10 m.s.-1"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "329.  Klesáte rychlostí 2000 ft/min. Za dvě min změníte výšku o",
+      "answers": [
+        "a)  dvě letové hladiny",
+        "b)  tři letové hladiny",
+        "c)  čtyři letové hladiny"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "330.  Klesáte rychlostí 2000 ft/min. Tato rychlost odpovídá",
+      "answers": [
+        "a)  7,5 m.s.-1",
+        "b)  10 m.s.-1",
+        "c)  12,5 m.s.-1"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "331.  Musíte nastoupat 15 letových hladin za 10 min. Budete stoupat rychlostí",
+      "answers": [
+        "a)  5 m.s.-1",
+        "b)  7,5 m.s.-1",
+        "c)  10 m.s.-1"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "332.  Musíte sklesat 20 letových hladin za 5 min. Budete klesat rychlostí",
+      "answers": [
+        "a)  10 m.s.-1",
+        "b)  15 m.s.-1",
+        "c)  20 m.s.-1"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "333.  Při traťovém letu ve vzdálenosti 60 NM od zařízení VOR/DME je indikace 2 tečky vpravo. Jaká je úhlová a vzdálenostní odchylka od správné trati?",
+      "answers": [
+        "a)  2° a 3 km",
+        "b)  4° a 8 km",
+        "c)  4° a 4 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "334.  Při traťovém letu ve vzdálenosti 30 NM od zařízení VOR/DME je indikace 1,5 tečky vlevo. Jaká je úhlová a vzdálenostní odchylka od správné trati?",
+      "answers": [
+        "a)  3° a 3 km",
+        "b)  3° a 6 km",
+        "c)  1,5° a 1,5 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "335.  Při traťovém letu ve vzdálenosti 60NM kursem na zařízení VOR/DME jste na radiálu 143°. Máte být na radiálu 138°. Vaše poloha je",
+      "answers": [
+        "a)  vpravo od trati 5 km",
+        "b)  vlevo od trati 10 km",
+        "c)  vpravo od trati 10 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "336.  Při traťovém letu ve vzdálenosti 30 NM kursem na zařízení VOR/DME jste na radiálu 285°. Máte být na radiálu 283°. Vaše poloha je",
+      "answers": [
+        "a)  vlevo od trati 2 km",
+        "b)  vpravo od trati 3 km",
+        "c)  vpravo od trati 2 km"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "337.  Délku ortodromické trati d vypočítáme podle vzorce",
+      "answers": [
+        "a)  cos d = sin ?1 * sin ?2 + cos ?1 * cos ?2 * cos (?2-?1)",
+        "b)  tg ? = ZZD/ZZŠ",
+        "c)  cos d = (?1-?2) * sin ?"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "338.  Správný vzorec pro výpočet počátečního úhlu ortodromy je",
+      "answers": [
+        "a)  cos d = sin ?1 * sin ?2 + cos ?1 * cos ?2 * cos (?2-?1)",
+        "b)  tg ? = ZZD/ZZŠ",
+        "c)  sin ? = (cos ?2 * sin (?2-?1))/sin d"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "339.  Správný vzorec pro výpočet úhlu loxodromy pomocí šířkové odchylky je",
+      "answers": [
+        "a)  tg ? = ZZD/ZZŠ",
+        "b)  tg ? = (ZZD * cos ?s)/ZZŠ",
+        "c)  tg ? = sin ?1 * sin ?2 + cos ?"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "340.  Správný vzorec pro výpočet loxodromické vzdálenosti je",
+      "answers": [
+        "a)  d = (ZZD * cos ?s)/sin ?",
+        "b)  d = ZZŠ/cos ?",
+        "c)  d = (?1 - ?2) * sin ?"
+      ],
+      "correct": 0
+    }
+  ]
 }
-
-function highlightSelection(c,s){
-  let buttons = quizContainer.querySelectorAll("button");
-  buttons.forEach((btn,i)=>{
-    btn.disabled = true;
-    if(i === c) btn.style.background="#2ecc71";
-    if(i === s && i !== c) btn.style.background="#e74c3c";
-  });
-}
-
-function finishQuiz(){
-  if(mode === "test"){
-    resultBox.innerHTML =
-      "Hotovo.<br>Správně: "
-      + score + " / " + currentQuestions.length +
-      "<br>Úspěšnost: "
-      + Math.round((score/currentQuestions.length)*100)
-      + " %";
-  }
-}
-
