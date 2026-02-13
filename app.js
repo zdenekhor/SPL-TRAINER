@@ -5,7 +5,7 @@ console.log("SPL READY");
 ========================= */
 
 
-}
+
 
 generateMetar();
 
