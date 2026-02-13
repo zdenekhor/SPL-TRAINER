@@ -1,15 +1,6 @@
-console.log("APP OK");
+console.log("APP READY");
 
-let data = {
-  "Testovací okruh": [
-    {
-      question: "1. Funguje aplikace?",
-      answers: ["a) Ano", "b) Ne", "c) Možná"],
-      correct: 0
-    }
-  ]
-};
-
+let data = {};
 let currentQuestions = [];
 let currentIndex = 0;
 let score = 0;
@@ -19,52 +10,60 @@ const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
 const resultBox = document.getElementById("result");
 
+fetch("./data.json")
+.then(response => response.json())
+.then(json => {
+    data = json;
+    initCategories();
+})
+.catch(err => {
+    console.error("Chyba načtení data.json:", err);
+});
+
 function initCategories(){
-  categorySelect.innerHTML = "";
-  Object.keys(data).forEach(cat=>{
-    let option = document.createElement("option");
-    option.value = cat;
-    option.textContent = cat;
-    categorySelect.appendChild(option);
-  });
+    categorySelect.innerHTML = "";
+    Object.keys(data).forEach(cat=>{
+        let option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        categorySelect.appendChild(option);
+    });
 }
 
-initCategories();
-
 function startStudy(){
-  mode = "study";
-  currentQuestions = data[categorySelect.value];
-  currentIndex = 0;
-  showQuestion();
+    mode = "study";
+    startQuiz();
 }
 
 function startTest(){
-  mode = "test";
-  score = 0;
-  currentQuestions = data[categorySelect.value];
-  currentIndex = 0;
-  showQuestion();
+    mode = "test";
+    score = 0;
+    startQuiz();
 }
 
 function startEdit(){
-  mode = "edit";
-  currentQuestions = data[categorySelect.value];
-  currentIndex = 0;
-  showQuestion();
+    mode = "edit";
+    startQuiz();
+}
+
+function startQuiz(){
+    currentQuestions = data[categorySelect.value];
+    currentIndex = 0;
+    resultBox.innerHTML = "";
+    showQuestion();
 }
 
 function showQuestion(){
-  let q = currentQuestions[currentIndex];
 
-  let html = "<h3>" + q.question + "</h3>";
+    if(!currentQuestions || currentQuestions.length === 0) return;
 
-  q.answers.forEach((ans,i)=>{
-    html += "<button onclick='selectAnswer("+i+")'>" + ans + "</button><br>";
-  });
+    let q = currentQuestions[currentIndex];
 
-  quizContainer.innerHTML = html;
-}
+    let html = "<div><strong>Otázka "
+        + (currentIndex+1) + " / " + currentQuestions.length + "</strong></div>";
 
-function selectAnswer(i){
-  alert("Klikl jste odpověď " + (i+1));
-}
+    html += "<h3>" + q.question + "</h3>";
+
+    q.answers.forEach((ans,i)=>{
+        html += "<button onclick='selectAnswer("+i+")' \
+        style='display:block;width:100%;margin:6px 0;padding:10px;border-radius:6px;border:none;background:#1
