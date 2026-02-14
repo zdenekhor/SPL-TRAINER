@@ -69,6 +69,32 @@ fetch("./data.json")
   })
   .catch(err => console.error("JSON error:", err));
 
+// načtení uložených barev
+const savedCorrect = localStorage.getItem("correctColor");
+const savedWrong = localStorage.getItem("wrongColor");
+
+if (savedCorrect) {
+    correctColor = savedCorrect;
+    document.getElementById("correctColor").value = savedCorrect;
+}
+
+if (savedWrong) {
+    wrongColor = savedWrong;
+    document.getElementById("wrongColor").value = savedWrong;
+}
+
+// posluchače změny
+document.getElementById("correctColor").addEventListener("input", (e) => {
+    correctColor = e.target.value;
+    localStorage.setItem("correctColor", correctColor);
+});
+
+document.getElementById("wrongColor").addEventListener("input", (e) => {
+    wrongColor = e.target.value;
+    localStorage.setItem("wrongColor", wrongColor);
+});
+
+
 function shuffleArray(array) { // FNK RANDOM PRO TEST
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
