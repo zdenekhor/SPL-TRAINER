@@ -200,7 +200,7 @@ function highlightCorrect() {
 
 function selectAnswer(index) {
     const correct = currentQuestions[currentIndex].correct;
-    const buttons = quizContainer.querySelectorAll("button");
+    const buttons = document.querySelectorAll(".answerBtn");
 
     buttons.forEach((btn, i) => {
         btn.disabled = true;
