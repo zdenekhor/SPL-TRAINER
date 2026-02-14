@@ -26,7 +26,7 @@ async function loadMetar() {
 }
 
 loadMetar();
-setInterval(loadMetar, 1800000);
+
 
 
 
