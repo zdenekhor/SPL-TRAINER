@@ -45,9 +45,10 @@ const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
 const resultBox = document.getElementById("result") || { innerHTML: "" };
 
+const randomToggle = document.getElementById("randomQuestions");
+const questionLimitInput = document.getElementById("questionCount");
 
-const randomToggle = document.getElementById("randomToggle");
-const questionLimitInput = document.getElementById("questionLimit");
+
 const correctColorPicker = document.getElementById("correctColorPicker");
 const wrongColorPicker = document.getElementById("wrongColorPicker");
 
