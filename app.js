@@ -3,13 +3,10 @@ console.log("SPL READY");
    METAR GENERATOR
 ========================= */
 async function loadMetar() {
-  console.log("METAR spouštím");
-  try {
-
   try {
 
     const response = await fetch(
-      "https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
+      "https://corsproxy.io/?https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
     );
 
     if (!response.ok) {
@@ -17,20 +14,16 @@ async function loadMetar() {
     }
 
     const text = await response.text();
-
     const lines = text.trim().split("\n");
-
-    // Druhý řádek obsahuje samotný METAR
     const metar = lines[1] || "METAR není dostupný";
 
     document.getElementById("metarBox").innerText = metar;
 
   } catch (error) {
-    document.getElementById("metarBox").innerText = "Chyba načítání METAR";
-    console.error("METAR error:", error);
+    document.getElementById("metarBox").innerText = "METAR nedostupný";
+    console.warn("METAR error (neblokuje aplikaci):", error);
   }
 }
-
 
 loadMetar();
 setInterval(loadMetar, 30000);
