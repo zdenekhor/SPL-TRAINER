@@ -93,6 +93,29 @@ Načítám METAR...
   <span id="versionInfo">Načítám verzi…</span>
 </footer>
 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs }
+    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDJUBuxXrv44dQmokqoLhDQ7n90nIbt1g8",
+    authDomain: "spl-trainer.firebaseapp.com",
+    projectId: "spl-trainer",
+    storageBucket: "spl-trainer.firebasestorage.app",
+    messagingSenderId: "51536361421",
+    appId: "1:51536361421:web:179c7497bb5341a7bcb684"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // zpřístupníme globálně
+  window.db = db;
+  window.fbCollection = collection;
+  window.fbAddDoc = addDoc;
+  window.fbGetDocs = getDocs;
+</script>
 
 
 </body>
