@@ -169,7 +169,8 @@ function showQuestion() {
 
     quizContainer.innerHTML = html;
 
-    if (mode === "study") highlightCorrect();
+  if (mode === "study" || mode === "edit") {
+    highlightCorrect();
 }
 
 // ==========================
