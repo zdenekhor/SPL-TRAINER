@@ -1,5 +1,30 @@
 console.log("SPL READY");
+/* =========================
+   METAR GENERATOR
+========================= */
+async function loadMetar() {
+  try {
+    const response = await fetch(
+      "https://api.allorigins.win/raw?url=" +
+      encodeURIComponent("https://aviationweather.gov/api/data/metar?ids=LKMT&format=raw&hours=1")
+    );
 
+    const metar = await response.text();
+
+    if (metar.trim() === "") {
+      document.getElementById("metarBox").innerText = "METAR není dostupný";
+    } else {
+      document.getElementById("metarBox").innerText = metar;
+    }
+
+  } catch (error) {
+    document.getElementById("metarBox").innerText = "Chyba načítání METAR";
+    console.error("METAR error:", error);
+  }
+}
+
+loadMetar();
+setInterval(loadMetar, 1800000);
 // ==========================
 // GLOBÁLNÍ STAV
 // ==========================
