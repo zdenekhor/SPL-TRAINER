@@ -90,6 +90,9 @@ function startEdit(){ mode="edit"; startQuiz(); }
 function startQuiz(){
 
   // vytvoříme kopii pole
+   console.log("Selected:", categorySelect.value);
+console.log("Available keys:", Object.keys(data));
+
   currentQuestions = [...data[categorySelect.value]];
   currentIndex = 0;
   resultBox.innerHTML = "";
