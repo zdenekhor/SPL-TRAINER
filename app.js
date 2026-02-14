@@ -43,7 +43,8 @@ let mode = "study";
 
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
-const resultBox = document.getElementById("result");
+const resultBox = document.getElementById("result") || { innerHTML: "" };
+
 
 const randomToggle = document.getElementById("randomToggle");
 const questionLimitInput = document.getElementById("questionLimit");
