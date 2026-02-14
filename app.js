@@ -1,5 +1,4 @@
 console.log("SPL READY");
-
 /* =========================
    METAR GENERATOR
 ========================= */
@@ -26,14 +25,9 @@ async function loadMetar() {
 
 loadMetar();
 setInterval(loadMetar, 1800000);
-
-
-
-
-
-/* =========================
-   QUIZ LOGIC
-========================= */
+// ==========================
+// GLOBÁLNÍ STAV
+// ==========================
 
 let data = {};
 let currentQuestions = [];
@@ -45,195 +39,288 @@ const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
 const resultBox = document.getElementById("result");
 
+const randomToggle = document.getElementById("randomToggle");
+const questionLimitInput = document.getElementById("questionLimit");
+
+// ==========================
+// BAREVNÝ SYSTÉM
+// ==========================
+
+const correctPicker = document.getElementById("correctColor");
+const wrongPicker = document.getElementById("wrongColor");
+
+function applyColors() {
+    document.documentElement.style.setProperty("--correctColor", correctPicker.value);
+    document.documentElement.style.setProperty("--wrongColor", wrongPicker.value);
+}
+
+function loadColors() {
+    const savedCorrect = localStorage.getItem("correctColor");
+    const savedWrong = localStorage.getItem("wrongColor");
+
+    if (savedCorrect) correctPicker.value = savedCorrect;
+    if (savedWrong) wrongPicker.value = savedWrong;
+
+    applyColors();
+}
+
+correctPicker.addEventListener("input", () => {
+    localStorage.setItem("correctColor", correctPicker.value);
+    applyColors();
+});
+
+wrongPicker.addEventListener("input", () => {
+    localStorage.setItem("wrongColor", wrongPicker.value);
+    applyColors();
+});
+
+loadColors();
+
+// ==========================
+// NAČTENÍ DAT
+// ==========================
+
 fetch("./data.json")
-  .then(res => res.json())
-  .then(json => {
-    data = json;
-    initCategories();
-  })
-  .catch(err => console.error("JSON error:", err));
+    .then(res => res.json())
+    .then(async json => {
 
-function initCategories(){
-  categorySelect.innerHTML = "";
-  Object.keys(data).forEach(cat=>{
-    let option = document.createElement("option");
-    option.value = cat;
-    option.textContent = cat;
-    categorySelect.appendChild(option);
-  });
+        data = json;
+
+        // načíst opravy z Firestore
+        if (window.db) {
+
+            const snapshot = await window.fbGetDocs(
+                window.fbCollection(window.db, "corrections")
+            );
+
+            snapshot.forEach(doc => {
+                const c = doc.data();
+
+                if (data[c.category] && data[c.category][c.questionIndex]) {
+                    data[c.category][c.questionIndex].correct = c.correct;
+                }
+            });
+        }
+
+        initCategories();
+    });
+
+
+// ==========================
+// KATEGORIE
+// ==========================
+
+function initCategories() {
+    categorySelect.innerHTML = "";
+    Object.keys(data).forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        categorySelect.appendChild(option);
+    });
 }
 
-function startStudy(){ mode="study"; startQuiz(); }
-function startTest(){ mode="test"; score=0; startQuiz(); }
-function startEdit(){ mode="edit"; startQuiz(); }
+// ==========================
+// START MÓDY
+// ==========================
 
-function startQuiz(){
-  currentQuestions = data[categorySelect.value];
-  currentIndex = 0;
-  resultBox.innerHTML = "";
-  showQuestion();
-}
-
-function showQuestion(){
-  if(!currentQuestions || currentQuestions.length === 0) return;
-
-  let q = currentQuestions[currentIndex];
-
-  let html = "<div><strong>Otázka "
-    + (currentIndex+1) + " / " + currentQuestions.length + "</strong></div>";
-
-  html += "<h3>" + q.question + "</h3>";
-
-  q.answers.forEach((a,i)=>{
-    html += "<button onclick='selectAnswer("+i+")' \
-    style='display:block;width:100%;margin:6px 0;padding:10px;border:none;border-radius:6px;background:#1f3a5f;color:white;' \
-    id='ans_"+i+"'>" + a + "</button>";
-  });
-
-  html += "<div style='margin-top:10px;display:flex;gap:8px;'>";
-  html += "<button onclick='prevQuestion()'>⬅ Zpět</button>";
-  html += "<button onclick='nextQuestion()'>Další ➡</button>";
-  html += "</div>";
-
-  quizContainer.innerHTML = html;
-
-  if(mode === "study"){
-    highlightCorrect();
-  }
-
-  if(mode === "edit"){
-    highlightCorrect();
-  }
-}
-
-function selectAnswer(i){
-  let correct = currentQuestions[currentIndex].correct;
-
-  if(mode === "edit"){
-    currentQuestions[currentIndex].correct = i;
-    highlightCorrect();
-    return;
-  }
-
-  if(mode === "test"){
-    if(i === correct) score++;
-    highlightSelection(correct,i);
-    setTimeout(nextQuestion,600);
-  }
-}
-
-function nextQuestion(){
-  if(currentIndex < currentQuestions.length-1){
-    currentIndex++;
+function startStudy() {
+    mode = "study";
+    prepareQuestions();
     showQuestion();
-  } else {
-    finishQuiz();
-  }
 }
 
-function prevQuestion(){
-  if(currentIndex > 0){
-    currentIndex--;
+function startTest() {
+    mode = "test";
+    score = 0;
+    prepareQuestions();
     showQuestion();
-  }
 }
 
-function highlightCorrect(){
-  let buttons = quizContainer.querySelectorAll("button");
-  buttons.forEach((btn,i)=>{
-    btn.style.background="#1f3a5f";
-    if(i === currentQuestions[currentIndex].correct){
-      btn.style.background="#3fa46a";
+function startEdit() {
+    mode = "edit";
+    prepareQuestions();
+    showQuestion();
+}
 
+
+// ==========================
+// PŘÍPRAVA OTÁZEK
+// ==========================
+
+function prepareQuestions() {
+    currentQuestions = [...data[categorySelect.value]];
+    currentIndex = 0;
+    resultBox.innerHTML = "";
+
+    // náhodné pořadí
+    if (mode === "test" && randomToggle.checked) {
+        shuffle(currentQuestions);
     }
-  });
+
+    // omezení počtu
+    const limit = parseInt(questionLimitInput.value);
+
+    if (
+        mode === "test" &&
+        !isNaN(limit) &&
+        limit > 0 &&
+        limit < currentQuestions.length
+    ) {
+        currentQuestions = currentQuestions.slice(0, limit);
+    }
 }
 
-function highlightSelection(c,s){
-  let buttons = quizContainer.querySelectorAll("button");
-  buttons.forEach((btn,i)=>{
-    btn.disabled = true;
-    if(i === c) btn.style.background="#3fa46a";
-    if(i === s && i !== c) btn.style.background="#e74c3c";
-  });
-}
-function finishQuiz(){
-  if(mode === "test"){
-    let percent = Math.round((score/currentQuestions.length)*100);
+// ==========================
+// SHUFFLE (Fisher-Yates)
+// ==========================
 
-    saveStats(categorySelect.value, percent);
-
-    resultBox.innerHTML =
-      "<div style='margin-top:20px;font-weight:bold'>Hotovo.<br>Správně: "
-      + score + " / " + currentQuestions.length +
-      "<br>Úspěšnost: "
-      + percent +
-      " %</div><hr>" +
-      showStats();
-  }
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
 
-/* =========================
-   STATISTICS SYSTEM
-========================= */
+// ==========================
+// ZOBRAZENÍ OTÁZKY
+// ==========================
 
-function saveStats(category, percentage){
-  let stats = JSON.parse(localStorage.getItem("splStats")) || {};
+function showQuestion() {
+    if (!currentQuestions.length) return;
 
-  if(!stats[category]){
-    stats[category] = {
-      attempts: 0,
-      totalPercent: 0,
-      best: 0
-    };
-  }
+    const q = currentQuestions[currentIndex];
 
-  stats[category].attempts += 1;
-  stats[category].totalPercent += percentage;
+    let html = `
+        <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
+        <h3>${q.question}</h3>
+    `;
 
-  if(percentage > stats[category].best){
-    stats[category].best = percentage;
-  }
-
-  localStorage.setItem("splStats", JSON.stringify(stats));
-}
-
-function showStats(){
-  let stats = JSON.parse(localStorage.getItem("splStats"));
-  if(!stats) return "Žádná statistika.";
-
-  let html = "<h3>Statistika</h3>";
-
-  Object.keys(stats).forEach(cat=>{
-    let avg = Math.round(stats[cat].totalPercent / stats[cat].attempts);
+   q.answers.forEach((a, i) => {
+    html += `
+        <button class="answerBtn" onclick="selectAnswer(${i})">
+            ${a}
+        </button>
+    `;
+});
 
     html += `
-      <div style="margin-bottom:10px;">
-        <strong>${cat}</strong><br>
-        Pokusů: ${stats[cat].attempts}<br>
-        Průměr: ${avg}%<br>
-        Nejlepší: ${stats[cat].best}%
-      </div>
+        <div style="margin-top:10px;display:flex;gap:8px;">
+            <button onclick="prevQuestion()">⬅ Zpět</button>
+            <button onclick="nextQuestion()">Další ➡</button>
+        </div>
     `;
-  });
 
-  return html;
+    quizContainer.innerHTML = html;
+
+  if (mode === "study" || mode === "edit") {
+    highlightCorrect();
+    }
 }
-/* =========================
-   GITHUB VERSION
-========================= */
+    
+// ==========================
+// ZVÝRAZNĚNÍ SPRÁVNÉ ODPOVĚDI
+// ==========================
 
-const GITHUB_USER = "zdenekhor";
-const GITHUB_REPO = "SPL-TRAINER";
+function highlightCorrect() {
 
-fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits/main`)
-  .then(res => res.json())
-  .then(data => {
-    const shortHash = data.sha.substring(0,7);
-    document.getElementById("versionInfo").innerText = "commit " + shortHash;
-  })
-  .catch(err => {
-    document.getElementById("versionInfo").innerText = "verze nenalezena";
-  });
+    const correct = currentQuestions[currentIndex].correct;
+    const buttons = document.querySelectorAll(".answerBtn");
 
+    buttons.forEach((btn, i) => {
 
+        // reset výchozí barvy
+        btn.style.backgroundColor = "#1f3a5f";
+        btn.disabled = false;
+
+        if (i === correct) {
+            btn.style.backgroundColor = "var(--correctColor)";
+        }
+    });
+}
+
+// ==========================
+// VÝBĚR ODPOVĚDI
+// ==========================
+
+function selectAnswer(index) {
+   // EDIT režim ukládá opravy do Firestore
+if (mode === "edit") {
+
+    currentQuestions[currentIndex].correct = index;
+
+    if (window.db) {
+        window.fbAddDoc(
+            window.fbCollection(window.db, "corrections"),
+            {
+                category: categorySelect.value,
+                questionIndex: currentIndex,
+                correct: index,
+                timestamp: Date.now()
+            }
+        );
+    }
+
+    highlightCorrect();
+    return;
+}
+
+    const correct = currentQuestions[currentIndex].correct;
+    const buttons = document.querySelectorAll(".answerBtn");
+
+    buttons.forEach((btn, i) => {
+        btn.disabled = true;
+
+        if (i === correct) {
+            btn.style.backgroundColor = "var(--correctColor)";
+        }
+
+        if (mode === "test" && i === index && i !== correct) {
+            btn.style.backgroundColor = "var(--wrongColor)";
+        }
+    });
+
+    if (mode === "test" && index === correct) score++;
+
+    if (mode === "test") {
+        setTimeout(nextQuestion, 700);
+    }
+}
+
+// ==========================
+// NAVIGACE
+// ==========================
+
+function nextQuestion() {
+    if (currentIndex < currentQuestions.length - 1) {
+        currentIndex++;
+        showQuestion();
+    } else {
+        finish();
+    }
+}
+
+function prevQuestion() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        showQuestion();
+    }
+}
+
+// ==========================
+// UKONČENÍ TESTU
+// ==========================
+
+function finish() {
+    if (mode !== "test") return;
+
+    const percent = Math.round((score / currentQuestions.length) * 100);
+
+    resultBox.innerHTML = `
+        <div style="margin-top:20px;font-weight:bold">
+            Hotovo.<br>
+            Správně: ${score} / ${currentQuestions.length}<br>
+            Úspěšnost: ${percent} %
+        </div>
+    `;
+}

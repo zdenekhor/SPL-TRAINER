@@ -4,14 +4,33 @@
 <meta charset="UTF-8">
 <title>SPL Testovací Aplikace</title>
 <link rel="stylesheet" href="style.css">
+  <style>
+:root {
+  --correctColor: #2ecc71;
+  --wrongColor: #e74c3c;
+}
+</style>
+
 </head>
 
 <body>
+  <div id="devBanner" style="
+  display:none;
+  background:#b00020;
+  color:white;
+  padding:8px;
+  text-align:center;
+  font-weight:bold;
+  letter-spacing:1px;
+">
+⚠ TESTOVACÍ VERZE (DEV)
+</div>
+
 
 <div class="container">
 <h1>✈ SPL01 Testovací Aplikace</h1>
-
-<div id="metarBox" style="
+  
+  <div id="metarBox" style="
 margin:15px 0;
 padding:12px;
 background:#101f33;
@@ -21,6 +40,20 @@ color:#7fdfff;">
 Načítám METAR...
 </div>
 
+
+  <div style="margin-top:15px;"> <!-- VÝBĚR BAREVNÉHO ZOBRAZENI -->
+  <strong>Nastavení barev:</strong><br><br>
+
+  Správná odpověď:
+  <input type="color" id="correctColor" value="#2ecc71">
+
+  &nbsp;&nbsp;
+
+  Špatná odpověď:
+  <input type="color" id="wrongColor" value="#e74c3c">
+</div>
+
+
 <div id="menu">
 <h3>Okruh:</h3>
 <select id="categorySelect"></select>
@@ -28,6 +61,17 @@ Načítám METAR...
 <button onclick="startStudy()">📘 Studium</button>
 <button onclick="startTest()">📝 Test</button>
 <button onclick="startEdit()">⚙ Nastavit správné odpovědi</button>
+  
+  <label style="display:block; margin-top:10px;"> <!-- VOLBA NÁHODNÉ OTÁZKY -->
+  <input type="checkbox" id="randomToggle">
+  Náhodné otázky v testu
+</label>
+  
+<label style="display:block; margin-top:10px;"> <!-- POČET OTÁZEK V TESTU -->
+  Počet otázek v testu:
+  <input type="number" id="questionLimit" min="1" style="width:80px; margin-left:5px;">
+</label>
+
 </div>
 
 <!-- TOTO TAM PŘEDTÍM CHYBĚLO -->
@@ -49,6 +93,29 @@ Načítám METAR...
   <span id="versionInfo">Načítám verzi…</span>
 </footer>
 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs }
+    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDJUBuxXrv44dQmokqoLhDQ7n90nIbt1g8",
+    authDomain: "spl-trainer.firebaseapp.com",
+    projectId: "spl-trainer",
+    storageBucket: "spl-trainer.firebasestorage.app",
+    messagingSenderId: "51536361421",
+    appId: "1:51536361421:web:179c7497bb5341a7bcb684"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // zpřístupníme globálně
+  window.db = db;
+  window.fbCollection = collection;
+  window.fbAddDoc = addDoc;
+  window.fbGetDocs = getDocs;
+</script>
 
 
 </body>
