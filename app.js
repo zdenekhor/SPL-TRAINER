@@ -30,7 +30,7 @@ async function loadMetar() {
 
 
 loadMetar();
-setInterval(loadMetar, 30 000);
+setInterval(loadMetar, 30000);
 // ==========================
 // GLOBÁLNÍ STAV
 // ==========================
