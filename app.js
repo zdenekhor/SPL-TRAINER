@@ -53,6 +53,9 @@ let currentQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let mode = "study";
+let correctColor = "#2ecc71";
+let wrongColor = "#e74c3c";
+
 
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
