@@ -93,7 +93,15 @@ function startQuiz(){
    console.log("Selected:", categorySelect.value);
 console.log("Available keys:", Object.keys(data));
 
-  currentQuestions = [...data[categorySelect.value]];
+  const selected = categorySelect.value;
+
+if (!data[selected]) {
+    console.error("Kategorie nenalezena:", selected);
+    return;
+}
+
+currentQuestions = [...data[selected]];
+
   currentIndex = 0;
   resultBox.innerHTML = "";
 
