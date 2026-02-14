@@ -232,9 +232,12 @@ function selectAnswer(index) {
         btn.style.backgroundColor = "var(--correctColor)";
       }
 
-      if (i === index && i !== correct) {
-        btn.style.backgroundColor = "var(--wrongColor)";
-      }
+      if (index === correctIndex) {
+  score++;
+} else {
+  wrongQuestions.push(currentQuestions[currentIndex]);
+}
+
     });
 
     if (index === correct) {
