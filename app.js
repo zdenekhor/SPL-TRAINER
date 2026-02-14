@@ -1,339 +1,231 @@
 console.log("SPL READY");
 
-/* =========================
-   METAR GENERATOR
-========================= */
-
-function generateMetar() {
-const APP_ENV = "dev"; // změnit na "prod" v main
-  const windDir = Math.floor(Math.random() * 36) * 10;
-  const windSpeed = Math.floor(Math.random() * 20) + 1;
-  const visibility = ["9999", "8000", "6000", "4000"];
-  const clouds = ["FEW020", "SCT030", "BKN040", "OVC050"];
-  const temp = Math.floor(Math.random() * 25) - 5;
-  const dew = temp - Math.floor(Math.random() * 5);
-  const qnh = 980 + Math.floor(Math.random() * 40);
-
-   
-if (APP_ENV === "dev") { // baner test
-  const banner = document.getElementById("devBanner");
-  if (banner) banner.style.display = "block";
-}
-
-
-   
-  const metar =
-    "LKMT 131000Z " +
-    windDir.toString().padStart(3, "0") +
-    windSpeed +
-    "KT " +
-    visibility[Math.floor(Math.random() * visibility.length)] +
-    " " +
-    clouds[Math.floor(Math.random() * clouds.length)] +
-    " " +
-    temp +
-    "/" +
-    dew +
-    " Q" +
-    qnh;
-
-  document.getElementById("metarBox").innerText = metar;
-}
-
-
-
-generateMetar();
-
-/* =========================
-   QUIZ LOGIC
-========================= */
+// ==========================
+// GLOBÁLNÍ STAV
+// ==========================
 
 let data = {};
 let currentQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let mode = "study";
-let correctColor = "#2ecc71";
-let wrongColor = "#e74c3c";
-
 
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
 const resultBox = document.getElementById("result");
 
+const randomToggle = document.getElementById("randomToggle");
+const questionLimitInput = document.getElementById("questionLimit");
+
+// ==========================
+// BAREVNÝ SYSTÉM
+// ==========================
+
+const correctPicker = document.getElementById("correctColor");
+const wrongPicker = document.getElementById("wrongColor");
+
+function applyColors() {
+    document.documentElement.style.setProperty("--correctColor", correctPicker.value);
+    document.documentElement.style.setProperty("--wrongColor", wrongPicker.value);
+}
+
+function loadColors() {
+    const savedCorrect = localStorage.getItem("correctColor");
+    const savedWrong = localStorage.getItem("wrongColor");
+
+    if (savedCorrect) correctPicker.value = savedCorrect;
+    if (savedWrong) wrongPicker.value = savedWrong;
+
+    applyColors();
+}
+
+correctPicker.addEventListener("input", () => {
+    localStorage.setItem("correctColor", correctPicker.value);
+    applyColors();
+});
+
+wrongPicker.addEventListener("input", () => {
+    localStorage.setItem("wrongColor", wrongPicker.value);
+    applyColors();
+});
+
+loadColors();
+
+// ==========================
+// NAČTENÍ DAT
+// ==========================
+
 fetch("./data.json")
-  .then(res => res.json())
-  .then(json => {
-    data = json;
-    initCategories();
-  })
-  .catch(err => console.error("JSON error:", err));
+    .then(res => res.json())
+    .then(json => {
+        data = json;
+        initCategories();
+    });
 
-// načtení uložených barev
-const savedCorrect = localStorage.getItem("correctColor");
-const savedWrong = localStorage.getItem("wrongColor");
+// ==========================
+// KATEGORIE
+// ==========================
 
-if (savedCorrect) {
-    correctColor = savedCorrect;
-    document.getElementById("correctColor").value = savedCorrect;
+function initCategories() {
+    categorySelect.innerHTML = "";
+    Object.keys(data).forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        categorySelect.appendChild(option);
+    });
 }
 
-if (savedWrong) {
-    wrongColor = savedWrong;
-    document.getElementById("wrongColor").value = savedWrong;
+// ==========================
+// START MÓDY
+// ==========================
+
+function startStudy() {
+    mode = "study";
+    prepareQuestions();
+    showQuestion();
 }
 
-// posluchače změny
-document.getElementById("correctColor").addEventListener("input", (e) => {
-    correctColor = e.target.value;
-    localStorage.setItem("correctColor", correctColor);
-});
-
-document.getElementById("wrongColor").addEventListener("input", (e) => {
-    wrongColor = e.target.value;
-    localStorage.setItem("wrongColor", wrongColor);
-});
-
-
-function shuffleArray(array) { // FNK RANDOM PRO TEST
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
+function startTest() {
+    mode = "test";
+    score = 0;
+    prepareQuestions();
+    showQuestion();
 }
 
-function initCategories(){
-  categorySelect.innerHTML = "";
-  Object.keys(data).forEach(cat=>{
-    let option = document.createElement("option");
-    option.value = cat;
-    option.textContent = cat;
-    categorySelect.appendChild(option);
-  });
-}
+// ==========================
+// PŘÍPRAVA OTÁZEK
+// ==========================
 
-function startStudy(){ mode="study"; startQuiz(); }
-function startTest(){ mode="test"; score=0; startQuiz(); }
-function startEdit(){ mode="edit"; startQuiz(); }
-
-function startQuiz(){
-
+function prepareQuestions() {
     currentQuestions = [...data[categorySelect.value]];
     currentIndex = 0;
     resultBox.innerHTML = "";
 
-    const randomOn = document.getElementById("randomToggle").checked;
-    const limitInput = document.getElementById("questionLimit").value;
-    const limit = parseInt(limitInput);
-
-    // random jen v testu
-    if (mode === "test" && randomOn) {
-        shuffleArray(currentQuestions);
+    // náhodné pořadí
+    if (mode === "test" && randomToggle.checked) {
+        shuffle(currentQuestions);
     }
-   
-   function applyColors() {
-    const correctPicker = document.getElementById("correctColor");
-    const wrongPicker = document.getElementById("wrongColor");
 
-    if (!correctPicker || !wrongPicker) return;
+    // omezení počtu
+    const limit = parseInt(questionLimitInput.value);
 
-    const newCorrect = correctPicker.value;
-    const newWrong = wrongPicker.value;
-
-    // nastav CSS proměnné
-    document.documentElement.style.setProperty("--correctColor", newCorrect);
-    document.documentElement.style.setProperty("--wrongColor", newWrong);
-
-    // uložit do localStorage
-    localStorage.setItem("correctColor", newCorrect);
-    localStorage
-
-
-    // omezení počtu otázek jen v testu
-    if (mode === "test" && !isNaN(limit) && limit > 0 && limit < currentQuestions.length) {
+    if (
+        mode === "test" &&
+        !isNaN(limit) &&
+        limit > 0 &&
+        limit < currentQuestions.length
+    ) {
         currentQuestions = currentQuestions.slice(0, limit);
     }
-
-    showQuestion();
 }
 
+// ==========================
+// SHUFFLE (Fisher-Yates)
+// ==========================
 
-function showQuestion(){
-  if(!currentQuestions || currentQuestions.length === 0) return;
-
-  let q = currentQuestions[currentIndex];
-
-  let html = "<div><strong>Otázka "
-    + (currentIndex+1) + " / " + currentQuestions.length + "</strong></div>";
-
-  html += "<h3>" + q.question + "</h3>";
-
-  q.answers.forEach((a,i)=>{
-    html += "<button onclick='selectAnswer("+i+")' \
-    style='display:block;width:100%;margin:6px 0;padding:10px;border:none;border-radius:6px;background:#1f3a5f;color:white;' \
-    id='ans_"+i+"'>" + a + "</button>";
-  });
-
-  html += "<div style='margin-top:10px;display:flex;gap:8px;'>";
-  html += "<button onclick='prevQuestion()'>⬅ Zpět</button>";
-  html += "<button onclick='nextQuestion()'>Další ➡</button>";
-  html += "</div>";
-
-  quizContainer.innerHTML = html;
-
-  if(mode === "study"){
-    highlightCorrect();
-  }
-
-  if(mode === "edit"){
-    highlightCorrect();
-  }
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
 
-function selectAnswer(i){
-  let correct = currentQuestions[currentIndex].correct;
+// ==========================
+// ZOBRAZENÍ OTÁZKY
+// ==========================
 
-  if(mode === "edit"){
-    currentQuestions[currentIndex].correct = i;
-    highlightCorrect();
-    return;
-  }
+function showQuestion() {
+    if (!currentQuestions.length) return;
 
-  if(mode === "test"){
-    if(i === correct) score++;
-    highlightSelection(correct,i);
-    setTimeout(nextQuestion,600);
-  }
-}
+    const q = currentQuestions[currentIndex];
 
-function nextQuestion(){
-  if(currentIndex < currentQuestions.length-1){
-    currentIndex++;
-    showQuestion();
-  } else {
-    finishQuiz();
-  }
-}
+    let html = `
+        <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
+        <h3>${q.question}</h3>
+    `;
 
-function prevQuestion(){
-  if(currentIndex > 0){
-    currentIndex--;
-    showQuestion();
-  }
-}
-
-function highlightCorrect(){
-    let buttons = quizContainer.querySelectorAll("button");
-
-    buttons.forEach((btn,i)=>{
-        btn.style.backgroundColor = "#1f3a5f";
-
-        if(i === currentQuestions[currentIndex].correct){
-            btn.style.backgroundColor = "var(--correctColor)";
-        }
+    q.answers.forEach((a, i) => {
+        html += `
+            <button onclick="selectAnswer(${i})" id="ans_${i}">
+                ${a}
+            </button>
+        `;
     });
-}
-
-
-function highlightSelection(c,s){
-    let buttons = quizContainer.querySelectorAll("button");
-
-    buttons.forEach((btn,i)=>{
-        btn.disabled = true;
-        btn.style.backgroundColor = "#3fa46a";
-
-        if(i === s && i !== c)
-            btn.style.backgroundColor = "var(--wrongColor)";
-    });
-}
-
-   
-function finishQuiz(){
-  if(mode === "test"){
-    let percent = Math.round((score/currentQuestions.length)*100);
-
-    saveStats(categorySelect.value, percent);
-
-    resultBox.innerHTML =
-      "<div style='margin-top:20px;font-weight:bold'>Hotovo.<br>Správně: "
-      + score + " / " + currentQuestions.length +
-      "<br>Úspěšnost: "
-      + percent +
-      " %</div><hr>" +
-      showStats();
-  }
-}
-
-/* =========================
-   STATISTICS SYSTEM
-========================= */
-
-function saveStats(category, percentage){
-  let stats = JSON.parse(localStorage.getItem("splStats")) || {};
-
-  if(!stats[category]){
-    stats[category] = {
-      attempts: 0,
-      totalPercent: 0,
-      best: 0
-    };
-  }
-
-  stats[category].attempts += 1;
-  stats[category].totalPercent += percentage;
-
-  if(percentage > stats[category].best){
-    stats[category].best = percentage;
-  }
-
-  localStorage.setItem("splStats", JSON.stringify(stats));
-}
-
-function showStats(){
-  let stats = JSON.parse(localStorage.getItem("splStats"));
-  if(!stats) return "Žádná statistika.";
-
-  let html = "<h3>Statistika</h3>";
-
-  Object.keys(stats).forEach(cat=>{
-    let avg = Math.round(stats[cat].totalPercent / stats[cat].attempts);
 
     html += `
-      <div style="margin-bottom:10px;">
-        <strong>${cat}</strong><br>
-        Pokusů: ${stats[cat].attempts}<br>
-        Průměr: ${avg}%<br>
-        Nejlepší: ${stats[cat].best}%
-      </div>
+        <div style="margin-top:10px;display:flex;gap:8px;">
+            <button onclick="prevQuestion()">⬅ Zpět</button>
+            <button onclick="nextQuestion()">Další ➡</button>
+        </div>
     `;
-  });
 
-  return html;
+    quizContainer.innerHTML = html;
+
+    if (mode === "study") highlightCorrect();
 }
-/* =========================
-   GITHUB VERSION
-========================= */
 
-const GITHUB_USER = "zdenekhor";
-const GITHUB_REPO = "SPL-TRAINER";
+// ==========================
+// VÝBĚR ODPOVĚDI
+// ==========================
 
-fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits/main`)
-  .then(res => res.json())
-  .then(data => {
-    const shortHash = data.sha.substring(0,7);
-    document.getElementById("versionInfo").innerText = "commit " + shortHash;
-  })
-  .catch(err => {
-    document.getElementById("versionInfo").innerText = "verze nenalezena";
-  });
-// DETEKCE DEV VERZE
-if (window.location.href.includes("dev")) {
-  const banner = document.getElementById("devBanner");
-  if (banner) banner.style.display = "block";
+function selectAnswer(index) {
+    const correct = currentQuestions[currentIndex].correct;
+    const buttons = quizContainer.querySelectorAll("button");
+
+    buttons.forEach((btn, i) => {
+        btn.disabled = true;
+
+        if (i === correct) {
+            btn.style.backgroundColor = "var(--correctColor)";
+        }
+
+        if (mode === "test" && i === index && i !== correct) {
+            btn.style.backgroundColor = "var(--wrongColor)";
+        }
+    });
+
+    if (mode === "test" && index === correct) score++;
+
+    if (mode === "test") {
+        setTimeout(nextQuestion, 700);
+    }
 }
-   document.getElementById("correctColor").addEventListener("input", applyColors);
-document.getElementById("wrongColor").addEventListener("input", applyColors);
 
+// ==========================
+// NAVIGACE
+// ==========================
 
+function nextQuestion() {
+    if (currentIndex < currentQuestions.length - 1) {
+        currentIndex++;
+        showQuestion();
+    } else {
+        finish();
+    }
+}
 
+function prevQuestion() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        showQuestion();
+    }
+}
 
+// ==========================
+// UKONČENÍ TESTU
+// ==========================
+
+function finish() {
+    if (mode !== "test") return;
+
+    const percent = Math.round((score / currentQuestions.length) * 100);
+
+    resultBox.innerHTML = `
+        <div style="margin-top:20px;font-weight:bold">
+            Hotovo.<br>
+            Správně: ${score} / ${currentQuestions.length}<br>
+            Úspěšnost: ${percent} %
+        </div>
+    `;
+}
