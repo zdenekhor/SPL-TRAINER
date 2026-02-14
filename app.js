@@ -244,48 +244,71 @@ function highlightCorrect() {
 // ==========================
 
 function selectAnswer(index) {
-   // EDIT režim ukládá opravy do Firestore
-if (mode === "edit") {
 
-    const previous = currentQuestions[currentIndex].correct;
+    // ===== TEST režim =====
+    if (mode === "test") {
 
-    currentQuestions[currentIndex].correct = index;
+        const correct = currentQuestions[currentIndex].correct;
+        const buttons = document.querySelectorAll(".answerBtn");
 
-    if (window.db) {
+        buttons.forEach((btn, i) => {
+            btn.disabled = true;
 
-        const logData = {
-            category: categorySelect.value,
-            questionIndex: currentIndex,
-            questionText: currentQuestions[currentIndex].question,
-            previousCorrect: previous,
-            newCorrect: index,
-            answers: currentQuestions[currentIndex].answers,
-            timestamp: Date.now()
-        };
-
-        // aktuální stav
-        window.fbAddDoc(
-            window.fbCollection(window.db, "corrections"),
-            {
-                category: categorySelect.value,
-                questionIndex: currentIndex,
-                correct: index,
-                timestamp: Date.now()
+            if (i === correct) {
+                btn.style.backgroundColor = "var(--correctColor)";
             }
-        );
 
-        // historie změn
-        window.fbAddDoc(
-            window.fbCollection(window.db, "corrections_log"),
-            logData
-        );
+            if (i === index && i !== correct) {
+                btn.style.backgroundColor = "var(--wrongColor)";
+            }
+        });
+
+        if (index === correct) {
+            score++;
+        }
+
+        return;
     }
 
-    highlightCorrect();
-    return;
+    // ===== EDIT režim =====
+    if (mode === "edit") {
+
+        const previous = currentQuestions[currentIndex].correct;
+        currentQuestions[currentIndex].correct = index;
+
+        if (window.db) {
+
+            const logData = {
+                category: categorySelect.value,
+                questionIndex: currentIndex,
+                questionText: currentQuestions[currentIndex].question,
+                previousCorrect: previous,
+                newCorrect: index,
+                answers: currentQuestions[currentIndex].answers,
+                timestamp: Date.now()
+            };
+
+            window.fbAddDoc(
+                window.fbCollection(window.db, "corrections"),
+                {
+                    category: categorySelect.value,
+                    questionIndex: currentIndex,
+                    correct: index,
+                    timestamp: Date.now()
+                }
+            );
+
+            window.fbAddDoc(
+                window.fbCollection(window.db, "corrections_log"),
+                logData
+            );
+        }
+
+        highlightCorrect();
+        return;
+    }
 }
 
-}
 
 // ==========================
 // HISTORIE ZMĚN OTÁZKY
