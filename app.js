@@ -240,5 +240,11 @@ fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits/main`)
   .catch(err => {
     document.getElementById("versionInfo").innerText = "verze nenalezena";
   });
+// DETEKCE DEV VERZE
+if (window.location.href.includes("dev")) {
+  const banner = document.getElementById("devBanner");
+  if (banner) banner.style.display = "block";
+}
+
 
 
