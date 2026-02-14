@@ -89,20 +89,27 @@ function startEdit(){ mode="edit"; startQuiz(); }
 
 function startQuiz(){
 
-    // vytvoříme kopii pole
     currentQuestions = [...data[categorySelect.value]];
     currentIndex = 0;
     resultBox.innerHTML = "";
 
-    // pokud je režim TEST a je zaškrtnuto random
     const randomOn = document.getElementById("randomToggle").checked;
+    const limitInput = document.getElementById("questionLimit").value;
+    const limit = parseInt(limitInput);
 
+    // random jen v testu
     if (mode === "test" && randomOn) {
         shuffleArray(currentQuestions);
     }
 
+    // omezení počtu otázek jen v testu
+    if (mode === "test" && !isNaN(limit) && limit > 0 && limit < currentQuestions.length) {
+        currentQuestions = currentQuestions.slice(0, limit);
+    }
+
     showQuestion();
 }
+
 
 function showQuestion(){
   if(!currentQuestions || currentQuestions.length === 0) return;
