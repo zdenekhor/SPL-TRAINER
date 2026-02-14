@@ -172,6 +172,7 @@ function showQuestion() {
   if (mode === "study" || mode === "edit") {
     highlightCorrect();
 }
+    }
     
 // ==========================
 // ZVÝRAZNĚNÍ SPRÁVNÉ ODPOVĚDI
