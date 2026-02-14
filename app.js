@@ -40,6 +40,8 @@ let currentQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let mode = "study";
+let wrongQuestions = [];
+
 
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
