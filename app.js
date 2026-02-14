@@ -289,13 +289,34 @@ function prevQuestion() {
 function finish() {
   if (mode !== "test") return;
 
-  const percent = Math.round((score / currentQuestions.length) * 100);
+  const total = currentQuestions.length;
+  const percent = Math.round((score / total) * 100);
+
+  let buttonHtml = "";
+
+  if (wrongQuestions.length > 0) {
+    buttonHtml = `
+      <button onclick="repeatWrong()" style="
+        margin-top:15px;
+        padding:10px 15px;
+        border-radius:6px;
+        border:none;
+        background:#2c5282;
+        color:white;
+        cursor:pointer;
+      ">
+        Opakovat špatné otázky (${wrongQuestions.length})
+      </button>
+    `;
+  }
 
   resultBox.innerHTML = `
-    <div style="margin-top:20px;font-weight:bold">
-      Hotovo.<br>
-      Správně: ${score} / ${currentQuestions.length}<br>
+    <div style="padding:15px;border:1px solid #ccc;border-radius:8px;">
+      <strong>Test dokončen</strong><br>
+      Správně: ${score} / ${total}<br>
       Úspěšnost: ${percent} %
+      ${buttonHtml}
     </div>
   `;
 }
+
