@@ -82,10 +82,29 @@ loadColors();
 
 fetch("./data.json")
     .then(res => res.json())
-    .then(json => {
+    .then(async json => {
+
         data = json;
+
+        // načíst opravy z Firestore
+        if (window.db) {
+
+            const snapshot = await window.fbGetDocs(
+                window.fbCollection(window.db, "corrections")
+            );
+
+            snapshot.forEach(doc => {
+                const c = doc.data();
+
+                if (data[c.category] && data[c.category][c.questionIndex]) {
+                    data[c.category][c.questionIndex].correct = c.correct;
+                }
+            });
+        }
+
         initCategories();
     });
+
 
 // ==========================
 // KATEGORIE
