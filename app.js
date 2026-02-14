@@ -4,18 +4,23 @@ console.log("SPL READY");
 ========================= */
 async function loadMetar() {
   try {
+
     const response = await fetch(
-      "https://api.allorigins.win/raw?url=" +
-      encodeURIComponent("https://aviationweather.gov/api/data/metar?ids=LKMT&format=raw&hours=1")
+      "https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
     );
 
-    const metar = await response.text();
-
-    if (metar.trim() === "") {
-      document.getElementById("metarBox").innerText = "METAR není dostupný";
-    } else {
-      document.getElementById("metarBox").innerText = metar;
+    if (!response.ok) {
+      throw new Error("HTTP error " + response.status);
     }
+
+    const text = await response.text();
+
+    const lines = text.trim().split("\n");
+
+    // Druhý řádek obsahuje samotný METAR
+    const metar = lines[1] || "METAR není dostupný";
+
+    document.getElementById("metarBox").innerText = metar;
 
   } catch (error) {
     document.getElementById("metarBox").innerText = "Chyba načítání METAR";
@@ -23,8 +28,9 @@ async function loadMetar() {
   }
 }
 
+
 loadMetar();
-setInterval(loadMetar, 1800000);
+setInterval(loadMetar, 30000);
 // ==========================
 // GLOBÁLNÍ STAV
 // ==========================
