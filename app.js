@@ -223,25 +223,31 @@ function prevQuestion(){
 }
 
 function highlightCorrect(){
-  let buttons = quizContainer.querySelectorAll("button");
-  buttons.forEach((btn,i)=>{
-    btn.style.background="#1f3a5f";
-    if(i === currentQuestions[currentIndex].correct){
-      btn.style.backgroundColor = "var(--correctColor)";
+    let buttons = quizContainer.querySelectorAll("button");
 
-;
-    }
-  });
+    buttons.forEach((btn,i)=>{
+        btn.style.backgroundColor = "#1f3a5f";
+
+        if(i === currentQuestions[currentIndex].correct){
+            btn.style.backgroundColor = "var(--correctColor)";
+        }
+    });
 }
+
 
 function highlightSelection(c,s){
-  let buttons = quizContainer.querySelectorAll("button");
-  buttons.forEach((btn,i)=>{
-    btn.disabled = true;
-    if(i === c) btn.style.background="#3fa46a";
-    if(i === s && i !== c) btn.style.backgroundColor = "var(--wrongColor)";
-  });
+    let buttons = quizContainer.querySelectorAll("button");
+
+    buttons.forEach((btn,i)=>{
+        btn.disabled = true;
+        btn.style.backgroundColor = "#3fa46a";
+
+        if(i === s && i !== c)
+            btn.style.backgroundColor = "var(--wrongColor)";
+    });
 }
+
+   
 function finishQuiz(){
   if(mode === "test"){
     let percent = Math.round((score/currentQuestions.length)*100);
