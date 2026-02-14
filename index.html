@@ -76,6 +76,10 @@ Načítám METAR...
 
 <!-- TOTO TAM PŘEDTÍM CHYBĚLO -->
 <div id="quizContainer" style="margin-top:20px;"></div>
+<button onclick="showHistory()" 
+        style="margin-top:15px; padding:8px 14px;">
+📜 Historie změn otázky
+</button>
 
 <div id="result" style="margin-top:20px;font-weight:bold;"></div>
 
@@ -92,6 +96,7 @@ Načítám METAR...
   © 2026 Zdeněk Horák | SPL Trainer | 
   <span id="versionInfo">Načítám verzi…</span>
 </footer>
+
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
@@ -110,7 +115,6 @@ Načítám METAR...
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // zpřístupníme globálně
   window.db = db;
   window.fbCollection = collection;
   window.fbAddDoc = addDoc;

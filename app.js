@@ -247,9 +247,23 @@ function selectAnswer(index) {
    // EDIT režim ukládá opravy do Firestore
 if (mode === "edit") {
 
+    const previous = currentQuestions[currentIndex].correct;
+
     currentQuestions[currentIndex].correct = index;
 
     if (window.db) {
+
+        const logData = {
+            category: categorySelect.value,
+            questionIndex: currentIndex,
+            questionText: currentQuestions[currentIndex].question,
+            previousCorrect: previous,
+            newCorrect: index,
+            answers: currentQuestions[currentIndex].answers,
+            timestamp: Date.now()
+        };
+
+        // aktuální stav
         window.fbAddDoc(
             window.fbCollection(window.db, "corrections"),
             {
@@ -259,32 +273,73 @@ if (mode === "edit") {
                 timestamp: Date.now()
             }
         );
+
+        // historie změn
+        window.fbAddDoc(
+            window.fbCollection(window.db, "corrections_log"),
+            logData
+        );
     }
 
     highlightCorrect();
     return;
 }
 
-    const correct = currentQuestions[currentIndex].correct;
-    const buttons = document.querySelectorAll(".answerBtn");
+}
 
-    buttons.forEach((btn, i) => {
-        btn.disabled = true;
+// ==========================
+// HISTORIE ZMĚN OTÁZKY
+// ==========================
 
-        if (i === correct) {
-            btn.style.backgroundColor = "var(--correctColor)";
-        }
+async function showHistory() {
 
-        if (mode === "test" && i === index && i !== correct) {
-            btn.style.backgroundColor = "var(--wrongColor)";
+    if (!window.db) {
+        alert("Databáze není dostupná.");
+        return;
+    }
+
+    const category = categorySelect.value;
+    const qIndex = currentIndex;
+
+    const snapshot = await window.fbGetDocs(
+        window.fbCollection(window.db, "corrections_log")
+    );
+
+    let history = [];
+
+    snapshot.forEach(doc => {
+        const d = doc.data();
+
+        if (d.category === category && d.questionIndex === qIndex) {
+            history.push(d);
         }
     });
 
-    if (mode === "test" && index === correct) score++;
+    history.sort((a, b) => b.timestamp - a.timestamp);
 
-    if (mode === "test") {
-        setTimeout(nextQuestion, 700);
+    let text = "Historie změn:\n\n";
+
+    if (history.length === 0) {
+        text += "Žádné změny pro tuto otázku.";
+    } else {
+
+        history.forEach(h => {
+
+            const date = new Date(h.timestamp).toLocaleString();
+
+            text += date + "\n";
+            text += "Otázka: " + h.questionText + "\n";
+
+            if (h.previousCorrect !== undefined && h.newCorrect !== undefined) {
+                text += "Změna: " + h.previousCorrect + " → " + h.newCorrect + "\n\n";
+            } else {
+                text += "Neznámý formát záznamu\n\n";
+            }
+
+        });
     }
+
+    alert(text);
 }
 
 // ==========================
