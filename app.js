@@ -225,6 +225,27 @@ function highlightCorrect() {
 // ==========================
 
 function selectAnswer(index) {
+   // EDIT režim ukládá opravy do Firestore
+if (mode === "edit") {
+
+    currentQuestions[currentIndex].correct = index;
+
+    if (window.db) {
+        window.fbAddDoc(
+            window.fbCollection(window.db, "corrections"),
+            {
+                category: categorySelect.value,
+                questionIndex: currentIndex,
+                correct: index,
+                timestamp: Date.now()
+            }
+        );
+    }
+
+    highlightCorrect();
+    return;
+}
+
     const correct = currentQuestions[currentIndex].correct;
     const buttons = document.querySelectorAll(".answerBtn");
 
