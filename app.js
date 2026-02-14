@@ -102,8 +102,6 @@ function startQuiz(){
   showQuestion();
 }
 
-}
-
 function showQuestion(){
   if(!currentQuestions || currentQuestions.length === 0) return;
 
