@@ -256,12 +256,18 @@ function selectAnswer(index) {
 ========================= */
 
 function nextQuestion() {
+
   if (currentIndex < currentQuestions.length - 1) {
+
     currentIndex++;
     showQuestion();
+
   } else {
+
     finish();
+
   }
+
 }
 
 function prevQuestion() {
