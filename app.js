@@ -25,8 +25,7 @@ async function loadMetar() {
   }
 }
 
-loadMetar();
-setInterval(loadMetar, 30000);
+
 // ==========================
 // GLOBÁLNÍ STAV
 // ==========================
