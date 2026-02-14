@@ -152,13 +152,13 @@ function showQuestion() {
         <h3>${q.question}</h3>
     `;
 
-    q.answers.forEach((a, i) => {
-        html += `
-            <button onclick="selectAnswer(${i})" id="ans_${i}">
-                ${a}
-            </button>
-        `;
-    });
+   q.answers.forEach((a, i) => {
+    html += `
+        <button class="answerBtn" onclick="selectAnswer(${i})">
+            ${a}
+        </button>
+    `;
+});
 
     html += `
         <div style="margin-top:10px;display:flex;gap:8px;">
