@@ -325,6 +325,9 @@ if (window.location.href.includes("dev")) {
   const banner = document.getElementById("devBanner");
   if (banner) banner.style.display = "block";
 }
+   document.getElementById("correctColor").addEventListener("input", applyColors);
+document.getElementById("wrongColor").addEventListener("input", applyColors);
+
 
 
 
