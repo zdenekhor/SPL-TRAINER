@@ -5,7 +5,7 @@ console.log("SPL READY");
 ========================= */
 
 function generateMetar() {
-
+const APP_ENV = "dev"; // změnit na "prod" v main
   const windDir = Math.floor(Math.random() * 36) * 10;
   const windSpeed = Math.floor(Math.random() * 20) + 1;
   const visibility = ["9999", "8000", "6000", "4000"];
