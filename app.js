@@ -93,6 +93,13 @@ function startTest() {
     showQuestion();
 }
 
+function startEdit() {
+    mode = "edit";
+    prepareQuestions();
+    showQuestion();
+}
+
+
 // ==========================
 // PŘÍPRAVA OTÁZEK
 // ==========================
