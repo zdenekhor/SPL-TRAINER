@@ -14,6 +14,14 @@ const APP_ENV = "dev"; // změnit na "prod" v main
   const dew = temp - Math.floor(Math.random() * 5);
   const qnh = 980 + Math.floor(Math.random() * 40);
 
+   
+if (APP_ENV === "dev") { // baner test
+  const banner = document.getElementById("devBanner");
+  if (banner) banner.style.display = "block";
+}
+
+
+   
   const metar =
     "LKMT 131000Z " +
     windDir.toString().padStart(3, "0") +
