@@ -2,125 +2,117 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<title>SPL Testovací Aplikace</title>
-<link rel="stylesheet" href="style.css">
-  <style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPL01 Testovací Aplikace</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #0d223a;
+  color: white;
+  padding: 20px;
+}
+
+button {
+  padding: 8px 12px;
+  margin: 5px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+select, input, textarea {
+  padding: 6px;
+  margin: 5px 0;
+}
+
+.answerBtn {
+  background: #1a2b44;
+  color: white;
+  width: 100%;
+  text-align: left;
+}
+
 :root {
-  --correctColor: #2ecc71;
-  --wrongColor: #e74c3c;
+  --correctColor: #2e7d32;
+  --wrongColor: #8b0000;
 }
 </style>
 
 </head>
-
 <body>
-  <div id="devBanner" style="
-  display:none;
-  background:#b00020;
-  color:white;
-  padding:8px;
-  text-align:center;
-  font-weight:bold;
-  letter-spacing:1px;
-">
-⚠ TESTOVACÍ VERZE (DEV)
-</div>
 
-
-<div class="container">
 <h1>✈ SPL01 Testovací Aplikace</h1>
-  
-  <div id="metarBox" style="
-margin:15px 0;
-padding:12px;
-background:#101f33;
-border-radius:8px;
-font-family: monospace;
-color:#7fdfff;">
-Načítám METAR...
+
+<div id="metarBox" style="margin-bottom:20px;">
+  Načítám METAR...
 </div>
 
+<h3>Nastavení barev:</h3>
+Správná odpověď: <span style="background:var(--correctColor);padding:6px 20px;"></span>
+Špatná odpověď: <span style="background:var(--wrongColor);padding:6px 20px;"></span>
 
-  <div style="margin-top:15px;"> <!-- VÝBĚR BAREVNÉHO ZOBRAZENI -->
-  <strong>Nastavení barev:</strong><br><br>
-
-  Správná odpověď:
-  <input type="color" id="correctColor" value="#2ecc71">
-
-  &nbsp;&nbsp;
-
-  Špatná odpověď:
-  <input type="color" id="wrongColor" value="#e74c3c">
-</div>
-
-
-<div id="menu">
 <h3>Okruh:</h3>
 <select id="categorySelect"></select>
-<br><br>
-<button onclick="startStudy()">📘 Studium</button>
-<button onclick="startTest()">📝 Test</button>
-<button onclick="startEdit()">⚙ Nastavit správné odpovědi</button>
-  
-  <label style="display:block; margin-top:10px;"> <!-- VOLBA NÁHODNÉ OTÁZKY -->
-  <input type="checkbox" id="randomToggle">
-  Náhodné otázky v testu
-</label>
-  
-<label style="display:block; margin-top:10px;"> <!-- POČET OTÁZEK V TESTU -->
-  Počet otázek v testu:
-  <input type="number" id="questionLimit" min="1" style="width:80px; margin-left:5px;">
+
+<br>
+
+<button onclick="startStudy()">Studium</button>
+<button onclick="startTest()">Test</button>
+<button onclick="startEdit()">Nastavit správné odpovědi</button>
+
+<br>
+
+<label>
+<input type="checkbox" id="randomQuestions">
+Náhodné otázky v testu
 </label>
 
-</div>
+<br>
 
-<!-- TOTO TAM PŘEDTÍM CHYBĚLO -->
+Počet otázek v testu:
+<input type="number" id="questionCount" value="10" min="1">
+
+<hr>
+
 <div id="quizContainer" style="margin-top:20px;"></div>
-<button onclick="showHistory()" 
-        style="margin-top:15px; padding:8px 14px;">
-📜 Historie změn otázky
-</button>
 
-<div id="result" style="margin-top:20px;font-weight:bold;"></div>
+<!-- CHAT -->
+<div id="chatSection" style="margin-top:30px;">
+  <h3>Dotazy / poznámky k otázce</h3>
 
+  <textarea id="chatInput"
+            rows="3"
+            style="width:100%; border-radius:6px;"></textarea>
+
+  <button onclick="sendChatMessage()">Odeslat</button>
+
+  <div id="chatMessages" style="margin-top:15px;"></div>
 </div>
 
-<script src="app.js"></script>
-<footer style="
-  margin-top:50px;
-  padding:20px;
-  text-align:center;
-  font-size:13px;
-  color:#ccc;
-  border-top:1px solid #333;">
-  © 2026 Zdeněk Horák | SPL Trainer | 
-  <span id="versionInfo">Načítám verzi…</span>
-</footer>
-
-
+<!-- FIREBASE -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs }
-    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDJUBuxXrv44dQmokqoLhDQ7n90nIbt1g8",
-    authDomain: "spl-trainer.firebaseapp.com",
-    projectId: "spl-trainer",
-    storageBucket: "spl-trainer.firebasestorage.app",
-    messagingSenderId: "51536361421",
-    appId: "1:51536361421:web:179c7497bb5341a7bcb684"
-  };
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+};
 
-  window.db = db;
-  window.fbCollection = collection;
-  window.fbAddDoc = addDoc;
-  window.fbGetDocs = getDocs;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+window.fbCollection = collection;
+window.fbAddDoc = addDoc;
+window.fbGetDocs = getDocs;
+
 </script>
 
+<script src="app.js"></script>
 
 </body>
 </html>
