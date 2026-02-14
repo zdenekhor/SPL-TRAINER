@@ -117,6 +117,7 @@ function startStudy() {
 function startTest() {
   mode = "test";
   score = 0;
+   wrongQuestions = []; // přidat toto
   prepareQuestions();
   showQuestion();
 }
