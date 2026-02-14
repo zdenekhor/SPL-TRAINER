@@ -130,6 +130,24 @@ function startQuiz(){
     if (mode === "test" && randomOn) {
         shuffleArray(currentQuestions);
     }
+   
+   function applyColors() {
+    const correctPicker = document.getElementById("correctColor");
+    const wrongPicker = document.getElementById("wrongColor");
+
+    if (!correctPicker || !wrongPicker) return;
+
+    const newCorrect = correctPicker.value;
+    const newWrong = wrongPicker.value;
+
+    // nastav CSS proměnné
+    document.documentElement.style.setProperty("--correctColor", newCorrect);
+    document.documentElement.style.setProperty("--wrongColor", newWrong);
+
+    // uložit do localStorage
+    localStorage.setItem("correctColor", newCorrect);
+    localStorage
+
 
     // omezení počtu otázek jen v testu
     if (mode === "test" && !isNaN(limit) && limit > 0 && limit < currentQuestions.length) {
