@@ -48,6 +48,27 @@ const resultBox = document.getElementById("result") || { innerHTML: "" };
 
 const randomToggle = document.getElementById("randomToggle");
 const questionLimitInput = document.getElementById("questionLimit");
+const correctColorPicker = document.getElementById("correctColorPicker");
+const wrongColorPicker = document.getElementById("wrongColorPicker");
+
+if (correctColorPicker) {
+  correctColorPicker.addEventListener("input", (e) => {
+    document.documentElement.style.setProperty(
+      "--correctColor",
+      e.target.value
+    );
+  });
+}
+
+if (wrongColorPicker) {
+  wrongColorPicker.addEventListener("input", (e) => {
+    document.documentElement.style.setProperty(
+      "--wrongColor",
+      e.target.value
+    );
+  });
+}
+
 
 /* =========================
    NAČTENÍ DAT
