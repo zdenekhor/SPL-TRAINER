@@ -172,6 +172,27 @@ function showQuestion() {
   if (mode === "study" || mode === "edit") {
     highlightCorrect();
 }
+    
+// ==========================
+// ZVÝRAZNĚNÍ SPRÁVNÉ ODPOVĚDI
+// ==========================
+
+function highlightCorrect() {
+
+    const correct = currentQuestions[currentIndex].correct;
+    const buttons = document.querySelectorAll(".answerBtn");
+
+    buttons.forEach((btn, i) => {
+
+        // reset výchozí barvy
+        btn.style.backgroundColor = "#1f3a5f";
+        btn.disabled = false;
+
+        if (i === correct) {
+            btn.style.backgroundColor = "var(--correctColor)";
+        }
+    });
+}
 
 // ==========================
 // VÝBĚR ODPOVĚDI
