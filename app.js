@@ -51,6 +51,16 @@ const questionLimitInput = document.getElementById("questionCount");
 
 const correctColorPicker = document.getElementById("correctColorPicker");
 const wrongColorPicker = document.getElementById("wrongColorPicker");
+const settingsToggle = document.getElementById("settingsToggle");
+const settingsPanel = document.getElementById("settingsPanel");
+
+if (settingsToggle && settingsPanel) {
+  settingsToggle.addEventListener("click", () => {
+    settingsPanel.style.display =
+      settingsPanel.style.display === "none" ? "block" : "none";
+  });
+}
+
 
 if (correctColorPicker) {
   correctColorPicker.addEventListener("input", (e) => {
