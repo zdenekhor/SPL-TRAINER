@@ -219,35 +219,34 @@ function highlightCorrect() {
 
 function selectAnswer(index) {
 
-  // TEST režim
   if (mode === "test") {
 
     const correct = currentQuestions[currentIndex].correct;
     const buttons = document.querySelectorAll(".answerBtn");
 
     buttons.forEach((btn, i) => {
+
       btn.disabled = true;
 
       if (i === correct) {
         btn.style.backgroundColor = "var(--correctColor)";
       }
 
-      if (index === correctIndex) {
-  score++;
-} else {
-  wrongQuestions.push(currentQuestions[currentIndex]);
-}
+      if (i === index && index !== correct) {
+        btn.style.backgroundColor = "var(--wrongColor)";
+      }
 
     });
 
     if (index === correct) {
       score++;
+    } else {
+      wrongQuestions.push(currentQuestions[currentIndex]);
     }
 
     return;
   }
 
-  // EDIT režim
   if (mode === "edit") {
 
     currentQuestions[currentIndex].correct = index;
