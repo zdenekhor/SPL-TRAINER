@@ -3,29 +3,30 @@ console.log("SPL READY");
 /* =========================
    METAR GENERATOR
 ========================= */
-
 async function loadMetar() {
   try {
     const response = await fetch(
-      "https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
+      "https://api.allorigins.win/raw?url=" +
+      encodeURIComponent("https://aviationweather.gov/api/data/metar?ids=LKMT&format=raw&hours=1")
     );
 
-    const text = await response.text();
+    const metar = await response.text();
 
-    // Druhý řádek obsahuje METAR
-    const lines = text.split("\n");
-    const metar = lines[1];
-
-    document.getElementById("metarBox").innerText = metar;
+    if (metar.trim() === "") {
+      document.getElementById("metarBox").innerText = "METAR není dostupný";
+    } else {
+      document.getElementById("metarBox").innerText = metar;
+    }
 
   } catch (error) {
-    document.getElementById("metarBox").innerText =
-      "METAR se nepodařilo načíst";
+    document.getElementById("metarBox").innerText = "Chyba načítání METAR";
     console.error("METAR error:", error);
   }
 }
 
 loadMetar();
+setInterval(loadMetar, 1800000);
+
 
 
 
