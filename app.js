@@ -3,6 +3,9 @@ console.log("SPL READY");
    METAR GENERATOR
 ========================= */
 async function loadMetar() {
+  console.log("METAR spouštím");
+  try {
+
   try {
 
     const response = await fetch(
