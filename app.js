@@ -88,10 +88,20 @@ function startTest(){ mode="test"; score=0; startQuiz(); }
 function startEdit(){ mode="edit"; startQuiz(); }
 
 function startQuiz(){
-  currentQuestions = data[categorySelect.value];
+
+  // vytvoříme kopii pole
+  currentQuestions = [...data[categorySelect.value]];
   currentIndex = 0;
   resultBox.innerHTML = "";
+
+  // random pouze v test režimu
+  if (mode === "test") {
+    shuffleArray(currentQuestions);
+  }
+
   showQuestion();
+}
+
 }
 
 function showQuestion(){
