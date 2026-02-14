@@ -209,7 +209,8 @@ function highlightCorrect(){
   buttons.forEach((btn,i)=>{
     btn.style.background="#1f3a5f";
     if(i === currentQuestions[currentIndex].correct){
-      btn.style.background="#3fa46a";
+      btn.style.backgroundColor = "var(--correctColor)";
+
 ;
     }
   });
@@ -220,7 +221,7 @@ function highlightSelection(c,s){
   buttons.forEach((btn,i)=>{
     btn.disabled = true;
     if(i === c) btn.style.background="#3fa46a";
-    if(i === s && i !== c) btn.style.background="#e74c3c";
+    if(i === s && i !== c) btn.style.backgroundColor = "var(--wrongColor)";
   });
 }
 function finishQuiz(){
