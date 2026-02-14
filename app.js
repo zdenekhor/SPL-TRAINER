@@ -4,23 +4,18 @@ console.log("SPL READY");
 ========================= */
 async function loadMetar() {
   try {
-
     const response = await fetch(
-      "https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
+      "https://api.allorigins.win/raw?url=" +
+      encodeURIComponent("https://aviationweather.gov/api/data/metar?ids=LKMT&format=raw&hours=1")
     );
 
-    if (!response.ok) {
-      throw new Error("HTTP error " + response.status);
+    const metar = await response.text();
+
+    if (metar.trim() === "") {
+      document.getElementById("metarBox").innerText = "METAR není dostupný";
+    } else {
+      document.getElementById("metarBox").innerText = metar;
     }
-
-    const text = await response.text();
-
-    const lines = text.trim().split("\n");
-
-    // Druhý řádek obsahuje samotný METAR
-    const metar = lines[1] || "METAR není dostupný";
-
-    document.getElementById("metarBox").innerText = metar;
 
   } catch (error) {
     document.getElementById("metarBox").innerText = "Chyba načítání METAR";
@@ -28,9 +23,8 @@ async function loadMetar() {
   }
 }
 
-
 loadMetar();
-setInterval(loadMetar, 30000);
+setInterval(loadMetar, 1800000);
 // ==========================
 // GLOBÁLNÍ STAV
 // ==========================
@@ -250,71 +244,48 @@ function highlightCorrect() {
 // ==========================
 
 function selectAnswer(index) {
+   // EDIT režim ukládá opravy do Firestore
+if (mode === "edit") {
 
-    // ===== TEST režim =====
-    if (mode === "test") {
+    const previous = currentQuestions[currentIndex].correct;
 
-        const correct = currentQuestions[currentIndex].correct;
-        const buttons = document.querySelectorAll(".answerBtn");
+    currentQuestions[currentIndex].correct = index;
 
-        buttons.forEach((btn, i) => {
-            btn.disabled = true;
+    if (window.db) {
 
-            if (i === correct) {
-                btn.style.backgroundColor = "var(--correctColor)";
-            }
+        const logData = {
+            category: categorySelect.value,
+            questionIndex: currentIndex,
+            questionText: currentQuestions[currentIndex].question,
+            previousCorrect: previous,
+            newCorrect: index,
+            answers: currentQuestions[currentIndex].answers,
+            timestamp: Date.now()
+        };
 
-            if (i === index && i !== correct) {
-                btn.style.backgroundColor = "var(--wrongColor)";
-            }
-        });
-
-        if (index === correct) {
-            score++;
-        }
-
-        return;
-    }
-
-    // ===== EDIT režim =====
-    if (mode === "edit") {
-
-        const previous = currentQuestions[currentIndex].correct;
-        currentQuestions[currentIndex].correct = index;
-
-        if (window.db) {
-
-            const logData = {
+        // aktuální stav
+        window.fbAddDoc(
+            window.fbCollection(window.db, "corrections"),
+            {
                 category: categorySelect.value,
                 questionIndex: currentIndex,
-                questionText: currentQuestions[currentIndex].question,
-                previousCorrect: previous,
-                newCorrect: index,
-                answers: currentQuestions[currentIndex].answers,
+                correct: index,
                 timestamp: Date.now()
-            };
+            }
+        );
 
-            window.fbAddDoc(
-                window.fbCollection(window.db, "corrections"),
-                {
-                    category: categorySelect.value,
-                    questionIndex: currentIndex,
-                    correct: index,
-                    timestamp: Date.now()
-                }
-            );
-
-            window.fbAddDoc(
-                window.fbCollection(window.db, "corrections_log"),
-                logData
-            );
-        }
-
-        highlightCorrect();
-        return;
+        // historie změn
+        window.fbAddDoc(
+            window.fbCollection(window.db, "corrections_log"),
+            logData
+        );
     }
+
+    highlightCorrect();
+    return;
 }
 
+}
 
 // ==========================
 // HISTORIE ZMĚN OTÁZKY
