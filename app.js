@@ -144,7 +144,7 @@ function highlightCorrect(){
     btn.style.background="#1f3a5f";
     if(i === currentQuestions[currentIndex].correct){
       btn.style.background="#3fa46a";
-;
+
     }
   });
 }
