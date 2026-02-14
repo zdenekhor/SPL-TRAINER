@@ -66,6 +66,13 @@ fetch("./data.json")
   })
   .catch(err => console.error("JSON error:", err));
 
+function shuffleArray(array) { // FNK RANDOM PRO TEST
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 function initCategories(){
   categorySelect.innerHTML = "";
   Object.keys(data).forEach(cat=>{
