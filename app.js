@@ -4,37 +4,31 @@ console.log("SPL READY");
    METAR GENERATOR
 ========================= */
 
-function generateMetar() {
+async function loadMetar() {
+  try {
+    const response = await fetch(
+      "https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
+    );
 
-  const windDir = Math.floor(Math.random() * 36) * 10;
-  const windSpeed = Math.floor(Math.random() * 20) + 1;
-  const visibility = ["9999", "8000", "6000", "4000"];
-  const clouds = ["FEW020", "SCT030", "BKN040", "OVC050"];
-  const temp = Math.floor(Math.random() * 25) - 5;
-  const dew = temp - Math.floor(Math.random() * 5);
-  const qnh = 980 + Math.floor(Math.random() * 40);
+    const text = await response.text();
 
-  const metar =
-    "LKMT 131000Z " +
-    windDir.toString().padStart(3, "0") +
-    windSpeed +
-    "KT " +
-    visibility[Math.floor(Math.random() * visibility.length)] +
-    " " +
-    clouds[Math.floor(Math.random() * clouds.length)] +
-    " " +
-    temp +
-    "/" +
-    dew +
-    " Q" +
-    qnh;
+    // Druhý řádek obsahuje METAR
+    const lines = text.split("\n");
+    const metar = lines[1];
 
-  document.getElementById("metarBox").innerText = metar;
+    document.getElementById("metarBox").innerText = metar;
+
+  } catch (error) {
+    document.getElementById("metarBox").innerText =
+      "METAR se nepodařilo načíst";
+    console.error("METAR error:", error);
+  }
 }
 
+loadMetar();
+setInterval(loadMetar, 1800000);
 
 
-generateMetar();
 
 /* =========================
    QUIZ LOGIC
