@@ -319,4 +319,23 @@ function finish() {
     </div>
   `;
 }
+function repeatWrong() {
+
+  if (wrongQuestions.length === 0) {
+    alert("Žádné špatné otázky.");
+    return;
+  }
+
+  currentQuestions = [...wrongQuestions];
+  wrongQuestions = [];
+
+  currentIndex = 0;
+  score = 0;
+  mode = "test";
+
+  resultBox.innerHTML = "";
+
+  showQuestion();
+}
+
 
