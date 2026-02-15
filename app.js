@@ -41,7 +41,6 @@ let currentIndex = 0;
 let score = 0;
 let mode = "study";
 let wrongQuestions = [];
-let wrongQuestions = [];
 let changeLog = {};
 
 
