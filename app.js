@@ -210,8 +210,16 @@ function showQuestion() {
 
   const q = currentQuestions[currentIndex];
 
-  const key = categorySelect.value + "|" + q.question;
-  const changes = changeLog[key];
+  const key =
+  categorySelect.value.trim() + "|" +
+  q.question.trim();
+
+const changes = changeLog[key];
+
+console.log("CURRENT KEY:", key);
+console.log("CHANGELOG KEYS:", Object.keys(changeLog));
+console.log("MATCH FOUND:", changes);
+
    console.log("KEY:", key);
 console.log("AVAILABLE KEYS:", Object.keys(changeLog));
 
