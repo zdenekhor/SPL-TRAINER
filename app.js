@@ -205,43 +205,62 @@ function shuffle(array) {
 ========================= */
 
 function showQuestion() {
+
   if (!currentQuestions.length) return;
 
- const q = currentQuestions[currentIndex];
+  const q = currentQuestions[currentIndex];
 
-const key = categorySelect.value + "|" + q.question;
-const changes = changeLog[key];
+  const key = categorySelect.value + "|" + q.question;
+  const changes = changeLog[key];
 
-let html = `
-  <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
-  <h3>${q.question}</h3>
-`;
-
-if (changes && changes.length > 0) {
-
-  q.answers.forEach((a, i) => {
-  html += `
-    <button class="answerBtn" onclick="selectAnswer(${i})">
-      ${a}
-    </button>
+  let html = `
+    <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
+    <h3>${q.question}</h3>
   `;
-});
 
-html += `
-  <div style="margin-top:10px;display:flex;gap:8px;">
-    <button onclick="prevQuestion()">⬅ Zpět</button>
-    <button onclick="nextQuestion()">Další ➡</button>
-  </div>
-`;
+  // zobrazit historii změn pokud existuje
+  if (changes && changes.length > 0) {
 
-quizContainer.innerHTML = html;
+    const last = changes[changes.length - 1];
+    const date = new Date(last.timestamp);
 
-if (mode === "study" || mode === "edit") {
-  highlightCorrect();
+    html += `
+      <div style="
+        font-size:12px;
+        color:#ffd166;
+        margin-bottom:10px;
+        padding:6px;
+        border-left:3px solid #ffd166;
+      ">
+        📝 Změněno: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
+        (${last.oldCorrect + 1} → ${last.newCorrect + 1})
+      </div>
+    `;
+  }
+
+  // odpovědi musí být vždy mimo if(changes)
+  q.answers.forEach((a, i) => {
+    html += `
+      <button class="answerBtn" onclick="selectAnswer(${i})">
+        ${a}
+      </button>
+    `;
+  });
+
+  html += `
+    <div style="margin-top:10px;display:flex;gap:8px;">
+      <button onclick="prevQuestion()">⬅ Zpět</button>
+      <button onclick="nextQuestion()">Další ➡</button>
+    </div>
+  `;
+
+  quizContainer.innerHTML = html;
+
+  if (mode === "study" || mode === "edit") {
+    highlightCorrect();
+  }
+
 }
-
-}
-
 
 /* =========================
    ZVÝRAZNĚNÍ
