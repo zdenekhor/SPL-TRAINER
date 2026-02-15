@@ -41,6 +41,9 @@ let currentIndex = 0;
 let score = 0;
 let mode = "study";
 let wrongQuestions = [];
+let wrongQuestions = [];
+let changeLog = {};
+
 
 
 const categorySelect = document.getElementById("categorySelect");
@@ -102,6 +105,33 @@ function initCategories() {
     option.textContent = cat;
     categorySelect.appendChild(option);
   });
+}
+/* =========================
+   NAČTENÍ HISTORIE ZMĚN Z FIREBASE
+========================= */
+
+async function loadChangeLog() {
+
+  if (!window.db) return;
+
+  const snapshot = await window.fbGetDocs(
+    window.fbCollection(window.db, "questionChanges")
+  );
+
+  snapshot.forEach(doc => {
+
+    const d = doc.data();
+
+    const key = d.category + "|" + d.question;
+
+    if (!changeLog[key]) {
+      changeLog[key] = [];
+    }
+
+    changeLog[key].push(d);
+
+  });
+
 }
 
 /* =========================
