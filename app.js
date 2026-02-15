@@ -1,381 +1,451 @@
 console.log("SPL READY");
+
 /* =========================
-   METAR GENERATOR
+   METAR
 ========================= */
 async function loadMetar() {
   try {
+
     const response = await fetch(
-      "https://api.allorigins.win/raw?url=" +
-      encodeURIComponent("https://aviationweather.gov/api/data/metar?ids=LKMT&format=raw&hours=1")
+      "https://corsproxy.io/?https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
     );
 
-    const metar = await response.text();
-
-    if (metar.trim() === "") {
-      document.getElementById("metarBox").innerText = "METAR není dostupný";
-    } else {
-      document.getElementById("metarBox").innerText = metar;
+    if (!response.ok) {
+      throw new Error("HTTP error " + response.status);
     }
 
+    const text = await response.text();
+    const lines = text.trim().split("\n");
+    const metar = lines[1] || "METAR není dostupný";
+
+    const box = document.getElementById("metarBox");
+    if (box) box.innerText = metar;
+
   } catch (error) {
-    document.getElementById("metarBox").innerText = "Chyba načítání METAR";
-    console.error("METAR error:", error);
+    console.warn("METAR error:", error);
+    const box = document.getElementById("metarBox");
+    if (box) box.innerText = "METAR nedostupný";
   }
 }
 
 loadMetar();
-setInterval(loadMetar, 1800000);
-// ==========================
-// GLOBÁLNÍ STAV
-// ==========================
+setInterval(loadMetar, 300000);
+
+/* =========================
+   GLOBÁLNÍ STAV
+========================= */
 
 let data = {};
 let currentQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let mode = "study";
+let wrongQuestions = [];
+let changeLog = {};
+
+
 
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
-const resultBox = document.getElementById("result");
+const resultBox = document.getElementById("result") || { innerHTML: "" };
 
-const randomToggle = document.getElementById("randomToggle");
-const questionLimitInput = document.getElementById("questionLimit");
+const randomToggle = document.getElementById("randomQuestions");
+const questionLimitInput = document.getElementById("questionCount");
 
-// ==========================
-// BAREVNÝ SYSTÉM
-// ==========================
 
-const correctPicker = document.getElementById("correctColor");
-const wrongPicker = document.getElementById("wrongColor");
+const correctColorPicker = document.getElementById("correctColorPicker");
+const wrongColorPicker = document.getElementById("wrongColorPicker");
+const settingsToggle = document.getElementById("settingsToggle");
+const settingsPanel = document.getElementById("settingsPanel");
 
-function applyColors() {
-    document.documentElement.style.setProperty("--correctColor", correctPicker.value);
-    document.documentElement.style.setProperty("--wrongColor", wrongPicker.value);
+if (settingsToggle && settingsPanel) {
+  settingsToggle.addEventListener("click", () => {
+    settingsPanel.style.display =
+      settingsPanel.style.display === "none" ? "block" : "none";
+  });
 }
 
-function loadColors() {
-    const savedCorrect = localStorage.getItem("correctColor");
-    const savedWrong = localStorage.getItem("wrongColor");
 
-    if (savedCorrect) correctPicker.value = savedCorrect;
-    if (savedWrong) wrongPicker.value = savedWrong;
-
-    applyColors();
+if (correctColorPicker) {
+  correctColorPicker.addEventListener("input", (e) => {
+    document.documentElement.style.setProperty(
+      "--correctColor",
+      e.target.value
+    );
+  });
 }
 
-correctPicker.addEventListener("input", () => {
-    localStorage.setItem("correctColor", correctPicker.value);
-    applyColors();
-});
+if (wrongColorPicker) {
+  wrongColorPicker.addEventListener("input", (e) => {
+    document.documentElement.style.setProperty(
+      "--wrongColor",
+      e.target.value
+    );
+  });
+}
 
-wrongPicker.addEventListener("input", () => {
-    localStorage.setItem("wrongColor", wrongPicker.value);
-    applyColors();
-});
 
-loadColors();
-
-// ==========================
-// NAČTENÍ DAT
-// ==========================
+/* =========================
+   NAČTENÍ DAT
+========================= */
 
 fetch("./data.json")
-    .then(res => res.json())
-    .then(async json => {
-
-        data = json;
-
-        // načíst opravy z Firestore
-        if (window.db) {
-
-            const snapshot = await window.fbGetDocs(
-                window.fbCollection(window.db, "corrections")
-            );
-
-            snapshot.forEach(doc => {
-                const c = doc.data();
-
-                if (data[c.category] && data[c.category][c.questionIndex]) {
-                    data[c.category][c.questionIndex].correct = c.correct;
-                }
-            });
-        }
-
-        initCategories();
-    });
+  .then(res => res.json())
+.then(async json => {
+  data = json;
+  initCategories();
+  await loadChangeLog();
+});
 
 
-// ==========================
-// KATEGORIE
-// ==========================
 
 function initCategories() {
-    categorySelect.innerHTML = "";
-    Object.keys(data).forEach(cat => {
-        const option = document.createElement("option");
-        option.value = cat;
-        option.textContent = cat;
-        categorySelect.appendChild(option);
-    });
+  categorySelect.innerHTML = "";
+  Object.keys(data).forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categorySelect.appendChild(option);
+  });
+}
+/* =========================
+   NAČTENÍ HISTORIE ZMĚN Z FIREBASE
+========================= */
+
+async function loadChangeLog() {
+
+  console.log("Načítám changeLog...");   // ← PŘIDAT SEM
+
+  if (!window.db) {
+    console.warn("Firebase není připraven");
+    return;
+  }
+
+  const snapshot = await window.fbGetDocs(
+    window.fbCollection(window.db, "questionChanges")
+  );
+
+  snapshot.forEach(doc => {
+
+    const d = doc.data();
+
+    const key = d.category + "|" + d.question;
+
+    if (!changeLog[key]) {
+      changeLog[key] = [];
+    }
+
+    changeLog[key].push(d);
+
+  });
+
+  console.log("ChangeLog načten:", changeLog);  // ← A SEM
+
 }
 
-// ==========================
-// START MÓDY
-// ==========================
+
+/* =========================
+   REŽIMY
+========================= */
 
 function startStudy() {
-    mode = "study";
-    prepareQuestions();
-    showQuestion();
+  mode = "study";
+  prepareQuestions();
+  showQuestion();
 }
 
 function startTest() {
-    mode = "test";
-    score = 0;
-    prepareQuestions();
-    showQuestion();
+  mode = "test";
+  score = 0;
+   wrongQuestions = []; // přidat toto
+  prepareQuestions();
+  showQuestion();
 }
 
 function startEdit() {
-    mode = "edit";
-    prepareQuestions();
-    showQuestion();
+  mode = "edit";
+  prepareQuestions();
+  showQuestion();
 }
 
-
-// ==========================
-// PŘÍPRAVA OTÁZEK
-// ==========================
+/* =========================
+   PŘÍPRAVA OTÁZEK
+========================= */
 
 function prepareQuestions() {
-    currentQuestions = [...data[categorySelect.value]];
-    currentIndex = 0;
-    resultBox.innerHTML = "";
+  currentQuestions = [...data[categorySelect.value]];
+  currentIndex = 0;
+  resultBox.innerHTML = "";
 
-    // náhodné pořadí
-    if (mode === "test" && randomToggle.checked) {
-        shuffle(currentQuestions);
-    }
+  if (mode === "test" && randomToggle && randomToggle.checked) {
+    shuffle(currentQuestions);
+  }
 
-    // omezení počtu
-    const limit = parseInt(questionLimitInput.value);
+  const limit = parseInt(questionLimitInput?.value);
 
-    if (
-        mode === "test" &&
-        !isNaN(limit) &&
-        limit > 0 &&
-        limit < currentQuestions.length
-    ) {
-        currentQuestions = currentQuestions.slice(0, limit);
-    }
+  if (
+    mode === "test" &&
+    !isNaN(limit) &&
+    limit > 0 &&
+    limit < currentQuestions.length
+  ) {
+    currentQuestions = currentQuestions.slice(0, limit);
+  }
 }
-
-// ==========================
-// SHUFFLE (Fisher-Yates)
-// ==========================
 
 function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
 
-// ==========================
-// ZOBRAZENÍ OTÁZKY
-// ==========================
+/* =========================
+   ZOBRAZENÍ OTÁZKY
+========================= */
 
 function showQuestion() {
-    if (!currentQuestions.length) return;
 
-    const q = currentQuestions[currentIndex];
+  if (!currentQuestions.length) return;
 
-    let html = `
-        <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
-        <h3>${q.question}</h3>
-    `;
+  const q = currentQuestions[currentIndex];
 
-   q.answers.forEach((a, i) => {
+  const key =
+  categorySelect.value.trim() + "|" +
+  q.question.trim();
+
+const changes = changeLog[key];
+
+console.log("CURRENT KEY:", key);
+console.log("CHANGELOG KEYS:", Object.keys(changeLog));
+console.log("MATCH FOUND:", changes);
+
+   console.log("KEY:", key);
+console.log("AVAILABLE KEYS:", Object.keys(changeLog));
+
+
+  let html = `
+    <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
+    <h3>${q.question}</h3>
+  `;
+
+  // zobrazit historii změn pokud existuje
+  if (changes && changes.length > 0) {
+
+    const last = changes[changes.length - 1];
+    const date = new Date(last.timestamp);
+
     html += `
-        <button class="answerBtn" onclick="selectAnswer(${i})">
-            ${a}
-        </button>
+      <div style="
+        font-size:12px;
+        color:#ffd166;
+        margin-bottom:10px;
+        padding:6px;
+        border-left:3px solid #ffd166;
+      ">
+        📝 Změněno: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
+        (${last.oldCorrect + 1} → ${last.newCorrect + 1})
+      </div>
     `;
-});
+  }
 
+  // odpovědi musí být vždy mimo if(changes)
+  q.answers.forEach((a, i) => {
     html += `
-        <div style="margin-top:10px;display:flex;gap:8px;">
-            <button onclick="prevQuestion()">⬅ Zpět</button>
-            <button onclick="nextQuestion()">Další ➡</button>
-        </div>
+      <button class="answerBtn" onclick="selectAnswer(${i})">
+        ${a}
+      </button>
     `;
+  });
 
-    quizContainer.innerHTML = html;
+  html += `
+    <div style="margin-top:10px;display:flex;gap:8px;">
+      <button onclick="prevQuestion()">⬅ Zpět</button>
+      <button onclick="nextQuestion()">Další ➡</button>
+    </div>
+  `;
+
+  quizContainer.innerHTML = html;
 
   if (mode === "study" || mode === "edit") {
     highlightCorrect();
-    }
+  }
+
 }
-    
-// ==========================
-// ZVÝRAZNĚNÍ SPRÁVNÉ ODPOVĚDI
-// ==========================
+
+/* =========================
+   ZVÝRAZNĚNÍ
+========================= */
 
 function highlightCorrect() {
+  const correct = currentQuestions[currentIndex].correct;
+  const buttons = document.querySelectorAll(".answerBtn");
+
+  buttons.forEach((btn, i) => {
+    btn.style.backgroundColor = "#1f3a5f";
+    btn.disabled = false;
+
+    if (i === correct) {
+      btn.style.backgroundColor = "var(--correctColor)";
+    }
+  });
+}
+
+/* =========================
+   VÝBĚR ODPOVĚDI
+========================= */
+
+function selectAnswer(index) {
+
+  if (mode === "test") {
 
     const correct = currentQuestions[currentIndex].correct;
     const buttons = document.querySelectorAll(".answerBtn");
 
     buttons.forEach((btn, i) => {
 
-        // reset výchozí barvy
-        btn.style.backgroundColor = "#1f3a5f";
-        btn.disabled = false;
+      btn.disabled = true;
 
-        if (i === correct) {
-            btn.style.backgroundColor = "var(--correctColor)";
-        }
+      if (i === correct) {
+        btn.style.backgroundColor = "var(--correctColor)";
+      }
+
+      if (i === index && index !== correct) {
+        btn.style.backgroundColor = "var(--wrongColor)";
+      }
+
     });
-}
 
-// ==========================
-// VÝBĚR ODPOVĚDI
-// ==========================
+    if (index === correct) {
+      score++;
+    } else {
+      wrongQuestions.push(currentQuestions[currentIndex]);
+    }
 
-function selectAnswer(index) {
-   // EDIT režim ukládá opravy do Firestore
+    return;
+  }
 if (mode === "edit") {
 
-    const previous = currentQuestions[currentIndex].correct;
+  const q = currentQuestions[currentIndex];
+  const oldCorrect = q.correct;
 
-    currentQuestions[currentIndex].correct = index;
+  if (oldCorrect !== index) {
+
+    q.correct = index;
+
+    console.log("Ukládám změnu do Firebase...");
 
     if (window.db) {
 
-        const logData = {
-            category: categorySelect.value,
-            questionIndex: currentIndex,
-            questionText: currentQuestions[currentIndex].question,
-            previousCorrect: previous,
-            newCorrect: index,
-            answers: currentQuestions[currentIndex].answers,
-            timestamp: Date.now()
-        };
-
-        // aktuální stav
-        window.fbAddDoc(
-            window.fbCollection(window.db, "corrections"),
-            {
-                category: categorySelect.value,
-                questionIndex: currentIndex,
-                correct: index,
-                timestamp: Date.now()
-            }
-        );
-
-        // historie změn
-        window.fbAddDoc(
-            window.fbCollection(window.db, "corrections_log"),
-            logData
-        );
+  window.fbAddDoc(
+    window.fbCollection(window.db, "questionChanges"),
+    {
+      category: categorySelect.value.trim(),
+      question: q.question.trim(),
+      oldCorrect: oldCorrect,
+      newCorrect: index,
+      timestamp: Date.now()
     }
-
-    highlightCorrect();
-    return;
-}
+  )
+  .then(() => {
+    console.log("✅ Změna uložena do Firestore");
+  })
+  .catch((err) => {
+    console.error("❌ Chyba zápisu:", err);
+  });
 
 }
 
-// ==========================
-// HISTORIE ZMĚN OTÁZKY
-// ==========================
 
-async function showHistory() {
+  }
 
-    if (!window.db) {
-        alert("Databáze není dostupná.");
-        return;
-    }
-
-    const category = categorySelect.value;
-    const qIndex = currentIndex;
-
-    const snapshot = await window.fbGetDocs(
-        window.fbCollection(window.db, "corrections_log")
-    );
-
-    let history = [];
-
-    snapshot.forEach(doc => {
-        const d = doc.data();
-
-        if (d.category === category && d.questionIndex === qIndex) {
-            history.push(d);
-        }
-    });
-
-    history.sort((a, b) => b.timestamp - a.timestamp);
-
-    let text = "Historie změn:\n\n";
-
-    if (history.length === 0) {
-        text += "Žádné změny pro tuto otázku.";
-    } else {
-
-        history.forEach(h => {
-
-            const date = new Date(h.timestamp).toLocaleString();
-
-            text += date + "\n";
-            text += "Otázka: " + h.questionText + "\n";
-
-            if (h.previousCorrect !== undefined && h.newCorrect !== undefined) {
-                text += "Změna: " + h.previousCorrect + " → " + h.newCorrect + "\n\n";
-            } else {
-                text += "Neznámý formát záznamu\n\n";
-            }
-
-        });
-    }
-
-    alert(text);
+  highlightCorrect();
+  return;
 }
 
-// ==========================
-// NAVIGACE
-// ==========================
+
+}
+
+/* =========================
+   NAVIGACE
+========================= */
 
 function nextQuestion() {
-    if (currentIndex < currentQuestions.length - 1) {
-        currentIndex++;
-        showQuestion();
-    } else {
-        finish();
-    }
+
+  if (currentIndex < currentQuestions.length - 1) {
+
+    currentIndex++;
+    showQuestion();
+
+  } else {
+
+    finish();
+
+  }
+
 }
 
 function prevQuestion() {
-    if (currentIndex > 0) {
-        currentIndex--;
-        showQuestion();
-    }
+  if (currentIndex > 0) {
+    currentIndex--;
+    showQuestion();
+  }
 }
 
-// ==========================
-// UKONČENÍ TESTU
-// ==========================
+/* =========================
+   UKONČENÍ TESTU
+========================= */
 
 function finish() {
-    if (mode !== "test") return;
+  if (mode !== "test") return;
 
-    const percent = Math.round((score / currentQuestions.length) * 100);
+  const total = currentQuestions.length;
+  const percent = Math.round((score / total) * 100);
 
-    resultBox.innerHTML = `
-        <div style="margin-top:20px;font-weight:bold">
-            Hotovo.<br>
-            Správně: ${score} / ${currentQuestions.length}<br>
-            Úspěšnost: ${percent} %
-        </div>
+  let buttonHtml = "";
+
+  if (wrongQuestions.length > 0) {
+    buttonHtml = `
+      <button onclick="repeatWrong()" style="
+        margin-top:15px;
+        padding:10px 15px;
+        border-radius:6px;
+        border:none;
+        background:#2c5282;
+        color:white;
+        cursor:pointer;
+      ">
+        Opakovat špatné otázky (${wrongQuestions.length})
+      </button>
     `;
+  }
+
+  resultBox.innerHTML = `
+    <div style="padding:15px;border:1px solid #ccc;border-radius:8px;">
+      <strong>Test dokončen</strong><br>
+      Správně: ${score} / ${total}<br>
+      Úspěšnost: ${percent} %
+      ${buttonHtml}
+    </div>
+  `;
 }
+function repeatWrong() {
+
+  if (wrongQuestions.length === 0) {
+    alert("Žádné špatné otázky.");
+    return;
+  }
+
+  currentQuestions = [...wrongQuestions];
+  wrongQuestions = [];
+
+  currentIndex = 0;
+  score = 0;
+  mode = "test";
+
+  resultBox.innerHTML = "";
+
+  showQuestion();
+}
+
+
