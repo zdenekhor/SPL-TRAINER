@@ -207,33 +207,33 @@ function shuffle(array) {
 function showQuestion() {
   if (!currentQuestions.length) return;
 
-  const q = currentQuestions[currentIndex];
+ const q = currentQuestions[currentIndex];
 
-  let html = `
-    <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
-    <h3>${q.question}</h3>
-  `;
+const key = categorySelect.value + "|" + q.question;
+const changes = changeLog[key];
 
-  q.answers.forEach((a, i) => {
-    html += `
-      <button class="answerBtn" onclick="selectAnswer(${i})">
-        ${a}
-      </button>
-    `;
-  });
+let html = `
+  <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
+  <h3>${q.question}</h3>
+`;
+
+if (changes && changes.length > 0) {
+
+  const last = changes[changes.length - 1];
+  const date = new Date(last.timestamp);
 
   html += `
-    <div style="margin-top:10px;display:flex;gap:8px;">
-      <button onclick="prevQuestion()">⬅ Zpět</button>
-      <button onclick="nextQuestion()">Další ➡</button>
+    <div style="
+      font-size:12px;
+      color:#ffd166;
+      margin-bottom:10px;
+      padding:6px;
+      border-left:3px solid #ffd166;
+    ">
+      📝 Změněno: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
+      (${last.oldCorrect + 1} → ${last.newCorrect + 1})
     </div>
   `;
-
-  quizContainer.innerHTML = html;
-
-  if (mode === "study" || mode === "edit") {
-    highlightCorrect();
-  }
 }
 
 /* =========================
