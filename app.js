@@ -212,6 +212,9 @@ function showQuestion() {
 
   const key = categorySelect.value + "|" + q.question;
   const changes = changeLog[key];
+   console.log("KEY:", key);
+console.log("AVAILABLE KEYS:", Object.keys(changeLog));
+
 
   let html = `
     <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
