@@ -92,10 +92,12 @@ if (wrongColorPicker) {
 
 fetch("./data.json")
   .then(res => res.json())
-  .then(json => {
-    data = json;
-    initCategories();
-  });
+.then(async json => {
+  data = json;
+  initCategories();
+  await loadChangeLog();
+});
+
 
 function initCategories() {
   categorySelect.innerHTML = "";
