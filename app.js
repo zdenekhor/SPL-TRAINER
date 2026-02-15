@@ -219,22 +219,29 @@ let html = `
 
 if (changes && changes.length > 0) {
 
-  const last = changes[changes.length - 1];
-  const date = new Date(last.timestamp);
-
+  q.answers.forEach((a, i) => {
   html += `
-    <div style="
-      font-size:12px;
-      color:#ffd166;
-      margin-bottom:10px;
-      padding:6px;
-      border-left:3px solid #ffd166;
-    ">
-      📝 Změněno: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
-      (${last.oldCorrect + 1} → ${last.newCorrect + 1})
-    </div>
+    <button class="answerBtn" onclick="selectAnswer(${i})">
+      ${a}
+    </button>
   `;
+});
+
+html += `
+  <div style="margin-top:10px;display:flex;gap:8px;">
+    <button onclick="prevQuestion()">⬅ Zpět</button>
+    <button onclick="nextQuestion()">Další ➡</button>
+  </div>
+`;
+
+quizContainer.innerHTML = html;
+
+if (mode === "study" || mode === "edit") {
+  highlightCorrect();
 }
+
+}
+
 
 /* =========================
    ZVÝRAZNĚNÍ
