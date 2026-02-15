@@ -324,13 +324,39 @@ function selectAnswer(index) {
 
     return;
   }
+if (mode === "edit") {
 
-  if (mode === "edit") {
+  const q = currentQuestions[currentIndex];
+  const oldCorrect = q.correct;
 
-    currentQuestions[currentIndex].correct = index;
-    highlightCorrect();
-    return;
+  if (oldCorrect !== index) {
+
+    q.correct = index;
+
+    console.log("Ukládám změnu do Firebase...");
+
+    if (window.db) {
+
+      window.fbAddDoc(
+        window.fbCollection(window.db, "questionChanges"),
+        {
+          category: categorySelect.value.trim(),
+          question: q.question.trim(),
+          oldCorrect: oldCorrect,
+          newCorrect: index,
+          timestamp: Date.now()
+        }
+      );
+
+    }
+
   }
+
+  highlightCorrect();
+  return;
+}
+
+
 }
 
 /* =========================
