@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPL01 Testovací Aplikace</title>
 
+<style>
+
 :root {
     --bg-main: #0b1724;
     --bg-panel: #0f2236;
@@ -44,24 +46,12 @@ body {
     margin-bottom: 16px;
 }
 
-.metar {
-    font-family: monospace;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-}
-
 .panel {
     background: var(--bg-panel);
     padding: 16px;
     border-radius: var(--radius);
     border: 1px solid var(--border);
     margin-bottom: 16px;
-}
-
-.controls {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
 }
 
 button {
@@ -77,32 +67,12 @@ button:hover {
     background: var(--accent-soft);
 }
 
-button.primary {
-    background: var(--accent);
-    border: none;
-}
-
-.question {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.answers {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
 .answer {
     padding: 10px;
     border-radius: var(--radius);
     background: var(--neutral);
-    cursor: pointer;
     border: 1px solid var(--border);
-}
-
-.answer:hover {
-    border-color: var(--accent);
+    margin-bottom: 6px;
 }
 
 .answer.correct {
@@ -113,30 +83,13 @@ button.primary {
     background: var(--error);
 }
 
-.answer.neutral {
-    background: var(--neutral);
-}
-
-.footer {
-    margin-top: 16px;
-    display: flex;
-    gap: 8px;
-}
-
-textarea {
-    width: 100%;
-    background: var(--bg-panel-light);
-    border: 1px solid var(--border);
-    color: var(--text-main);
-    padding: 8px;
-    border-radius: var(--radius);
-}
-
 .change-log {
     font-size: 11px;
     color: var(--text-muted);
     margin-top: 4px;
 }
+
+</style>
 
 </head>
 <body>
