@@ -5,40 +5,138 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPL01 Testovací Aplikace</title>
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #0d223a;
-  color: white;
-  padding: 20px;
+:root {
+    --bg-main: #0b1724;
+    --bg-panel: #0f2236;
+    --bg-panel-light: #132b44;
+
+    --accent: #4da3ff;
+    --accent-soft: #2a6fb3;
+
+    --text-main: #e6eef7;
+    --text-muted: #8aa0b8;
+
+    --success: #2e7d32;
+    --error: #b71c1c;
+    --neutral: #1e3a5a;
+
+    --border: #1f3b57;
+
+    --radius: 6px;
 }
 
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
+}
+
+.app {
+    max-width: 900px;
+    margin: auto;
+    padding: 24px;
+}
+
+.header {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.metar {
+    font-family: monospace;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.panel {
+    background: var(--bg-panel);
+    padding: 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
 
 button {
-  padding: 8px 12px;
-  margin: 5px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+    background: var(--neutral);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
 }
 
-select, input, textarea {
-  padding: 6px;
-  margin: 5px 0;
+button:hover {
+    background: var(--accent-soft);
 }
 
-.answerBtn {
-  background: #1a2b44;
-  color: white;
-  width: 100%;
-  text-align: left;
+button.primary {
+    background: var(--accent);
+    border: none;
 }
 
-:root {
-  --correctColor: #2e7d32;
-  --wrongColor: #8b0000;
+.question {
+    font-size: 18px;
+    margin-bottom: 10px;
 }
-</style>
+
+.answers {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.answer {
+    padding: 10px;
+    border-radius: var(--radius);
+    background: var(--neutral);
+    cursor: pointer;
+    border: 1px solid var(--border);
+}
+
+.answer:hover {
+    border-color: var(--accent);
+}
+
+.answer.correct {
+    background: var(--success);
+}
+
+.answer.wrong {
+    background: var(--error);
+}
+
+.answer.neutral {
+    background: var(--neutral);
+}
+
+.footer {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+}
+
+textarea {
+    width: 100%;
+    background: var(--bg-panel-light);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 8px;
+    border-radius: var(--radius);
+}
+
+.change-log {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
 
 </head>
 <body>
