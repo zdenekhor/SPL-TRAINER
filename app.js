@@ -3,6 +3,7 @@ console.log("SPL READY");
 /* =========================
    METAR
 ========================= */
+
 async function loadMetar() {
   try {
 
@@ -22,14 +23,18 @@ async function loadMetar() {
     if (box) box.innerText = metar;
 
   } catch (error) {
+
     console.warn("METAR error:", error);
+
     const box = document.getElementById("metarBox");
     if (box) box.innerText = "METAR nedostupný";
+
   }
 }
 
 loadMetar();
 setInterval(loadMetar, 300000);
+
 
 /* =========================
    GLOBÁLNÍ STAV
@@ -44,6 +49,9 @@ let wrongQuestions = [];
 let changeLog = {};
 
 
+/* =========================
+   DOM
+========================= */
 
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
@@ -52,36 +60,52 @@ const resultBox = document.getElementById("result") || { innerHTML: "" };
 const randomToggle = document.getElementById("randomQuestions");
 const questionLimitInput = document.getElementById("questionCount");
 
-
 const correctColorPicker = document.getElementById("correctColorPicker");
 const wrongColorPicker = document.getElementById("wrongColorPicker");
 const settingsToggle = document.getElementById("settingsToggle");
 const settingsPanel = document.getElementById("settingsPanel");
 
+
+/* =========================
+   NASTAVENÍ PANEL
+========================= */
+
 if (settingsToggle && settingsPanel) {
+
   settingsToggle.addEventListener("click", () => {
+
     settingsPanel.style.display =
       settingsPanel.style.display === "none" ? "block" : "none";
+
   });
+
 }
 
 
 if (correctColorPicker) {
+
   correctColorPicker.addEventListener("input", (e) => {
+
     document.documentElement.style.setProperty(
       "--correctColor",
       e.target.value
     );
+
   });
+
 }
 
 if (wrongColorPicker) {
+
   wrongColorPicker.addEventListener("input", (e) => {
+
     document.documentElement.style.setProperty(
       "--wrongColor",
       e.target.value
     );
+
   });
+
 }
 
 
@@ -91,34 +115,62 @@ if (wrongColorPicker) {
 
 fetch("./data.json")
   .then(res => res.json())
-.then(async json => {
-  data = json;
-  initCategories();
-  await loadChangeLog();
-});
+  .then(async json => {
+
+    data = json;
+
+    initCategories();
+
+    await loadChangeLog();
+
+    startStudy(); // automatické spuštění
+
+  });
 
 
+/* =========================
+   INICIALIZACE OKRUHŮ
+========================= */
 
 function initCategories() {
+
   categorySelect.innerHTML = "";
+
   Object.keys(data).forEach(cat => {
+
     const option = document.createElement("option");
+
     option.value = cat;
     option.textContent = cat;
+
     categorySelect.appendChild(option);
+
   });
+
+
+  // KLÍČOVÁ OPRAVA – přepínání okruhů
+  categorySelect.addEventListener("change", () => {
+
+    if (mode === "study") startStudy();
+    if (mode === "test") startTest();
+    if (mode === "edit") startEdit();
+
+  });
+
 }
+
+
 /* =========================
-   NAČTENÍ HISTORIE ZMĚN Z FIREBASE
+   CHANGELOG
 ========================= */
 
 async function loadChangeLog() {
 
-  console.log("Načítám changeLog...");   // ← PŘIDAT SEM
-
   if (!window.db) {
+
     console.warn("Firebase není připraven");
     return;
+
   }
 
   const snapshot = await window.fbGetDocs(
@@ -129,7 +181,9 @@ async function loadChangeLog() {
 
     const d = doc.data();
 
-    const key = d.category + "|" + d.question;
+    const key =
+      d.category.trim() + "|" +
+      d.question.trim();
 
     if (!changeLog[key]) {
       changeLog[key] = [];
@@ -139,7 +193,7 @@ async function loadChangeLog() {
 
   });
 
-  console.log("ChangeLog načten:", changeLog);  // ← A SEM
+  console.log("ChangeLog načten");
 
 }
 
@@ -149,36 +203,66 @@ async function loadChangeLog() {
 ========================= */
 
 function startStudy() {
+
   mode = "study";
+
   prepareQuestions();
+
   showQuestion();
+
 }
 
 function startTest() {
+
   mode = "test";
+
   score = 0;
-   wrongQuestions = []; // přidat toto
+
+  wrongQuestions = [];
+
   prepareQuestions();
+
   showQuestion();
+
 }
 
 function startEdit() {
+
   mode = "edit";
+
   prepareQuestions();
+
   showQuestion();
+
 }
+
 
 /* =========================
    PŘÍPRAVA OTÁZEK
 ========================= */
 
 function prepareQuestions() {
-  currentQuestions = [...data[categorySelect.value]];
+
+  const category = categorySelect.value;
+
+  if (!data[category]) {
+
+    console.error("Kategorie nenalezena:", category);
+    return;
+
+  }
+
+  currentQuestions = [...data[category]];
+
   currentIndex = 0;
+
   resultBox.innerHTML = "";
 
-  if (mode === "test" && randomToggle && randomToggle.checked) {
+
+  if (mode === "test" && randomToggle?.checked) {
+
     shuffle(currentQuestions);
+
   }
 
   const limit = parseInt(questionLimitInput?.value);
@@ -189,16 +273,26 @@ function prepareQuestions() {
     limit > 0 &&
     limit < currentQuestions.length
   ) {
+
     currentQuestions = currentQuestions.slice(0, limit);
+
   }
+
 }
 
+
 function shuffle(array) {
+
   for (let i = array.length - 1; i > 0; i--) {
+
     const j = Math.floor(Math.random() * (i + 1));
+
     [array[i], array[j]] = [array[j], array[i]];
+
   }
+
 }
+
 
 /* =========================
    ZOBRAZENÍ OTÁZKY
@@ -211,17 +305,10 @@ function showQuestion() {
   const q = currentQuestions[currentIndex];
 
   const key =
-  categorySelect.value.trim() + "|" +
-  q.question.trim();
+    categorySelect.value.trim() + "|" +
+    q.question.trim();
 
-const changes = changeLog[key];
-
-console.log("CURRENT KEY:", key);
-console.log("CHANGELOG KEYS:", Object.keys(changeLog));
-console.log("MATCH FOUND:", changes);
-
-   console.log("KEY:", key);
-console.log("AVAILABLE KEYS:", Object.keys(changeLog));
+  const changes = changeLog[key];
 
 
   let html = `
@@ -229,10 +316,11 @@ console.log("AVAILABLE KEYS:", Object.keys(changeLog));
     <h3>${q.question}</h3>
   `;
 
-  // zobrazit historii změn pokud existuje
+
   if (changes && changes.length > 0) {
 
     const last = changes[changes.length - 1];
+
     const date = new Date(last.timestamp);
 
     html += `
@@ -243,20 +331,25 @@ console.log("AVAILABLE KEYS:", Object.keys(changeLog));
         padding:6px;
         border-left:3px solid #ffd166;
       ">
-        📝 Změněno: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
-        (${last.oldCorrect + 1} → ${last.newCorrect + 1})
+        📝 Změněno:
+        ${date.toLocaleDateString()}
+        ${date.toLocaleTimeString()}
       </div>
     `;
+
   }
 
-  // odpovědi musí být vždy mimo if(changes)
+
   q.answers.forEach((a, i) => {
+
     html += `
       <button class="answerBtn" onclick="selectAnswer(${i})">
         ${a}
       </button>
     `;
+
   });
+
 
   html += `
     <div style="margin-top:10px;display:flex;gap:8px;">
@@ -265,106 +358,115 @@ console.log("AVAILABLE KEYS:", Object.keys(changeLog));
     </div>
   `;
 
+
   quizContainer.innerHTML = html;
 
+
   if (mode === "study" || mode === "edit") {
+
     highlightCorrect();
+
   }
 
 }
+
 
 /* =========================
    ZVÝRAZNĚNÍ
 ========================= */
 
 function highlightCorrect() {
+
   const correct = currentQuestions[currentIndex].correct;
+
   const buttons = document.querySelectorAll(".answerBtn");
 
   buttons.forEach((btn, i) => {
+
     btn.style.backgroundColor = "#1f3a5f";
+
     btn.disabled = false;
 
     if (i === correct) {
-      btn.style.backgroundColor = "var(--correctColor)";
+
+      btn.style.backgroundColor =
+        "var(--correctColor, #2e7d32)";
+
     }
+
   });
+
 }
 
+
 /* =========================
-   VÝBĚR ODPOVĚDI
+   ODPOVĚĎ
 ========================= */
 
 function selectAnswer(index) {
 
-  if (mode === "test") {
+  const correct = currentQuestions[currentIndex].correct;
 
-    const correct = currentQuestions[currentIndex].correct;
-    const buttons = document.querySelectorAll(".answerBtn");
+  const buttons = document.querySelectorAll(".answerBtn");
+
+
+  if (mode === "test") {
 
     buttons.forEach((btn, i) => {
 
       btn.disabled = true;
 
-      if (i === correct) {
-        btn.style.backgroundColor = "var(--correctColor)";
-      }
+      if (i === correct)
+        btn.style.backgroundColor =
+          "var(--correctColor, #2e7d32)";
 
-      if (i === index && index !== correct) {
-        btn.style.backgroundColor = "var(--wrongColor)";
-      }
+      if (i === index && index !== correct)
+        btn.style.backgroundColor =
+          "var(--wrongColor, #b71c1c)";
 
     });
 
-    if (index === correct) {
+    if (index === correct)
       score++;
-    } else {
+    else
       wrongQuestions.push(currentQuestions[currentIndex]);
-    }
-
-    return;
-  }
-if (mode === "edit") {
-
-  const q = currentQuestions[currentIndex];
-  const oldCorrect = q.correct;
-
-  if (oldCorrect !== index) {
-
-    q.correct = index;
-
-    console.log("Ukládám změnu do Firebase...");
-
-    if (window.db) {
-
-  window.fbAddDoc(
-    window.fbCollection(window.db, "questionChanges"),
-    {
-      category: categorySelect.value.trim(),
-      question: q.question.trim(),
-      oldCorrect: oldCorrect,
-      newCorrect: index,
-      timestamp: Date.now()
-    }
-  )
-  .then(() => {
-    console.log("✅ Změna uložena do Firestore");
-  })
-  .catch((err) => {
-    console.error("❌ Chyba zápisu:", err);
-  });
-
-}
-
 
   }
 
-  highlightCorrect();
-  return;
+
+  if (mode === "edit") {
+
+    const q = currentQuestions[currentIndex];
+
+    const oldCorrect = q.correct;
+
+    if (oldCorrect !== index) {
+
+      q.correct = index;
+
+      if (window.db) {
+
+        window.fbAddDoc(
+          window.fbCollection(window.db, "questionChanges"),
+          {
+            category: categorySelect.value.trim(),
+            question: q.question.trim(),
+            oldCorrect,
+            newCorrect: index,
+            timestamp: Date.now()
+          }
+        );
+
+      }
+
+    }
+
+    highlightCorrect();
+
+  }
+
 }
 
-
-}
 
 /* =========================
    NAVIGACE
@@ -375,9 +477,12 @@ function nextQuestion() {
   if (currentIndex < currentQuestions.length - 1) {
 
     currentIndex++;
+
     showQuestion();
 
-  } else {
+  }
+
+  else {
 
     finish();
 
@@ -386,66 +491,38 @@ function nextQuestion() {
 }
 
 function prevQuestion() {
+
   if (currentIndex > 0) {
+
     currentIndex--;
+
     showQuestion();
+
   }
+
 }
 
+
 /* =========================
-   UKONČENÍ TESTU
+   KONEC TESTU
 ========================= */
 
 function finish() {
+
   if (mode !== "test") return;
 
   const total = currentQuestions.length;
-  const percent = Math.round((score / total) * 100);
 
-  let buttonHtml = "";
+  const percent =
+    Math.round((score / total) * 100);
 
-  if (wrongQuestions.length > 0) {
-    buttonHtml = `
-      <button onclick="repeatWrong()" style="
-        margin-top:15px;
-        padding:10px 15px;
-        border-radius:6px;
-        border:none;
-        background:#2c5282;
-        color:white;
-        cursor:pointer;
-      ">
-        Opakovat špatné otázky (${wrongQuestions.length})
-      </button>
-    `;
-  }
 
   resultBox.innerHTML = `
-    <div style="padding:15px;border:1px solid #ccc;border-radius:8px;">
-      <strong>Test dokončen</strong><br>
-      Správně: ${score} / ${total}<br>
-      Úspěšnost: ${percent} %
-      ${buttonHtml}
+    <div>
+      Test dokončen<br>
+      ${score} / ${total}<br>
+      ${percent} %
     </div>
   `;
+
 }
-function repeatWrong() {
-
-  if (wrongQuestions.length === 0) {
-    alert("Žádné špatné otázky.");
-    return;
-  }
-
-  currentQuestions = [...wrongQuestions];
-  wrongQuestions = [];
-
-  currentIndex = 0;
-  score = 0;
-  mode = "test";
-
-  resultBox.innerHTML = "";
-
-  showQuestion();
-}
-
-
