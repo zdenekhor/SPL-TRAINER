@@ -337,18 +337,25 @@ if (mode === "edit") {
 
     if (window.db) {
 
-      window.fbAddDoc(
-        window.fbCollection(window.db, "questionChanges"),
-        {
-          category: categorySelect.value.trim(),
-          question: q.question.trim(),
-          oldCorrect: oldCorrect,
-          newCorrect: index,
-          timestamp: Date.now()
-        }
-      );
-
+  window.fbAddDoc(
+    window.fbCollection(window.db, "questionChanges"),
+    {
+      category: categorySelect.value.trim(),
+      question: q.question.trim(),
+      oldCorrect: oldCorrect,
+      newCorrect: index,
+      timestamp: Date.now()
     }
+  )
+  .then(() => {
+    console.log("✅ Změna uložena do Firestore");
+  })
+  .catch((err) => {
+    console.error("❌ Chyba zápisu:", err);
+  });
+
+}
+
 
   }
 
