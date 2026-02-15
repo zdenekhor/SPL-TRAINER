@@ -98,6 +98,7 @@ fetch("./data.json")
 });
 
 
+
 function initCategories() {
   categorySelect.innerHTML = "";
   Object.keys(data).forEach(cat => {
