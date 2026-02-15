@@ -114,7 +114,12 @@ function initCategories() {
 
 async function loadChangeLog() {
 
-  if (!window.db) return;
+  console.log("Načítám changeLog...");   // ← PŘIDAT SEM
+
+  if (!window.db) {
+    console.warn("Firebase není připraven");
+    return;
+  }
 
   const snapshot = await window.fbGetDocs(
     window.fbCollection(window.db, "questionChanges")
@@ -134,7 +139,10 @@ async function loadChangeLog() {
 
   });
 
+  console.log("ChangeLog načten:", changeLog);  // ← A SEM
+
 }
+
 
 /* =========================
    REŽIMY
