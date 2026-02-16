@@ -3,187 +3,250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPL01 Testovací Aplikace</title>
+<title>SPL Trainer</title>
 
 <style>
 
 :root {
-    --bg-main: #0b1724;
-    --bg-panel: #0f2236;
-    --bg-panel-light: #132b44;
 
-    --accent: #4da3ff;
-    --accent-soft: #2a6fb3;
+  --bg-main: #0b1724;
+  --bg-panel: #132b44;
+  --bg-header: #0f2236;
 
-    --text-main: #e6eef7;
-    --text-muted: #8aa0b8;
+  --accent: #4da3ff;
+  --accent-soft: #2a6fb3;
 
-    --success: #2e7d32;
-    --error: #b71c1c;
-    --neutral: #1e3a5a;
+  --text-main: #e6eef7;
+  --text-muted: #8aa0b8;
 
-    --border: #1f3b57;
+  --correctColor: #2e7d32;
+  --wrongColor: #b71c1c;
 
-    --radius: 6px;
+  --border: #1f3b57;
+
 }
 
 body {
-    margin: 0;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    background: var(--bg-main);
-    color: var(--text-main);
+
+  margin: 0;
+  font-family: "Segoe UI", system-ui;
+  background: var(--bg-main);
+  color: var(--text-main);
+
 }
 
-.app {
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 24px;
-}
+.container {
 
+  max-width: 900px;
+  margin: auto;
+  padding: 15px;
+
+}
 
 .header {
-    font-size: 26px;
-    font-weight: 600;
-    margin-bottom: 16px;
-}
-    
-.quiz-container {
-    max-width: 680px;
-    margin: 0 auto;
+
+  position: sticky;
+  top: 0;
+  background: var(--bg-header);
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+
 }
 
-.panel {
-    background: var(--bg-panel);
-    padding: 20px 22px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    margin-bottom: 22px;
+.title {
+
+  font-size: 20px;
+  font-weight: bold;
+
 }
 
-.question {
-    font-size: 18px;
-    margin-bottom: 18px;
-    line-height: 1.5;
+.statusbar {
+
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-size: 14px;
+  margin-top: 4px;
+
 }
 
+.control-panel {
+
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+}
+
+select, input, button {
+
+  background: #1e3a5a;
+  color: white;
+  border: 1px solid var(--border);
+  padding: 8px;
+  border-radius: 6px;
+
+}
 
 button {
-    background: var(--neutral);
-    color: var(--text-main);
-    border: 1px solid var(--border);
-    padding: 6px 12px;
-    border-radius: var(--radius);
-    cursor: pointer;
+
+  cursor: pointer;
+
 }
 
 button:hover {
-    background: var(--accent-soft);
+
+  background: var(--accent-soft);
+
 }
 
-.answer {
-    padding: 10px;
-    border-radius: var(--radius);
-    background: var(--neutral);
-    border: 1px solid var(--border);
-    margin-bottom: 6px;
+.quiz-panel {
+
+  margin-top: 20px;
+  background: var(--bg-panel);
+  padding: 20px;
+  border-radius: 8px;
+
 }
 
-.answer.correct {
-    background: var(--success);
+.answerBtn {
+
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  font-size: 16px;
+  background: #1e3a5a;
+
 }
 
-.answer.wrong {
-    background: var(--error);
+.answerBtn:hover {
+
+  background: var(--accent-soft);
+
 }
 
-.change-log {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 4px;
+.nav-buttons {
+
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+
+}
+
+.result {
+
+  margin-top: 20px;
+  font-size: 18px;
+
+}
+
+.settings {
+
+  margin-top: 10px;
+
+}
+
+@media (max-width: 600px) {
+
+  .control-panel {
+
+    flex-direction: column;
+
+  }
+
+  .answerBtn {
+
+    font-size: 18px;
+    padding: 16px;
+
+  }
+
 }
 
 </style>
 
 </head>
 <body>
-  <button id="settingsToggle" style="float:right;">⚙ Nastavení</button>
 
-<h1>✈ SPL01 Testovací Aplikace</h1>
+<div class="header">
 
-<div id="metarBox" style="margin-bottom:20px;">
-  Načítám METAR...
-</div>
-  
-<div id="settingsPanel"
-     style="display:none;
-            margin-top:15px;
-            padding:10px;
-            border:1px solid #ddd;
-            border-radius:6px;">
+  <div class="container">
 
-    
-    <label>
-      Správná:
-      <input type="color" id="correctColorPicker">
-    </label>
+    <div class="title">✈ SPL Trainer</div>
 
-    <label>
-      Chybná:
-      <input type="color" id="wrongColorPicker">
-    </label>
+    <div class="statusbar">
+
+      <div id="metarBox">Načítám METAR...</div>
+
+      <div id="userStats">👥 ...</div>
+
+    </div>
 
   </div>
+
 </div>
 
 
+<div class="container">
 
-<h3>Okruh:</h3>
+
+<div class="control-panel">
+
 <select id="categorySelect"></select>
-
-<br>
 
 <button onclick="startStudy()">Studium</button>
 <button onclick="startTest()">Test</button>
-<button onclick="startEdit()">Nastavit správné odpovědi</button>
-
-<br>
+<button onclick="startEdit()">Edit</button>
 
 <label>
 <input type="checkbox" id="randomQuestions">
-Náhodné otázky v testu
+Náhodné
 </label>
 
-<br>
-
-Počet otázek v testu:
+<label>
+Počet:
 <input type="number" id="questionCount" value="10" min="1">
+</label>
 
-<hr>
+<button id="settingsToggle">⚙</button>
 
-<div class="quiz-container">
-    <div id="quizContainer"></div>
 </div>
 
-<div id="result" style="margin-top:20px;"></div>
 
-<!-- CHAT -->
-<div id="chatSection" style="margin-top:30px;">
-  <h3>Dotazy / poznámky k otázce</h3>
+<div class="settings" id="settingsPanel" style="display:none;">
 
-  <textarea id="chatInput"
-            rows="3"
-            style="width:100%; border-radius:6px;"></textarea>
+<label>
+Správná:
+<input type="color" id="correctColorPicker">
+</label>
 
-  <button onclick="sendChatMessage()">Odeslat</button>
+<label>
+Chybná:
+<input type="color" id="wrongColorPicker">
+</label>
 
-  <div id="chatMessages" style="margin-top:15px;"></div>
 </div>
 
-<!-- FIREBASE -->
+
+<div class="quiz-panel">
+
+<div id="quizContainer"></div>
+
+</div>
+
+
+<div class="result" id="result"></div>
+
+
+</div>
+
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 import {
   getDatabase,
   ref,
@@ -191,9 +254,10 @@ import {
   onDisconnect,
   onValue
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-    
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+
 const firebaseConfig = {
+
   apiKey: "AIzaSyDJUBuxXrv44dQmokqoLhDQ7n90nlbt1g8",
   authDomain: "spl-trainer.firebaseapp.com",
   projectId: "spl-trainer",
@@ -202,17 +266,24 @@ const firebaseConfig = {
   appId: "1:51536361421:web:179c7497bb5341a7bcb684",
   measurementId: "G-JYFEFFZH2P",
 
-  databaseURL: "https://spl-trainer-default-rtdb.europe-west1.firebasedatabase.app"
+  databaseURL:
+  "https://spl-trainer-default-rtdb.europe-west1.firebasedatabase.app"
+
 };
 
+
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
+
 const rtdb = getDatabase(app);
+
 
 window.db = db;
 window.fbCollection = collection;
 window.fbAddDoc = addDoc;
 window.fbGetDocs = getDocs;
+
 window.rtdb = rtdb;
 window.rtdbRef = ref;
 window.rtdbSet = set;
@@ -222,7 +293,9 @@ window.rtdbOnValue = onValue;
 
 </script>
 
+
 <script src="app.js"></script>
+
 
 </body>
 </html>
