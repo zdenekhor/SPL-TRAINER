@@ -1,3 +1,88 @@
+/* =========================
+   PRESENCE SYSTEM
+========================= */
+
+function getUserId() {
+
+  let userId = localStorage.getItem("spl_user_id");
+
+  if (!userId) {
+
+    userId = crypto.randomUUID();
+
+    localStorage.setItem("spl_user_id", userId);
+
+  }
+
+  return userId;
+}
+
+const userId = getUserId();
+
+async function setupPresence() {
+
+  if (!window.rtdb) return;
+
+  const ref =
+    window.rtdbRef(window.rtdb, "presence/" + userId);
+
+  await window.rtdbSet(ref, {
+
+    online: true,
+    lastSeen: Date.now()
+
+  });
+
+  window.rtdbOnDisconnect(ref).set({
+
+    online: false,
+    lastSeen: Date.now()
+
+  });
+
+}
+
+function watchPresence() {
+
+  const ref =
+    window.rtdbRef(window.rtdb, "presence");
+
+  window.rtdbOnValue(ref, snapshot => {
+
+    let total = 0;
+    let online = 0;
+
+    snapshot.forEach(child => {
+
+      total++;
+
+      if (child.val().online)
+        online++;
+
+    });
+
+    console.log("👥 Online:", online, "| Celkem:", total);
+
+    const box = document.getElementById("metarBox");
+
+    if (box) {
+
+      const firstLine =
+        box.innerHTML.split("<br>")[0];
+
+      box.innerHTML =
+        firstLine +
+        `<br>👥 Online: ${online} | Celkem: ${total}`;
+
+    }
+
+  });
+
+}
+
+setupPresence();
+watchPresence();
+
 console.log("SPL READY");
 
 /* =========================
