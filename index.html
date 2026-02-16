@@ -7,10 +7,6 @@
 
 <style>
 
-/* =========================
-   ZÁKLADNÍ STYL APLIKACE
-========================= */
-
 body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
@@ -63,6 +59,10 @@ button {
   cursor: pointer;
 }
 
+button:hover {
+  background: #2a6fb3;
+}
+
 select, input {
   padding: 6px;
   background: #1e3a5a;
@@ -80,36 +80,34 @@ select, input {
   border-top: 1px solid #1f3b57;
 }
 
+@media (max-width:600px) {
+
+  .answerBtn {
+    font-size: 16px;
+    padding: 14px;
+  }
+
+  button {
+    margin-top: 5px;
+  }
+
+}
+
 </style>
 
 </head>
 <body>
 
-<!-- =========================
-     HEADER – NÁZEV A METAR
-========================= -->
-
 <div class="header">
 <div class="container">
 
 <div><strong>✈ SPL Trainer</strong></div>
-<div id="userStats"></div>
-
+<div id="metarBox">Načítám METAR...</div>
 
 </div>
 </div>
-
-
-<!-- =========================
-     HLAVNÍ KONTEJNER
-========================= -->
 
 <div class="container">
-
-
-<!-- =========================
-     OVLÁDÁNÍ TESTU
-========================= -->
 
 <div class="control-panel">
 
@@ -133,29 +131,17 @@ Počet:
 
 </div>
 
-
-<!-- =========================
-     PANEL NASTAVENÍ
-========================= -->
-
 <div id="settingsPanel" style="display:none;">
 
-<label>
-Správná barva:
+<label>Správná:
 <input type="color" id="correctColorPicker">
 </label>
 
-<label>
-Chybná barva:
+<label>Chybná:
 <input type="color" id="wrongColorPicker">
 </label>
 
 </div>
-
-
-<!-- =========================
-     PANEL OTÁZKY
-========================= -->
 
 <div class="quiz-panel">
 
@@ -163,27 +149,7 @@ Chybná barva:
 
 </div>
 
-
-<!-- =========================
-     VÝSLEDEK TESTU
-========================= -->
-
 <div id="result"></div>
-<div id="userStats">Vaše statistika: načítám...</div>
-
-
-<!-- =========================
-     STATISTIKA UŽIVATELE
-========================= -->
-
-<div id="statsBox" style="margin-top:15px; padding:10px; background:#0f2236; border-radius:6px;">
-Vaše statistika: načítám…
-</div>
-
-
-<!-- =========================
-     FOOTER – AUTOR A VERZE
-========================= -->
 
 <div class="footer">
 Autor: Zdeněk Horák • Verze: <span id="appVersion">zjišťuji…</span>
@@ -192,10 +158,7 @@ Autor: Zdeněk Horák • Verze: <span id="appVersion">zjišťuji…</span>
 </div>
 
 
-<!-- =========================
-     FIREBASE INICIALIZACE
-========================= -->
-
+<!-- Firebase init -->
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -230,17 +193,11 @@ window.rtdbOnValue = onValue;
 </script>
 
 
-<!-- =========================
-     HLAVNÍ LOGIKA APLIKACE
-========================= -->
-
+<!-- vaše hlavní logika -->
 <script src="app.js"></script>
 
 
-<!-- =========================
-     AUTOMATICKÉ VERZOVÁNÍ
-========================= -->
-
+<!-- Automatické verzování (profesionální formát) -->
 <script>
 
 async function loadVersion() {
@@ -255,12 +212,17 @@ async function loadVersion() {
 
     const date = new Date(data[0].commit.committer.date);
 
-    const version =
-      `v${date.getFullYear()}.` +
-      `${String(date.getMonth()+1).padStart(2,"0")}.` +
-      `${String(date.getDate()).padStart(2,"0")} build ` +
-      `${String(date.getHours()).padStart(2,"0")}` +
-      `${String(date.getMinutes()).padStart(2,"0")}`;
+    const year = date.getFullYear();
+
+    const month = String(date.getMonth()+1).padStart(2,"0");
+
+    const day = String(date.getDate()).padStart(2,"0");
+
+    const hours = String(date.getHours()).padStart(2,"0");
+
+    const minutes = String(date.getMinutes()).padStart(2,"0");
+
+    const version = `v${year}.${month}.${day} build ${hours}${minutes}`;
 
     document.getElementById("appVersion").innerText = version;
 
