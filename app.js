@@ -1,171 +1,11 @@
 /* =========================
-   PRESENCE SYSTEM (Firebase Realtime Database)
+   SPL TRAINER – HLAVNÍ LOGIKA APLIKACE
+   Autor: Zdeněk Horák
 ========================= */
-
-function getUserId() {
-
-  let userId = localStorage.getItem("spl_user_id");
-
-  if (!userId) {
-
-    userId = crypto.randomUUID();
-
-    localStorage.setItem("spl_user_id", userId);
-
-  }
-
-  return userId;
-
-}
-
-const userId = getUserId();
-
-async function setupPresence() {
-
-  if (!window.rtdb) {
-
-    console.warn("Realtime Database není připravena");
-
-    return;
-
-  }
-
-  const presenceRef = window.rtdbRef(
-    window.rtdb,
-    "presence/" + userId
-  );
-
-  try {
-
-    await window.rtdbSet(presenceRef, {
-
-      online: true,
-      lastSeen: Date.now()
-
-    });
-
-    window.rtdbOnDisconnect(presenceRef).set({
-
-      online: false,
-      lastSeen: Date.now()
-
-    });
-
-  }
-
-  catch (e) {
-
-    console.error("Presence error:", e);
-
-  }
-
-}
-
-function watchPresence() {
-
-  if (!window.rtdb) return;
-
-  const presenceRef = window.rtdbRef(
-    window.rtdb,
-    "presence"
-  );
-
-  window.rtdbOnValue(presenceRef, snapshot => {
-
-    let total = 0;
-    let online = 0;
-
-    snapshot.forEach(child => {
-
-      total++;
-
-      if (child.val().online)
-        online++;
-
-    });
-
-    console.log("👥 Online:", online, "| Celkem:", total);
-
-    const box = document.getElementById("metarBox");
-
-    if (box) {
-
-      const base = box.innerText.split("\n")[0];
-
-      box.innerText = base +
-        `\n👥 Online: ${online} | Celkem: ${total}`;
-
-    }
-
-  });
-
-}
-
-window.addEventListener("load", () => {
-
-  setupPresence();
-
-  watchPresence();
-
-});
-
-
-console.log("SPL READY");
 
 
 /* =========================
-   METAR
-========================= */
-
-async function loadMetar() {
-
-  try {
-
-    const response = await fetch(
-      "https://corsproxy.io/?https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
-    );
-
-    if (!response.ok) {
-
-      throw new Error("HTTP error " + response.status);
-
-    }
-
-    const text = await response.text();
-
-    const lines = text.trim().split("\n");
-
-    const metar = lines[1] || "METAR není dostupný";
-
-    const box = document.getElementById("metarBox");
-
-    if (box) {
-
-      const presenceLine = box.innerText.includes("👥")
-        ? "\n" + box.innerText.split("\n")[1]
-        : "";
-
-      box.innerText = metar + presenceLine;
-
-    }
-
-  }
-
-  catch (error) {
-
-    console.warn("METAR error:", error);
-
-  }
-
-}
-
-loadMetar();
-
-setInterval(loadMetar, 300000);
-
-
-/* =========================
-   GLOBÁLNÍ STAV
+   GLOBÁLNÍ PROMĚNNÉ
 ========================= */
 
 let data = {};
@@ -174,64 +14,96 @@ let currentIndex = 0;
 let score = 0;
 let mode = "study";
 let wrongQuestions = [];
-let changeLog = {};
 
-
-/* =========================
-   DOM
-========================= */
 
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
-const resultBox = document.getElementById("result") || { innerHTML: "" };
+const resultBox = document.getElementById("result");
+const statsBox = document.getElementById("statsBox");
 
 const randomToggle = document.getElementById("randomQuestions");
 const questionLimitInput = document.getElementById("questionCount");
 
-const correctColorPicker = document.getElementById("correctColorPicker");
-const wrongColorPicker = document.getElementById("wrongColorPicker");
-const settingsToggle = document.getElementById("settingsToggle");
-const settingsPanel = document.getElementById("settingsPanel");
+
+/* =========================
+   IDENTITA UŽIVATELE
+========================= */
+
+function getUserId() {
+
+  let id = localStorage.getItem("spl_user_id");
+
+  if (!id) {
+
+    id = crypto.randomUUID();
+
+    localStorage.setItem("spl_user_id", id);
+
+  }
+
+  return id;
+
+}
+
+const userId = getUserId();
 
 
 /* =========================
-   NASTAVENÍ PANEL
+   FIREBASE PRESENCE
 ========================= */
 
-if (settingsToggle && settingsPanel) {
+async function setupPresence() {
 
-  settingsToggle.addEventListener("click", () => {
+  if (!window.rtdb) return;
 
-    settingsPanel.style.display =
-      settingsPanel.style.display === "none" ? "block" : "none";
+  const ref = window.rtdbRef(window.rtdb, "presence/" + userId);
+
+  await window.rtdbSet(ref, {
+
+    online: true,
+    lastSeen: Date.now()
+
+  });
+
+  window.rtdbOnDisconnect(ref).set({
+
+    online: false,
+    lastSeen: Date.now()
 
   });
 
 }
 
 
-if (correctColorPicker) {
+function watchPresence() {
 
-  correctColorPicker.addEventListener("input", (e) => {
+  if (!window.rtdb) return;
 
-    document.documentElement.style.setProperty(
-      "--correctColor",
-      e.target.value
-    );
+  const ref = window.rtdbRef(window.rtdb, "presence");
 
-  });
+  window.rtdbOnValue(ref, snapshot => {
 
-}
+    let online = 0;
+    let total = 0;
 
+    snapshot.forEach(child => {
 
-if (wrongColorPicker) {
+      total++;
 
-  wrongColorPicker.addEventListener("input", (e) => {
+      if (child.val().online) online++;
 
-    document.documentElement.style.setProperty(
-      "--wrongColor",
-      e.target.value
-    );
+    });
+
+    const metarBox = document.getElementById("metarBox");
+
+    if (metarBox) {
+
+      const base = metarBox.innerText.split("\n")[0];
+
+      metarBox.innerText = base +
+        `\n👥 Online: ${online} | Celkem: ${total}`;
+
+    }
 
   });
 
@@ -239,20 +111,110 @@ if (wrongColorPicker) {
 
 
 /* =========================
-   NAČTENÍ DAT
+   STATISTIKA – ULOŽENÍ
 ========================= */
 
-fetch("./data.json")
+async function saveStats(correct, total) {
 
-  .then(res => res.json())
+  try {
 
-  .then(async json => {
+    if (!window.rtdb) return;
+
+    const ref = window.rtdbRef(window.rtdb, "stats/" + userId);
+
+    const snapshot = await new Promise(resolve => {
+
+      window.rtdbOnValue(ref, resolve, { onlyOnce: true });
+
+    });
+
+    let stats = snapshot.val();
+
+    if (!stats) {
+
+      stats = {
+
+        totalTests: 0,
+        totalCorrect: 0,
+        totalQuestions: 0
+
+      };
+
+    }
+
+    stats.totalTests++;
+    stats.totalCorrect += correct;
+    stats.totalQuestions += total;
+    stats.lastTest = Date.now();
+
+    await window.rtdbSet(ref, stats);
+
+    console.log("Statistika uložena", stats);
+
+  }
+
+  catch (e) {
+
+    console.error("Statistika chyba", e);
+
+  }
+
+}
+
+
+/* =========================
+   STATISTIKA – NAČTENÍ
+========================= */
+
+function loadStats() {
+
+  if (!window.rtdb) return;
+
+  const ref = window.rtdbRef(window.rtdb, "stats/" + userId);
+
+  window.rtdbOnValue(ref, snapshot => {
+
+    if (!snapshot.exists()) {
+
+      statsBox.innerHTML = "Vaše statistika: zatím žádná data";
+
+      return;
+
+    }
+
+    const stats = snapshot.val();
+
+    const percent = Math.round(
+      (stats.totalCorrect / stats.totalQuestions) * 100
+    );
+
+    statsBox.innerHTML = `
+
+      Vaše statistika:<br>
+      Testů: ${stats.totalTests}<br>
+      Úspěšnost: ${percent} %<br>
+      Správně: ${stats.totalCorrect} / ${stats.totalQuestions}
+
+    `;
+
+  });
+
+}
+
+
+/* =========================
+   NAČTENÍ OTÁZEK
+========================= */
+
+fetch("data.json")
+
+  .then(r => r.json())
+
+  .then(json => {
 
     data = json;
 
     initCategories();
-
-    await loadChangeLog();
 
     startStudy();
 
@@ -260,7 +222,7 @@ fetch("./data.json")
 
 
 /* =========================
-   INICIALIZACE OKRUHŮ
+   KATEGORIE
 ========================= */
 
 function initCategories() {
@@ -272,48 +234,9 @@ function initCategories() {
     const option = document.createElement("option");
 
     option.value = cat;
-
     option.textContent = cat;
 
     categorySelect.appendChild(option);
-
-  });
-
-
-  categorySelect.addEventListener("change", () => {
-
-    if (mode === "study") startStudy();
-
-    if (mode === "test") startTest();
-
-    if (mode === "edit") startEdit();
-
-  });
-
-}
-
-
-/* =========================
-   CHANGELOG
-========================= */
-
-async function loadChangeLog() {
-
-  if (!window.db) return;
-
-  const snapshot = await window.fbGetDocs(
-    window.fbCollection(window.db, "questionChanges")
-  );
-
-  snapshot.forEach(doc => {
-
-    const d = doc.data();
-
-    const key = d.category.trim() + "|" + d.question.trim();
-
-    if (!changeLog[key]) changeLog[key] = [];
-
-    changeLog[key].push(d);
 
   });
 
@@ -341,8 +264,6 @@ function startTest() {
 
   score = 0;
 
-  wrongQuestions = [];
-
   prepareQuestions();
 
   showQuestion();
@@ -369,47 +290,15 @@ function prepareQuestions() {
 
   const category = categorySelect.value;
 
-  if (!data[category]) return;
-
   currentQuestions = data[category].map((q, i) => ({
+
     ...q,
+
     _originalIndex: i + 1
+
   }));
 
   currentIndex = 0;
-
-  resultBox.innerHTML = "";
-
-
-  if (mode === "test" && randomToggle?.checked)
-
-    shuffle(currentQuestions);
-
-
-  const limit = parseInt(questionLimitInput?.value);
-
-
-  if (
-    mode === "test" &&
-    !isNaN(limit) &&
-    limit > 0 &&
-    limit < currentQuestions.length
-  )
-
-    currentQuestions = currentQuestions.slice(0, limit);
-
-}
-
-
-function shuffle(array) {
-
-  for (let i = array.length - 1; i > 0; i--) {
-
-    const j = Math.floor(Math.random() * (i + 1));
-
-    [array[i], array[j]] = [array[j], array[i]];
-
-  }
 
 }
 
@@ -420,76 +309,41 @@ function shuffle(array) {
 
 function showQuestion() {
 
-  if (!currentQuestions.length) return;
-
   const q = currentQuestions[currentIndex];
 
   let html = `
 
-  <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length} (původní #${q._originalIndex})</strong></div>
+  <div>
+  Otázka ${currentIndex + 1} / ${currentQuestions.length}
+  (původní #${q._originalIndex})
+  </div>
 
   <h3>${q.question}</h3>
 
   `;
-
 
   q.answers.forEach((a, i) => {
 
     html += `
 
     <button class="answerBtn" onclick="selectAnswer(${i})">
-
     ${a}
-
     </button>
 
     `;
 
   });
 
-
   html += `
 
   <div style="margin-top:10px;">
-
-  <button onclick="prevQuestion()">⬅ Zpět</button>
-
-  <button onclick="nextQuestion()">Další ➡</button>
-
+  <button onclick="prevQuestion()">← Zpět</button>
+  <button onclick="nextQuestion()">Další →</button>
   </div>
 
   `;
 
-
   quizContainer.innerHTML = html;
-
-
-  if (mode === "study" || mode === "edit")
-
-    highlightCorrect();
-
-}
-
-
-function highlightCorrect() {
-
-  const correct = currentQuestions[currentIndex].correct;
-
-  const buttons = document.querySelectorAll(".answerBtn");
-
-
-  buttons.forEach((btn, i) => {
-
-    btn.disabled = false;
-
-    btn.style.backgroundColor = "#1f3a5f";
-
-
-    if (i === correct)
-
-      btn.style.backgroundColor = "var(--correctColor, #2e7d32)";
-
-  });
 
 }
 
@@ -502,73 +356,9 @@ function selectAnswer(index) {
 
   const correct = currentQuestions[currentIndex].correct;
 
-  const buttons = document.querySelectorAll(".answerBtn");
+  if (mode === "test" && index === correct)
 
-
-  if (mode === "test") {
-
-    buttons.forEach((btn, i) => {
-
-      btn.disabled = true;
-
-
-      if (i === correct)
-
-        btn.style.backgroundColor = "var(--correctColor, #2e7d32)";
-
-
-      if (i === index && index !== correct)
-
-        btn.style.backgroundColor = "var(--wrongColor, #b71c1c)";
-
-    });
-
-
-    if (index === correct)
-
-      score++;
-
-
-    else
-
-      wrongQuestions.push(currentQuestions[currentIndex]);
-
-  }
-
-
-  if (mode === "edit") {
-
-    const q = currentQuestions[currentIndex];
-
-    const oldCorrect = q.correct;
-
-
-    if (oldCorrect !== index) {
-
-      q.correct = index;
-
-
-      if (window.db) {
-
-        window.fbAddDoc(
-          window.fbCollection(window.db, "questionChanges"),
-          {
-            category: categorySelect.value.trim(),
-            question: q.question.trim(),
-            oldCorrect,
-            newCorrect: index,
-            timestamp: Date.now()
-          }
-        );
-
-      }
-
-    }
-
-
-    highlightCorrect();
-
-  }
+    score++;
 
 }
 
@@ -586,7 +376,6 @@ function nextQuestion() {
     showQuestion();
 
   }
-
 
   else
 
@@ -612,30 +401,64 @@ function prevQuestion() {
    KONEC TESTU
 ========================= */
 
-function finish() {
+async function finish() {
 
   if (mode !== "test") return;
 
-
   const total = currentQuestions.length;
-
 
   const percent = Math.round((score / total) * 100);
 
-
   resultBox.innerHTML = `
 
-  <div>
-
   Test dokončen<br>
-
   ${score} / ${total}<br>
-
   ${percent} %
-
-  </div>
 
   `;
 
+  await saveStats(score, total);
+
 }
 
+
+/* =========================
+   METAR
+========================= */
+
+async function loadMetar() {
+
+  try {
+
+    const r = await fetch(
+      "https://corsproxy.io/?https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
+    );
+
+    const text = await r.text();
+
+    const lines = text.split("\n");
+
+    document.getElementById("metarBox").innerText = lines[1];
+
+  }
+
+  catch {}
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+window.addEventListener("load", () => {
+
+  setupPresence();
+
+  watchPresence();
+
+  loadStats();
+
+  loadMetar();
+
+});
