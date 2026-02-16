@@ -1,17 +1,13 @@
 /* =========================
-   PRESENCE SYSTEM
+   PRESENCE SYSTEM (Firebase Realtime Database)
 ========================= */
 
 function getUserId() {
-
   let userId = localStorage.getItem("spl_user_id");
 
   if (!userId) {
-
     userId = crypto.randomUUID();
-
     localStorage.setItem("spl_user_id", userId);
-
   }
 
   return userId;
@@ -21,33 +17,48 @@ const userId = getUserId();
 
 async function setupPresence() {
 
-  if (!window.rtdb) return;
+  if (!window.rtdb) {
+    console.warn("Realtime Database není připravena");
+    return;
+  }
 
-  const ref =
-    window.rtdbRef(window.rtdb, "presence/" + userId);
+  const presenceRef = window.rtdbRef(
+    window.rtdb,
+    "presence/" + userId
+  );
 
-  await window.rtdbSet(ref, {
+  try {
 
-    online: true,
-    lastSeen: Date.now()
+    await window.rtdbSet(presenceRef, {
+      online: true,
+      lastSeen: Date.now()
+    });
 
-  });
+    window.rtdbOnDisconnect(presenceRef).set({
+      online: false,
+      lastSeen: Date.now()
+    });
 
-  window.rtdbOnDisconnect(ref).set({
+    console.log("Presence nastavena");
 
-    online: false,
-    lastSeen: Date.now()
+  } catch (e) {
 
-  });
+    console.error("Presence error:", e);
+
+  }
 
 }
 
 function watchPresence() {
 
-  const ref =
-    window.rtdbRef(window.rtdb, "presence");
+  if (!window.rtdb) return;
 
-  window.rtdbOnValue(ref, snapshot => {
+  const presenceRef = window.rtdbRef(
+    window.rtdb,
+    "presence"
+  );
+
+  window.rtdbOnValue(presenceRef, snapshot => {
 
     let total = 0;
     let online = 0;
@@ -67,12 +78,11 @@ function watchPresence() {
 
     if (box) {
 
-      const firstLine =
-        box.innerHTML.split("<br>")[0];
+      const baseText = box.innerText.split("\n")[0];
 
-      box.innerHTML =
-        firstLine +
-        `<br>👥 Online: ${online} | Celkem: ${total}`;
+      box.innerText =
+        baseText +
+        `\n👥 Online: ${online} | Celkem: ${total}`;
 
     }
 
@@ -80,41 +90,59 @@ function watchPresence() {
 
 }
 
-setupPresence();
-watchPresence();
+
+/* =========================
+   START PO NAČTENÍ STRÁNKY
+========================= */
+
+window.addEventListener("load", () => {
+
+  setupPresence();
+  watchPresence();
+
+});
+
 
 console.log("SPL READY");
+
 
 /* =========================
    METAR
 ========================= */
 
 async function loadMetar() {
+
   try {
 
     const response = await fetch(
       "https://corsproxy.io/?https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
     );
 
-    if (!response.ok) {
+    if (!response.ok)
       throw new Error("HTTP error " + response.status);
-    }
 
     const text = await response.text();
     const lines = text.trim().split("\n");
     const metar = lines[1] || "METAR není dostupný";
 
     const box = document.getElementById("metarBox");
-    if (box) box.innerText = metar;
+
+    if (box) {
+
+      const presenceLine = box.innerText.includes("👥")
+        ? "\n" + box.innerText.split("\n")[1]
+        : "";
+
+      box.innerText = metar + presenceLine;
+
+    }
 
   } catch (error) {
 
     console.warn("METAR error:", error);
 
-    const box = document.getElementById("metarBox");
-    if (box) box.innerText = "METAR nedostupný";
-
   }
+
 }
 
 loadMetar();
@@ -122,7 +150,7 @@ setInterval(loadMetar, 300000);
 
 
 /* =========================
-   GLOBÁLNÍ STAV
+   ZBYTEK VAŠÍ APLIKACE
 ========================= */
 
 let data = {};
@@ -133,10 +161,6 @@ let mode = "study";
 let wrongQuestions = [];
 let changeLog = {};
 
-
-/* =========================
-   DOM
-========================= */
 
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
@@ -151,16 +175,14 @@ const settingsToggle = document.getElementById("settingsToggle");
 const settingsPanel = document.getElementById("settingsPanel");
 
 
-/* =========================
-   NASTAVENÍ PANEL
-========================= */
-
 if (settingsToggle && settingsPanel) {
 
   settingsToggle.addEventListener("click", () => {
 
     settingsPanel.style.display =
-      settingsPanel.style.display === "none" ? "block" : "none";
+      settingsPanel.style.display === "none"
+        ? "block"
+        : "none";
 
   });
 
@@ -169,7 +191,7 @@ if (settingsToggle && settingsPanel) {
 
 if (correctColorPicker) {
 
-  correctColorPicker.addEventListener("input", (e) => {
+  correctColorPicker.addEventListener("input", e => {
 
     document.documentElement.style.setProperty(
       "--correctColor",
@@ -180,9 +202,10 @@ if (correctColorPicker) {
 
 }
 
+
 if (wrongColorPicker) {
 
-  wrongColorPicker.addEventListener("input", (e) => {
+  wrongColorPicker.addEventListener("input", e => {
 
     document.documentElement.style.setProperty(
       "--wrongColor",
@@ -194,12 +217,10 @@ if (wrongColorPicker) {
 }
 
 
-/* =========================
-   NAČTENÍ DAT
-========================= */
-
 fetch("./data.json")
+
   .then(res => res.json())
+
   .then(async json => {
 
     data = json;
@@ -208,14 +229,10 @@ fetch("./data.json")
 
     await loadChangeLog();
 
-    startStudy(); // automatické spuštění
+    startStudy();
 
   });
 
-
-/* =========================
-   INICIALIZACE OKRUHŮ
-========================= */
 
 function initCategories() {
 
@@ -232,8 +249,6 @@ function initCategories() {
 
   });
 
-
-  // KLÍČOVÁ OPRAVA – přepínání okruhů
   categorySelect.addEventListener("change", () => {
 
     if (mode === "study") startStudy();
@@ -245,18 +260,9 @@ function initCategories() {
 }
 
 
-/* =========================
-   CHANGELOG
-========================= */
-
 async function loadChangeLog() {
 
-  if (!window.db) {
-
-    console.warn("Firebase není připraven");
-    return;
-
-  }
+  if (!window.db) return;
 
   const snapshot = await window.fbGetDocs(
     window.fbCollection(window.db, "questionChanges")
@@ -266,26 +272,17 @@ async function loadChangeLog() {
 
     const d = doc.data();
 
-    const key =
-      d.category.trim() + "|" +
-      d.question.trim();
+    const key = d.category + "|" + d.question;
 
-    if (!changeLog[key]) {
+    if (!changeLog[key])
       changeLog[key] = [];
-    }
 
     changeLog[key].push(d);
 
   });
 
-  console.log("ChangeLog načten");
-
 }
 
-
-/* =========================
-   REŽIMY
-========================= */
 
 function startStudy() {
 
@@ -296,6 +293,7 @@ function startStudy() {
   showQuestion();
 
 }
+
 
 function startTest() {
 
@@ -311,6 +309,7 @@ function startTest() {
 
 }
 
+
 function startEdit() {
 
   mode = "edit";
@@ -322,20 +321,9 @@ function startEdit() {
 }
 
 
-/* =========================
-   PŘÍPRAVA OTÁZEK
-========================= */
-
 function prepareQuestions() {
 
   const category = categorySelect.value;
-
-  if (!data[category]) {
-
-    console.error("Kategorie nenalezena:", category);
-    return;
-
-  }
 
   currentQuestions = [...data[category]];
 
@@ -343,45 +331,8 @@ function prepareQuestions() {
 
   resultBox.innerHTML = "";
 
-
-  if (mode === "test" && randomToggle?.checked) {
-
-    shuffle(currentQuestions);
-
-  }
-
-  const limit = parseInt(questionLimitInput?.value);
-
-  if (
-    mode === "test" &&
-    !isNaN(limit) &&
-    limit > 0 &&
-    limit < currentQuestions.length
-  ) {
-
-    currentQuestions = currentQuestions.slice(0, limit);
-
-  }
-
 }
 
-
-function shuffle(array) {
-
-  for (let i = array.length - 1; i > 0; i--) {
-
-    const j = Math.floor(Math.random() * (i + 1));
-
-    [array[i], array[j]] = [array[j], array[i]];
-
-  }
-
-}
-
-
-/* =========================
-   ZOBRAZENÍ OTÁZKY
-========================= */
 
 function showQuestion() {
 
@@ -389,225 +340,69 @@ function showQuestion() {
 
   const q = currentQuestions[currentIndex];
 
-  const key =
-    categorySelect.value.trim() + "|" +
-    q.question.trim();
-
-  const changes = changeLog[key];
-
-
   let html = `
-    <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
-    <h3>${q.question}</h3>
+
+  <div>
+  Otázka ${currentIndex + 1}/${currentQuestions.length}
+  </div>
+
+  <h3>${q.question}</h3>
+
   `;
-
-
-  if (changes && changes.length > 0) {
-
-    const last = changes[changes.length - 1];
-
-    const date = new Date(last.timestamp);
-
-    html += `
-      <div style="
-        font-size:12px;
-        color:#ffd166;
-        margin-bottom:10px;
-        padding:6px;
-        border-left:3px solid #ffd166;
-      ">
-        📝 Změněno:
-        ${date.toLocaleDateString()}
-        ${date.toLocaleTimeString()}
-      </div>
-    `;
-
-  }
-
 
   q.answers.forEach((a, i) => {
 
     html += `
-      <button class="answerBtn" onclick="selectAnswer(${i})">
-        ${a}
-      </button>
+
+    <button onclick="selectAnswer(${i})">
+    ${a}
+    </button>
+
     `;
 
   });
 
-
-  html += `
-    <div style="margin-top:10px;display:flex;gap:8px;">
-      <button onclick="prevQuestion()">⬅ Zpět</button>
-      <button onclick="nextQuestion()">Další ➡</button>
-    </div>
-  `;
-
-
   quizContainer.innerHTML = html;
 
-
-  if (mode === "study" || mode === "edit") {
-
-    highlightCorrect();
-
-  }
-
 }
 
-
-/* =========================
-   ZVÝRAZNĚNÍ
-========================= */
-
-function highlightCorrect() {
-
-  const correct = currentQuestions[currentIndex].correct;
-
-  const buttons = document.querySelectorAll(".answerBtn");
-
-  buttons.forEach((btn, i) => {
-
-    btn.style.backgroundColor = "#1f3a5f";
-
-    btn.disabled = false;
-
-    if (i === correct) {
-
-      btn.style.backgroundColor =
-        "var(--correctColor, #2e7d32)";
-
-    }
-
-  });
-
-}
-
-
-/* =========================
-   ODPOVĚĎ
-========================= */
 
 function selectAnswer(index) {
 
   const correct = currentQuestions[currentIndex].correct;
 
-  const buttons = document.querySelectorAll(".answerBtn");
-
-
   if (mode === "test") {
-
-    buttons.forEach((btn, i) => {
-
-      btn.disabled = true;
-
-      if (i === correct)
-        btn.style.backgroundColor =
-          "var(--correctColor, #2e7d32)";
-
-      if (i === index && index !== correct)
-        btn.style.backgroundColor =
-          "var(--wrongColor, #b71c1c)";
-
-    });
 
     if (index === correct)
       score++;
-    else
-      wrongQuestions.push(currentQuestions[currentIndex]);
-
-  }
-
-
-  if (mode === "edit") {
-
-    const q = currentQuestions[currentIndex];
-
-    const oldCorrect = q.correct;
-
-    if (oldCorrect !== index) {
-
-      q.correct = index;
-
-      if (window.db) {
-
-        window.fbAddDoc(
-          window.fbCollection(window.db, "questionChanges"),
-          {
-            category: categorySelect.value.trim(),
-            question: q.question.trim(),
-            oldCorrect,
-            newCorrect: index,
-            timestamp: Date.now()
-          }
-        );
-
-      }
-
-    }
-
-    highlightCorrect();
 
   }
 
 }
 
-
-/* =========================
-   NAVIGACE
-========================= */
 
 function nextQuestion() {
 
-  if (currentIndex < currentQuestions.length - 1) {
+  currentIndex++;
 
-    currentIndex++;
-
-    showQuestion();
-
-  }
-
-  else {
-
+  if (currentIndex >= currentQuestions.length)
     finish();
 
-  }
-
-}
-
-function prevQuestion() {
-
-  if (currentIndex > 0) {
-
-    currentIndex--;
-
+  else
     showQuestion();
 
-  }
-
 }
 
-
-/* =========================
-   KONEC TESTU
-========================= */
 
 function finish() {
 
-  if (mode !== "test") return;
-
-  const total = currentQuestions.length;
-
-  const percent =
-    Math.round((score / total) * 100);
-
-
   resultBox.innerHTML = `
-    <div>
-      Test dokončen<br>
-      ${score} / ${total}<br>
-      ${percent} %
-    </div>
+
+  Test dokončen
+
+  ${score}/${currentQuestions.length}
+
   `;
 
 }
+
