@@ -1,5 +1,5 @@
 /* =========================
-   SPL TRAINER – HLAVNÍ LOGIKA APLIKACE
+   SPL TRAINER – FINÁLNÍ VERZE
    Autor: Zdeněk Horák
 ========================= */
 
@@ -13,8 +13,6 @@ let currentQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let mode = "study";
-let wrongQuestions = [];
-
 
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
@@ -149,8 +147,6 @@ async function saveStats(correct, total) {
 
     await window.rtdbSet(ref, stats);
 
-    console.log("Statistika uložena", stats);
-
   }
 
   catch (e) {
@@ -262,8 +258,6 @@ function startTest() {
 
   mode = "test";
 
-  score = 0;
-
   prepareQuestions();
 
   showQuestion();
@@ -283,22 +277,59 @@ function startEdit() {
 
 
 /* =========================
-   PŘÍPRAVA OTÁZEK
+   PŘÍPRAVA OTÁZEK (OPRAVENO)
 ========================= */
 
 function prepareQuestions() {
 
   const category = categorySelect.value;
 
-  currentQuestions = data[category].map((q, i) => ({
+  if (!data[category]) return;
+
+  let questions = data[category].map((q, i) => ({
 
     ...q,
-
     _originalIndex: i + 1
 
   }));
 
+
+  // náhodné pořadí
+
+  if (randomToggle && randomToggle.checked) {
+
+    for (let i = questions.length - 1; i > 0; i--) {
+
+      const j = Math.floor(Math.random() * (i + 1));
+
+      [questions[i], questions[j]] =
+        [questions[j], questions[i]];
+
+    }
+
+  }
+
+
+  // limit počtu
+
+  if (questionLimitInput) {
+
+    let limit = parseInt(questionLimitInput.value);
+
+    if (!isNaN(limit) && limit > 0 && limit < questions.length)
+
+      questions = questions.slice(0, limit);
+
+  }
+
+
+  currentQuestions = questions;
+
   currentIndex = 0;
+
+  score = 0;
+
+  resultBox.innerHTML = "";
 
 }
 
@@ -308,6 +339,8 @@ function prepareQuestions() {
 ========================= */
 
 function showQuestion() {
+
+  if (!currentQuestions.length) return;
 
   const q = currentQuestions[currentIndex];
 
@@ -419,6 +452,8 @@ async function finish() {
 
   await saveStats(score, total);
 
+  loadStats();
+
 }
 
 
@@ -448,7 +483,7 @@ async function loadMetar() {
 
 
 /* =========================
-   START
+   START APLIKACE
 ========================= */
 
 window.addEventListener("load", () => {
