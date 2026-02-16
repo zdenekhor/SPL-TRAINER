@@ -7,247 +7,68 @@
 
 <style>
 
-:root {
-
-  --bg-main: #0b1724;
-  --bg-panel: #132b44;
-  --bg-header: #0f2236;
-
-  --accent: #4da3ff;
-  --accent-soft: #2a6fb3;
-
-  --text-main: #e6eef7;
-  --text-muted: #8aa0b8;
-
-  --correctColor: #2e7d32;
-  --wrongColor: #b71c1c;
-
-  --border: #1f3b57;
-
-}
-
-html, body {
-
+body {
   margin: 0;
-  padding: 0;
-
-  font-family: "Segoe UI", system-ui;
-  background: var(--bg-main);
-  color: var(--text-main);
-
-}
-
-.container {
-
-  max-width: 900px;
-  margin: auto;
-  padding: 12px;
-
+  font-family: Segoe UI, Arial;
+  background: #0b1724;
+  color: #e6eef7;
 }
 
 .header {
-
-  position: sticky;
-  top: 0;
-
-  background: var(--bg-header);
-
-  padding: 6px 10px;
-
-  border-bottom: 1px solid var(--border);
-
+  background: #0f2236;
+  padding: 10px;
+  border-bottom: 1px solid #1f3b57;
 }
 
-.title {
-
-  font-size: 18px;
-  font-weight: bold;
-
-}
-
-.statusbar {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  flex-wrap: wrap;
-
-  font-size: 12px;
-
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 10px;
 }
 
 .control-panel {
-
-  margin-top: 6px;
-
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 6px;
-
-}
-
-select, input, button {
-
-  background: #1e3a5a;
-
-  color: white;
-
-  border: 1px solid var(--border);
-
-  padding: 6px;
-
-  border-radius: 6px;
-
-  font-size: 14px;
-
-}
-
-button {
-
-  cursor: pointer;
-
+  margin-top: 10px;
 }
 
 .quiz-panel {
-
-  margin-top: 12px;
-
-  background: var(--bg-panel);
-
-  padding: 16px;
-
+  margin-top: 15px;
+  background: #132b44;
+  padding: 15px;
   border-radius: 8px;
-
 }
 
 .answerBtn {
-
+  display: block;
   width: 100%;
-
-  padding: 10px;
-
-  margin-top: 6px;
-
-  font-size: 15px;
-
+  margin-top: 8px;
+  padding: 12px;
+  background: #1e3a5a;
+  border: 1px solid #1f3b57;
+  color: white;
+  border-radius: 6px;
 }
 
-.nav-buttons {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  margin-top: 6px;
-
+button {
+  padding: 8px;
+  margin-right: 5px;
+  background: #1e3a5a;
+  color: white;
+  border: 1px solid #1f3b57;
+  border-radius: 6px;
 }
 
-.result {
-
-  font-size: 16px;
-
+select, input {
+  padding: 6px;
+  background: #1e3a5a;
+  color: white;
+  border: 1px solid #1f3b57;
 }
 
-.settings {
-
-  margin-top: 4px;
-
-}
-
-
-/* MOBIL OPTIMALIZACE */
-
-@media (max-width: 600px) {
-
-  .container {
-
-    min-height: calc(100vh - 60px);
-
-    padding: 6px;
-
-  }
-
-  .title {
-
-    font-size: 16px;
-
-  }
-
-  .statusbar {
-
-    font-size: 11px;
-
-  }
-
-  select, input, button {
-
-    font-size: 13px;
-
-    padding: 5px;
-
-  }
+@media (max-width:600px) {
 
   .answerBtn {
-
-    font-size: 15px;
-
-    padding: 10px;
-
-  }
-
-  .quiz-panel {
-
-    padding: 8px;
-
-    overflow-y: auto;
-
-  }
-
-}
-
-  .container {
-
-    height: calc(100vh - 60px);
-
-    padding: 6px;
-
-  }
-
-  .title {
-
     font-size: 16px;
-
-  }
-
-  .statusbar {
-
-    font-size: 11px;
-
-  }
-
-  select, input, button {
-
-    font-size: 13px;
-
-    padding: 5px;
-
-  }
-
-  .answerBtn {
-
-    font-size: 15px;
-
-    padding: 10px;
-
-  }
-
-  .quiz-panel {
-
-    padding: 8px;
-
+    padding: 14px;
   }
 
 }
@@ -258,26 +79,15 @@ button {
 <body>
 
 <div class="header">
-
-  <div class="container">
-
-    <div class="title">✈ SPL Trainer</div>
-
-    <div class="statusbar">
-
-      <div id="metarBox">Načítám METAR...</div>
-
-      <div id="userStats">👥 ...</div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
 <div class="container">
 
+<div><strong>✈ SPL Trainer</strong></div>
+<div id="metarBox">Načítám METAR...</div>
+
+</div>
+</div>
+
+<div class="container">
 
 <div class="control-panel">
 
@@ -294,96 +104,64 @@ Náhodné
 
 <label>
 Počet:
-<input type="number" id="questionCount" value="10" min="1">
+<input type="number" id="questionCount" value="10">
 </label>
 
 <button id="settingsToggle">⚙</button>
 
 </div>
 
+<div id="settingsPanel" style="display:none;">
 
-<div class="settings" id="settingsPanel" style="display:none;">
-
-<label>
-Správná:
 <input type="color" id="correctColorPicker">
-</label>
-
-<label>
-Chybná:
 <input type="color" id="wrongColorPicker">
-</label>
 
 </div>
-
 
 <div class="quiz-panel">
 
-<div id="quizContainer"></div>
+<div id="quizContainer">Načítám otázky...</div>
 
 </div>
 
-
-<div class="result" id="result"></div>
-
+<div id="result"></div>
 
 </div>
-
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-import {
-  getDatabase,
-  ref,
-  set,
-  onDisconnect,
-  onValue
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
+import { getDatabase, ref, set, onDisconnect, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyDJUBuxXrv44dQmokqoLhDQ7n90nlbt1g8",
-  authDomain: "spl-trainer.firebaseapp.com",
-  projectId: "spl-trainer",
-  storageBucket: "spl-trainer.firebasestorage.app",
-  messagingSenderId: "51536361421",
-  appId: "1:51536361421:web:179c7497bb5341a7bcb684",
-  measurementId: "G-JYFEFFZH2P",
-
-  databaseURL:
-  "https://spl-trainer-default-rtdb.europe-west1.firebasedatabase.app"
+apiKey: "AIzaSyDJUBuxXrv44dQmokqoLhDQ7n90nlbt1g8",
+authDomain: "spl-trainer.firebaseapp.com",
+projectId: "spl-trainer",
+storageBucket: "spl-trainer.firebasestorage.app",
+messagingSenderId: "51536361421",
+appId: "1:51536361421:web:179c7497bb5341a7bcb684",
+databaseURL: "https://spl-trainer-default-rtdb.europe-west1.firebasedatabase.app"
 
 };
 
-
 const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
-
-const rtdb = getDatabase(app);
-
-
-window.db = db;
+window.db = getFirestore(app);
 window.fbCollection = collection;
 window.fbAddDoc = addDoc;
 window.fbGetDocs = getDocs;
 
-window.rtdb = rtdb;
+window.rtdb = getDatabase(app);
 window.rtdbRef = ref;
 window.rtdbSet = set;
 window.rtdbOnDisconnect = onDisconnect;
 window.rtdbOnValue = onValue;
 
-
 </script>
 
-
 <script src="app.js"></script>
-
 
 </body>
 </html>
