@@ -668,11 +668,13 @@ async function loadUserStats() {
 
   try {
 
-    const statsBox = document.getElementById("userStats");
+  const statsBox = document.getElementById("userStats");
 
-    if (!statsBox) return;
+if (!statsBox) return;
 
-    statsBox.innerHTML = "Vaše statistika: načítám...";
+// vyčistit bez textu
+statsBox.innerHTML = "";
+
 
     if (!window.db) {
 
