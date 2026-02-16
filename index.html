@@ -26,9 +26,13 @@
 
 }
 
-body {
+html, body {
 
   margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+
   font-family: "Segoe UI", system-ui;
   background: var(--bg-main);
   color: var(--text-main);
@@ -39,7 +43,13 @@ body {
 
   max-width: 900px;
   margin: auto;
-  padding: 15px;
+
+  height: calc(100vh - 70px);
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 8px;
 
 }
 
@@ -47,15 +57,18 @@ body {
 
   position: sticky;
   top: 0;
+
   background: var(--bg-header);
-  padding: 10px;
+
+  padding: 6px 10px;
+
   border-bottom: 1px solid var(--border);
 
 }
 
 .title {
 
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
 
 }
@@ -63,29 +76,40 @@ body {
 .statusbar {
 
   display: flex;
+
   justify-content: space-between;
+
   flex-wrap: wrap;
-  font-size: 14px;
-  margin-top: 4px;
+
+  font-size: 12px;
 
 }
 
 .control-panel {
 
-  margin-top: 15px;
+  margin-top: 6px;
+
   display: flex;
+
   flex-wrap: wrap;
-  gap: 8px;
+
+  gap: 6px;
 
 }
 
 select, input, button {
 
   background: #1e3a5a;
+
   color: white;
+
   border: 1px solid var(--border);
-  padding: 8px;
+
+  padding: 6px;
+
   border-radius: 6px;
+
+  font-size: 14px;
 
 }
 
@@ -95,70 +119,112 @@ button {
 
 }
 
-button:hover {
-
-  background: var(--accent-soft);
-
-}
-
 .quiz-panel {
 
-  margin-top: 20px;
+  margin-top: 6px;
+
   background: var(--bg-panel);
-  padding: 20px;
+
+  padding: 10px;
+
   border-radius: 8px;
+
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  overflow: hidden;
 
 }
 
 .answerBtn {
 
   width: 100%;
-  padding: 14px;
-  margin-top: 8px;
-  font-size: 16px;
-  background: #1e3a5a;
 
-}
+  padding: 10px;
 
-.answerBtn:hover {
+  margin-top: 6px;
 
-  background: var(--accent-soft);
+  font-size: 15px;
 
 }
 
 .nav-buttons {
 
   display: flex;
+
   justify-content: space-between;
-  margin-top: 15px;
+
+  margin-top: 6px;
 
 }
 
 .result {
 
-  margin-top: 20px;
-  font-size: 18px;
+  font-size: 16px;
 
 }
 
 .settings {
 
-  margin-top: 10px;
+  margin-top: 4px;
 
 }
 
+
+/* MOBIL OPTIMALIZACE */
+
 @media (max-width: 600px) {
 
-  .control-panel {
+  html, body {
 
-    flex-direction: column;
+    overflow: hidden;
+
+  }
+
+  .container {
+
+    height: calc(100vh - 60px);
+
+    padding: 6px;
+
+  }
+
+  .title {
+
+    font-size: 16px;
+
+  }
+
+  .statusbar {
+
+    font-size: 11px;
+
+  }
+
+  select, input, button {
+
+    font-size: 13px;
+
+    padding: 5px;
 
   }
 
   .answerBtn {
 
-    font-size: 18px;
-    padding: 16px;
+    font-size: 15px;
+
+    padding: 10px;
+
+  }
+
+  .quiz-panel {
+
+    padding: 8px;
 
   }
 
