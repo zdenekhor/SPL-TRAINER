@@ -1,11 +1,171 @@
 /* =========================
-   SPL TRAINER – KOMPLETNÍ OPRAVENÁ VERZE
-   Zachovává plnou funkcionalitu + statistiku
+   PRESENCE SYSTEM (Firebase Realtime Database)
 ========================= */
+
+function getUserId() {
+
+  let userId = localStorage.getItem("spl_user_id");
+
+  if (!userId) {
+
+    userId = crypto.randomUUID();
+
+    localStorage.setItem("spl_user_id", userId);
+
+  }
+
+  return userId;
+
+}
+
+const userId = getUserId();
+
+async function setupPresence() {
+
+  if (!window.rtdb) {
+
+    console.warn("Realtime Database není připravena");
+
+    return;
+
+  }
+
+  const presenceRef = window.rtdbRef(
+    window.rtdb,
+    "presence/" + userId
+  );
+
+  try {
+
+    await window.rtdbSet(presenceRef, {
+
+      online: true,
+      lastSeen: Date.now()
+
+    });
+
+    window.rtdbOnDisconnect(presenceRef).set({
+
+      online: false,
+      lastSeen: Date.now()
+
+    });
+
+  }
+
+  catch (e) {
+
+    console.error("Presence error:", e);
+
+  }
+
+}
+
+function watchPresence() {
+
+  if (!window.rtdb) return;
+
+  const presenceRef = window.rtdbRef(
+    window.rtdb,
+    "presence"
+  );
+
+  window.rtdbOnValue(presenceRef, snapshot => {
+
+    let total = 0;
+    let online = 0;
+
+    snapshot.forEach(child => {
+
+      total++;
+
+      if (child.val().online)
+        online++;
+
+    });
+
+    console.log("👥 Online:", online, "| Celkem:", total);
+
+    const box = document.getElementById("metarBox");
+
+    if (box) {
+
+      const base = box.innerText.split("\n")[0];
+
+      box.innerText = base +
+        `\n👥 Online: ${online} | Celkem: ${total}`;
+
+    }
+
+  });
+
+}
+
+window.addEventListener("load", () => {
+
+  setupPresence();
+
+  watchPresence();
+
+});
+
+
+console.log("SPL READY");
 
 
 /* =========================
-   GLOBÁLNÍ PROMĚNNÉ
+   METAR
+========================= */
+
+async function loadMetar() {
+
+  try {
+
+    const response = await fetch(
+      "https://corsproxy.io/?https://tgftp.nws.noaa.gov/data/observations/metar/stations/LKMT.TXT"
+    );
+
+    if (!response.ok) {
+
+      throw new Error("HTTP error " + response.status);
+
+    }
+
+    const text = await response.text();
+
+    const lines = text.trim().split("\n");
+
+    const metar = lines[1] || "METAR není dostupný";
+
+    const box = document.getElementById("metarBox");
+
+    if (box) {
+
+      const presenceLine = box.innerText.includes("👥")
+        ? "\n" + box.innerText.split("\n")[1]
+        : "";
+
+      box.innerText = metar + presenceLine;
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.warn("METAR error:", error);
+
+  }
+
+}
+
+loadMetar();
+
+setInterval(loadMetar, 300000);
+
+
+/* =========================
+   GLOBÁLNÍ STAV
 ========================= */
 
 let data = {};
@@ -13,9 +173,8 @@ let currentQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let mode = "study";
-
-let correctColor = "#2e7d32";
-let wrongColor = "#b71c1c";
+let wrongQuestions = [];
+let changeLog = {};
 
 
 /* =========================
@@ -24,127 +183,55 @@ let wrongColor = "#b71c1c";
 
 const categorySelect = document.getElementById("categorySelect");
 const quizContainer = document.getElementById("quizContainer");
-const resultBox = document.getElementById("result");
-const statsBox = document.getElementById("statsBox");
+const resultBox = document.getElementById("result") || { innerHTML: "" };
 
 const randomToggle = document.getElementById("randomQuestions");
 const questionLimitInput = document.getElementById("questionCount");
 
 const correctColorPicker = document.getElementById("correctColorPicker");
 const wrongColorPicker = document.getElementById("wrongColorPicker");
+const settingsToggle = document.getElementById("settingsToggle");
+const settingsPanel = document.getElementById("settingsPanel");
 
 
 /* =========================
-   BARVY
+   NASTAVENÍ PANEL
 ========================= */
 
-if (correctColorPicker)
-  correctColorPicker.addEventListener("input", e =>
-    correctColor = e.target.value);
+if (settingsToggle && settingsPanel) {
 
-if (wrongColorPicker)
-  wrongColorPicker.addEventListener("input", e =>
-    wrongColor = e.target.value);
+  settingsToggle.addEventListener("click", () => {
 
+    settingsPanel.style.display =
+      settingsPanel.style.display === "none" ? "block" : "none";
 
-/* =========================
-   USER ID
-========================= */
-
-function getUserId() {
-
-  let id = localStorage.getItem("spl_user_id");
-
-  if (!id) {
-
-    id = crypto.randomUUID();
-
-    localStorage.setItem("spl_user_id", id);
-
-  }
-
-  return id;
-
-}
-
-const userId = getUserId();
-
-
-/* =========================
-   PRESENCE
-========================= */
-
-async function setupPresence() {
-
-  if (!window.rtdb) return;
-
-  const ref = window.rtdbRef(window.rtdb, "presence/" + userId);
-
-  await window.rtdbSet(ref, {
-    online: true,
-    lastSeen: Date.now()
-  });
-
-  window.rtdbOnDisconnect(ref).set({
-    online: false,
-    lastSeen: Date.now()
   });
 
 }
 
 
-/* =========================
-   STATISTIKA
-========================= */
+if (correctColorPicker) {
 
-async function saveStats(correct, total) {
+  correctColorPicker.addEventListener("input", (e) => {
 
-  if (!window.rtdb) return;
+    document.documentElement.style.setProperty(
+      "--correctColor",
+      e.target.value
+    );
 
-  const ref = window.rtdbRef(window.rtdb, "stats/" + userId);
-
-  const snapshot = await new Promise(resolve =>
-    window.rtdbOnValue(ref, resolve, { onlyOnce: true }));
-
-  let stats = snapshot.val() || {
-    totalTests: 0,
-    totalCorrect: 0,
-    totalQuestions: 0
-  };
-
-  stats.totalTests++;
-  stats.totalCorrect += correct;
-  stats.totalQuestions += total;
-
-  await window.rtdbSet(ref, stats);
+  });
 
 }
 
 
-function loadStats() {
+if (wrongColorPicker) {
 
-  if (!window.rtdb) return;
+  wrongColorPicker.addEventListener("input", (e) => {
 
-  const ref = window.rtdbRef(window.rtdb, "stats/" + userId);
-
-  window.rtdbOnValue(ref, snapshot => {
-
-    if (!snapshot.exists()) {
-
-      statsBox.innerHTML = "Statistika zatím není";
-      return;
-
-    }
-
-    const s = snapshot.val();
-
-    const percent = Math.round(
-      (s.totalCorrect / s.totalQuestions) * 100);
-
-    statsBox.innerHTML = `
-    Testů: ${s.totalTests}<br>
-    Úspěšnost: ${percent}%<br>
-    ${s.totalCorrect}/${s.totalQuestions}`;
+    document.documentElement.style.setProperty(
+      "--wrongColor",
+      e.target.value
+    );
 
   });
 
@@ -155,23 +242,25 @@ function loadStats() {
    NAČTENÍ DAT
 ========================= */
 
-fetch("data.json")
+fetch("./data.json")
 
-.then(r => r.json())
+  .then(res => res.json())
 
-.then(json => {
+  .then(async json => {
 
-  data = json;
+    data = json;
 
-  initCategories();
+    initCategories();
 
-  startStudy();
+    await loadChangeLog();
 
-});
+    startStudy();
+
+  });
 
 
 /* =========================
-   KATEGORIE
+   INICIALIZACE OKRUHŮ
 ========================= */
 
 function initCategories() {
@@ -180,12 +269,24 @@ function initCategories() {
 
   Object.keys(data).forEach(cat => {
 
-    const opt = document.createElement("option");
+    const option = document.createElement("option");
 
-    opt.value = cat;
-    opt.textContent = cat;
+    option.value = cat;
 
-    categorySelect.appendChild(opt);
+    option.textContent = cat;
+
+    categorySelect.appendChild(option);
+
+  });
+
+
+  categorySelect.addEventListener("change", () => {
+
+    if (mode === "study") startStudy();
+
+    if (mode === "test") startTest();
+
+    if (mode === "edit") startEdit();
 
   });
 
@@ -193,37 +294,28 @@ function initCategories() {
 
 
 /* =========================
-   PŘÍPRAVA OTÁZEK
+   CHANGELOG
 ========================= */
 
-function prepareQuestions() {
+async function loadChangeLog() {
 
-  const cat = categorySelect.value;
+  if (!window.db) return;
 
-  let questions = [...data[cat]];
+  const snapshot = await window.fbGetDocs(
+    window.fbCollection(window.db, "questionChanges")
+  );
 
-  questions = questions.map((q,i)=>({...q,_originalIndex:i+1}));
+  snapshot.forEach(doc => {
 
+    const d = doc.data();
 
-  if (randomToggle.checked) {
+    const key = d.category.trim() + "|" + d.question.trim();
 
-    questions.sort(()=>Math.random()-0.5);
+    if (!changeLog[key]) changeLog[key] = [];
 
-  }
+    changeLog[key].push(d);
 
-
-  const limit = parseInt(questionLimitInput.value);
-
-  if (!isNaN(limit) && limit>0 && limit<questions.length)
-
-    questions = questions.slice(0,limit);
-
-
-  currentQuestions = questions;
-
-  currentIndex = 0;
-
-  score = 0;
+  });
 
 }
 
@@ -234,7 +326,7 @@ function prepareQuestions() {
 
 function startStudy() {
 
-  mode="study";
+  mode = "study";
 
   prepareQuestions();
 
@@ -245,11 +337,79 @@ function startStudy() {
 
 function startTest() {
 
-  mode="test";
+  mode = "test";
+
+  score = 0;
+
+  wrongQuestions = [];
 
   prepareQuestions();
 
   showQuestion();
+
+}
+
+
+function startEdit() {
+
+  mode = "edit";
+
+  prepareQuestions();
+
+  showQuestion();
+
+}
+
+
+/* =========================
+   PŘÍPRAVA OTÁZEK
+========================= */
+
+function prepareQuestions() {
+
+  const category = categorySelect.value;
+
+  if (!data[category]) return;
+
+  currentQuestions = data[category].map((q, i) => ({
+    ...q,
+    _originalIndex: i + 1
+  }));
+
+  currentIndex = 0;
+
+  resultBox.innerHTML = "";
+
+
+  if (mode === "test" && randomToggle?.checked)
+
+    shuffle(currentQuestions);
+
+
+  const limit = parseInt(questionLimitInput?.value);
+
+
+  if (
+    mode === "test" &&
+    !isNaN(limit) &&
+    limit > 0 &&
+    limit < currentQuestions.length
+  )
+
+    currentQuestions = currentQuestions.slice(0, limit);
+
+}
+
+
+function shuffle(array) {
+
+  for (let i = array.length - 1; i > 0; i--) {
+
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [array[i], array[j]] = [array[j], array[i]];
+
+  }
 
 }
 
@@ -260,81 +420,153 @@ function startTest() {
 
 function showQuestion() {
 
-  const q=currentQuestions[currentIndex];
+  if (!currentQuestions.length) return;
 
-  let html=`
+  const q = currentQuestions[currentIndex];
 
-  <div>
-  Otázka ${currentIndex+1}/${currentQuestions.length}
-  (#${q._originalIndex})
-  </div>
+  let html = `
 
-  <h3>${q.question}</h3>`;
+  <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length} (původní #${q._originalIndex})</strong></div>
+
+  <h3>${q.question}</h3>
+
+  `;
 
 
-  q.answers.forEach((a,i)=>{
+  q.answers.forEach((a, i) => {
 
-    html+=`<button class="answerBtn" onclick="selectAnswer(${i})" id="btn${i}">${a}</button>`;
+    html += `
+
+    <button class="answerBtn" onclick="selectAnswer(${i})">
+
+    ${a}
+
+    </button>
+
+    `;
 
   });
 
 
-  html+=`
-  <br>
-  <button onclick="prevQuestion()">←</button>
-  <button onclick="nextQuestion()">→</button>`;
+  html += `
+
+  <div style="margin-top:10px;">
+
+  <button onclick="prevQuestion()">⬅ Zpět</button>
+
+  <button onclick="nextQuestion()">Další ➡</button>
+
+  </div>
+
+  `;
 
 
-  quizContainer.innerHTML=html;
+  quizContainer.innerHTML = html;
 
 
-  if(mode==="study")
+  if (mode === "study" || mode === "edit")
 
-    showCorrectAnswer();
+    highlightCorrect();
+
+}
+
+
+function highlightCorrect() {
+
+  const correct = currentQuestions[currentIndex].correct;
+
+  const buttons = document.querySelectorAll(".answerBtn");
+
+
+  buttons.forEach((btn, i) => {
+
+    btn.disabled = false;
+
+    btn.style.backgroundColor = "#1f3a5f";
+
+
+    if (i === correct)
+
+      btn.style.backgroundColor = "var(--correctColor, #2e7d32)";
+
+  });
 
 }
 
 
 /* =========================
-   SPRÁVNÁ ODPOVĚĎ
+   ODPOVĚĎ
 ========================= */
 
-function showCorrectAnswer(){
+function selectAnswer(index) {
 
-  const correct=currentQuestions[currentIndex].correct;
+  const correct = currentQuestions[currentIndex].correct;
 
-  const btn=document.getElementById("btn"+correct);
-
-  if(btn) btn.style.background=correctColor;
-
-}
+  const buttons = document.querySelectorAll(".answerBtn");
 
 
-/* =========================
-   VÝBĚR ODPOVĚDI
-========================= */
+  if (mode === "test") {
 
-function selectAnswer(index){
+    buttons.forEach((btn, i) => {
 
-  const correct=currentQuestions[currentIndex].correct;
+      btn.disabled = true;
 
-  if(mode==="test"){
 
-    if(index===correct){
+      if (i === correct)
+
+        btn.style.backgroundColor = "var(--correctColor, #2e7d32)";
+
+
+      if (i === index && index !== correct)
+
+        btn.style.backgroundColor = "var(--wrongColor, #b71c1c)";
+
+    });
+
+
+    if (index === correct)
 
       score++;
 
-      document.getElementById("btn"+index).style.background=correctColor;
+
+    else
+
+      wrongQuestions.push(currentQuestions[currentIndex]);
+
+  }
+
+
+  if (mode === "edit") {
+
+    const q = currentQuestions[currentIndex];
+
+    const oldCorrect = q.correct;
+
+
+    if (oldCorrect !== index) {
+
+      q.correct = index;
+
+
+      if (window.db) {
+
+        window.fbAddDoc(
+          window.fbCollection(window.db, "questionChanges"),
+          {
+            category: categorySelect.value.trim(),
+            question: q.question.trim(),
+            oldCorrect,
+            newCorrect: index,
+            timestamp: Date.now()
+          }
+        );
+
+      }
 
     }
 
-    else{
 
-      document.getElementById("btn"+index).style.background=wrongColor;
-
-      document.getElementById("btn"+correct).style.background=correctColor;
-
-    }
+    highlightCorrect();
 
   }
 
@@ -345,9 +577,9 @@ function selectAnswer(index){
    NAVIGACE
 ========================= */
 
-function nextQuestion(){
+function nextQuestion() {
 
-  if(currentIndex<currentQuestions.length-1){
+  if (currentIndex < currentQuestions.length - 1) {
 
     currentIndex++;
 
@@ -355,14 +587,17 @@ function nextQuestion(){
 
   }
 
-  else finish();
+
+  else
+
+    finish();
 
 }
 
 
-function prevQuestion(){
+function prevQuestion() {
 
-  if(currentIndex>0){
+  if (currentIndex > 0) {
 
     currentIndex--;
 
@@ -377,31 +612,30 @@ function prevQuestion(){
    KONEC TESTU
 ========================= */
 
-async function finish(){
+function finish() {
 
-  if(mode!=="test")return;
+  if (mode !== "test") return;
 
-  const total=currentQuestions.length;
 
-  const percent=Math.round(score/total*100);
+  const total = currentQuestions.length;
 
-  resultBox.innerHTML=`Výsledek: ${score}/${total} (${percent}%)`;
 
-  await saveStats(score,total);
+  const percent = Math.round((score / total) * 100);
 
-  loadStats();
+
+  resultBox.innerHTML = `
+
+  <div>
+
+  Test dokončen<br>
+
+  ${score} / ${total}<br>
+
+  ${percent} %
+
+  </div>
+
+  `;
 
 }
 
-
-/* =========================
-   START
-========================= */
-
-window.addEventListener("load",()=>{
-
-  setupPresence();
-
-  loadStats();
-
-});
