@@ -612,30 +612,26 @@ function prevQuestion() {
    KONEC TESTU
 ========================= */
 
-function finish() {
+async function finish() {
 
   if (mode !== "test") return;
 
-
   const total = currentQuestions.length;
-
 
   const percent = Math.round((score / total) * 100);
 
-
   resultBox.innerHTML = `
-
   <div>
-
   Test dokončen<br>
-
   ${score} / ${total}<br>
-
   ${percent} %
-
   </div>
-
   `;
 
+  await saveUserStats(score, total);
+  await loadUserStats();
+
 }
+
+
 
