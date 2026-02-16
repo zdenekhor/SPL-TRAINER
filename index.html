@@ -30,8 +30,7 @@ html, body {
 
   margin: 0;
   padding: 0;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
 
   font-family: "Segoe UI", system-ui;
   background: var(--bg-main);
@@ -44,7 +43,7 @@ html, body {
   max-width: 900px;
   margin: auto;
 
-  height: calc(100vh - 70px);
+  min-height: calc(100vh - 70px);
 
   display: flex;
   flex-direction: column;
@@ -135,9 +134,9 @@ button {
 
   flex-direction: column;
 
-  justify-content: space-between;
+  justify-content: flex-start;
 
-  overflow: hidden;
+  overflow-y: auto;
 
 }
 
@@ -180,11 +179,51 @@ button {
 
 @media (max-width: 600px) {
 
-  html, body {
+  .container {
 
-    overflow: hidden;
+    min-height: calc(100vh - 60px);
+
+    padding: 6px;
 
   }
+
+  .title {
+
+    font-size: 16px;
+
+  }
+
+  .statusbar {
+
+    font-size: 11px;
+
+  }
+
+  select, input, button {
+
+    font-size: 13px;
+
+    padding: 5px;
+
+  }
+
+  .answerBtn {
+
+    font-size: 15px;
+
+    padding: 10px;
+
+  }
+
+  .quiz-panel {
+
+    padding: 8px;
+
+    overflow-y: auto;
+
+  }
+
+}
 
   .container {
 
