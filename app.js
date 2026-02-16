@@ -632,6 +632,100 @@ async function finish() {
   await loadUserStats();
 
 }
+/* =========================
+   USER STATISTICS
+========================= */
 
+async function saveUserStats(score, total) {
+
+  try {
+
+    if (!window.db) return;
+
+    await window.fbAddDoc(
+      window.fbCollection(window.db, "userStats"),
+      {
+        userId: userId,
+        score: score,
+        total: total,
+        percent: Math.round((score / total) * 100),
+        category: categorySelect.value,
+        timestamp: Date.now()
+      }
+    );
+
+  }
+  catch (e) {
+
+    console.error("Stat save error:", e);
+
+  }
+
+}
+
+
+async function loadUserStats() {
+
+  try {
+
+    const statsBox = document.getElementById("userStats");
+
+    if (!statsBox) return;
+
+    statsBox.innerHTML = "Vaše statistika: načítám...";
+
+    if (!window.db) {
+
+      statsBox.innerHTML = "Statistika není dostupná";
+      return;
+
+    }
+
+    const snapshot = await window.fbGetDocs(
+      window.fbCollection(window.db, "userStats")
+    );
+
+    let tests = 0;
+    let totalQuestions = 0;
+    let totalCorrect = 0;
+    let best = 0;
+
+    snapshot.forEach(doc => {
+
+      const d = doc.data();
+
+      if (d.userId === userId) {
+
+        tests++;
+        totalQuestions += d.total;
+        totalCorrect += d.score;
+
+        if (d.percent > best)
+          best = d.percent;
+
+      }
+
+    });
+
+    const avg = totalQuestions
+      ? Math.round((totalCorrect / totalQuestions) * 100)
+      : 0;
+
+    statsBox.innerHTML = `
+      Vaše statistika:<br>
+      Testů: ${tests}<br>
+      Celkem otázek: ${totalQuestions}<br>
+      Úspěšnost: ${avg} %<br>
+      Nejlepší výsledek: ${best} %
+    `;
+
+  }
+  catch (e) {
+
+    console.error("Stat load error:", e);
+
+  }
+
+}
 
 
