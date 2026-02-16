@@ -371,7 +371,10 @@ function prepareQuestions() {
 
   if (!data[category]) return;
 
-  currentQuestions = [...data[category]];
+  currentQuestions = data[category].map((q, i) => ({
+    ...q,
+    _originalIndex: i + 1
+  }));
 
   currentIndex = 0;
 
@@ -423,7 +426,7 @@ function showQuestion() {
 
   let html = `
 
-  <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length}</strong></div>
+  <div><strong>Otázka ${currentIndex + 1} / ${currentQuestions.length} (původní #${q._originalIndex})</strong></div>
 
   <h3>${q.question}</h3>
 
