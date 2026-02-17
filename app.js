@@ -378,6 +378,23 @@ function prepareQuestions() {
     ...q,
     _originalIndex: i + 1
   }));
+   
+   // FILTR ROZSAHU PRO TEST
+if (mode === "test") {
+
+  const from = parseInt(rangeFromInput?.value);
+  const to = parseInt(rangeToInput?.value);
+
+  if (!isNaN(from) && !isNaN(to) && from <= to) {
+
+    currentQuestions = currentQuestions.filter(q =>
+      q._originalIndex >= from && q._originalIndex <= to
+    );
+
+  }
+
+}
+
 
   currentIndex = 0;
 
