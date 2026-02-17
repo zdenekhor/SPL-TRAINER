@@ -187,6 +187,9 @@ const resultBox = document.getElementById("result") || { innerHTML: "" };
 
 const randomToggle = document.getElementById("randomQuestions");
 const questionLimitInput = document.getElementById("questionCount");
+const rangeFromInput = document.getElementById("rangeFrom");
+const rangeToInput = document.getElementById("rangeTo");
+
 
 const correctColorPicker = document.getElementById("correctColorPicker");
 const wrongColorPicker = document.getElementById("wrongColorPicker");
