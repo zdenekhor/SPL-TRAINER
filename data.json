@@ -15430,7 +15430,7 @@
         "b)  směr letadla k úhlu větru",
         "c)  úhel, který svírá ortodroma a loxodroma v bodech, které jsou na zeměkouli spojeny oběma čarami"
       ],
-      "correct": 1
+      "correct": 2
     },
     {
       "question": "Konverzní úhel vypočteme vzorcem",
@@ -15439,7 +15439,7 @@
         "b)  (RZD * sin SZŠ)/2",
         "c)  RZD * sin SZŠ"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "question": "Při řešení navigačních úloh se Země uvažuje jako koule o poloměru",
