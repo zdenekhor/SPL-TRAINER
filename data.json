@@ -15351,7 +15351,7 @@
         "b)  severozápad",
         "c)  jihozápad"
       ],
-      "correct": 0
+      "correct": 2
     },
     {
       "question": "Pro přesnější označení směru užíváme",
@@ -15412,16 +15412,16 @@
         "b)  průběhem ortodromy na dvou uvažovaných poledníkách",
         "c)  úhlem mezi Nz a Nm"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "question": "Konvergenci poledníků vypočítáme",
       "answers": [
         "a)  RZD - ZZŠ",
-        "b)  RZD * sin ?",
+        "b)  RZD * sin φ",
         "c)  ZZD * ZZŠ"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "question": "Konverzní úhel je",
@@ -15430,7 +15430,7 @@
         "b)  směr letadla k úhlu větru",
         "c)  úhel, který svírá ortodroma a loxodroma v bodech, které jsou na zeměkouli spojeny oběma čarami"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "question": "Konverzní úhel vypočteme vzorcem",
@@ -15448,7 +15448,7 @@
         "b)  6378,2 km",
         "c)  6356,8 km"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "question": "Rovníkový poloměr Země je",
@@ -15457,7 +15457,7 @@
         "b)  6378,2 km",
         "c)  6356,8 km"
       ],
-      "correct": 0
+      "correct": 2
     },
     {
       "question": "Pólový poloměr Země je",
@@ -15475,7 +15475,7 @@
         "b)  365,2 dne",
         "c)  369 dnů"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "question": "Obvod rovníku měří",
@@ -15484,7 +15484,7 @@
         "b)  30 000 NM",
         "c)  21 600 NM"
       ],
-      "correct": 0
+      "correct": 2
     },
     {
       "question": "Jeden stupeň východní nebo západní délky, měřený na rovníku představuje vzdálenost",
@@ -15493,16 +15493,16 @@
         "b)  60 NM",
         "c)  111 NM"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "question": "Magnetický pól obíhá kolem zeměpisného pólu jednou za 27 000 roků ve vzdálenosti",
       "answers": [
-        "a)  90",
-        "b)  210",
-        "c)  170"
+        "a)  9°",
+        "b)  21°",
+        "c)  17°"
       ],
-      "correct": 0
+      "correct": 2
     },
     {
       "question": "Průměrná vzdálenost měsíce od Země je",
@@ -15543,7 +15543,7 @@
         "a)  ano",
         "b)  ne"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "question": "Sever magnetický je směr, který",
@@ -15552,7 +15552,7 @@
         "b)  je určený myšlenou přímkou, která vede středem země a protíná její povrch v bodech, které nazýváme sever magnetický a jih magnetický",
         "c)  změříme na mapě"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "question": "Deklinace je úhel mezi severem",
