@@ -15448,7 +15448,7 @@
         "b)  6378,2 km",
         "c)  6356,8 km"
       ],
-      "correct": 1
+      "correct": 0
     },
     {
       "question": "Rovníkový poloměr Země je",
@@ -15457,7 +15457,7 @@
         "b)  6378,2 km",
         "c)  6356,8 km"
       ],
-      "correct": 2
+      "correct": 1
     },
     {
       "question": "Pólový poloměr Země je",
@@ -15466,7 +15466,7 @@
         "b)  6378,2 km",
         "c)  6356,8 km"
       ],
-      "correct": 0
+      "correct": 2
     },
     {
       "question": "Jeden oběh Země kolem Slunce (tzv. siderický rok) trvá",
