@@ -104,7 +104,17 @@ select, input {
   font-size: inherit;
   line-height: normal;
 }
-  
+  .control-panel .inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 10px;
+}
+
+#questionCount,
+#startQuestion {
+  width: 60px;
+}
 </style>
 
 </head>
@@ -123,30 +133,50 @@ select, input {
 
 <div class="control-panel">
 
- 
+  <select id="categorySelect"></select>
 
-<select id="categorySelect"></select>
+  <!-- STUDIUM -->
+  <button onclick="startStudy()">Studium</button>
 
-<button onclick="startStudy()">Studium</button>
-<button onclick="startTest()">Test</button>
-<button onclick="startEdit()">Edit</button>
- <button
-      onclick="window.open('https://aim.rlp.cz/', '_blank')"
-      title="AIM – Letecká informační služba"
+  <label class="inline">
+    Od otázky:
+    <input
+      type="number"
+      id="startQuestion"
+      min="1"
+      value="1"
     >
-      ✈ AIM
-    </button>
-<label>
-<input type="checkbox" id="randomQuestions">
-Náhodné
-</label>
+  </label>
 
-<label>
-Počet:
-<input type="number" id="questionCount" value="10">
-</label>
+  <!-- TEST -->
+  <button onclick="startTest()">Test</button>
 
-<button id="settingsToggle">⚙</button>
+  <label class="inline">
+    <input type="checkbox" id="randomQuestions">
+    Náhodné
+  </label>
+
+  <label class="inline">
+    Počet:
+    <input
+      type="number"
+      id="questionCount"
+      value="10"
+      min="1"
+    >
+  </label>
+
+  <!-- OSTATNÍ -->
+  <button onclick="startEdit()">Edit</button>
+
+  <button
+    onclick="window.open('https://aim.rlp.cz/', '_blank')"
+    title="AIM – Letecká informační služba"
+  >
+    ✈ AIM
+  </button>
+
+  <button id="settingsToggle">⚙</button>
 
 </div>
 

@@ -193,6 +193,8 @@ const wrongColorPicker = document.getElementById("wrongColorPicker");
 const settingsToggle = document.getElementById("settingsToggle");
 const settingsPanel = document.getElementById("settingsPanel");
 
+const startQuestionInput = document.getElementById("startQuestion");
+
 
 /* =========================
    NASTAVENÍ PANEL
@@ -368,7 +370,6 @@ function startEdit() {
 function prepareQuestions() {
 
   const category = categorySelect.value;
-
   if (!data[category]) return;
 
   currentQuestions = data[category].map((q, i) => ({
@@ -376,30 +377,40 @@ function prepareQuestions() {
     _originalIndex: i + 1
   }));
 
-  currentIndex = 0;
-
   resultBox.innerHTML = "";
 
+  // === TEST: random + limit ===
+  if (mode === "test") {
 
-  if (mode === "test" && randomToggle?.checked)
+    if (randomToggle?.checked) {
+      shuffle(currentQuestions);
+    }
 
-    shuffle(currentQuestions);
+    const limit = parseInt(questionLimitInput?.value);
 
+    if (
+      !isNaN(limit) &&
+      limit > 0 &&
+      limit < currentQuestions.length
+    ) {
+      currentQuestions = currentQuestions.slice(0, limit);
+    }
 
-  const limit = parseInt(questionLimitInput?.value);
+    // test VŽDY začíná od první otázky
+    currentIndex = 0;
+    return;
+  }
 
+  // === STUDIUM / EDIT: start od otázky ===
+  const startFrom = parseInt(startQuestionInput?.value);
 
-  if (
-    mode === "test" &&
-    !isNaN(limit) &&
-    limit > 0 &&
-    limit < currentQuestions.length
-  )
-
-    currentQuestions = currentQuestions.slice(0, limit);
-
+  if (!isNaN(startFrom) && startFrom > 1) {
+    const index = startFrom - 1;
+    currentIndex = index < currentQuestions.length ? index : 0;
+  } else {
+    currentIndex = 0;
+  }
 }
-
 
 function shuffle(array) {
 
