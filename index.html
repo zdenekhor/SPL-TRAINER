@@ -120,15 +120,12 @@ select, input {
 <button onclick="startStudy()">Studium</button>
 <button onclick="startTest()">Test</button>
 <button onclick="startEdit()">Edit</button>
-<a
-  href="https://aim.rlp.cz/"
-  target="_blank"
-  rel="noopener"
->
-  <button title="AIM – Letecká informační služba">
-    ✈ AIM
-  </button>
-</a>
+ <button
+      onclick="window.open('https://aim.rlp.cz/', '_blank')"
+      title="AIM – Letecká informační služba"
+    >
+      ✈ AIM
+    </button>
 <label>
 <input type="checkbox" id="randomQuestions">
 Náhodné
